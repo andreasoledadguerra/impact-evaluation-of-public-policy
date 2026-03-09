@@ -55,3 +55,9 @@ formularios_estudio['edad'] = formularios_estudio.apply(
                 if pd.notnull(row['fecha_de_nacimiento']) else pd.NA,
     axis=1
 )
+
+# -------------------------- Cálculo directo de media -----------------------------------------
+
+vuln = float(round(formularios_estudio['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
+#paredes_ext_rev = float(round(formularios_estudio['paredes_ext_revocadas'].mean(skipna=True), 1))
+paredes_ext_rev = round(formularios_estudio['paredes_ext_revocadas'].mean(skipna=True), 1)
