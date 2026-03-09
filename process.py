@@ -1,5 +1,7 @@
 import pandas as pd
 
+from dateutil.relativedelta import relativedelta
+
 
 
 # ---------------------------------------- pre-procesamiento ------------------------------
@@ -35,3 +37,21 @@ formularios_estudio = formularios_estudio[filtro]
 
 # --------------------------- Cálculo de atributo faltante (edad) -----------------------------
 
+# Como los valores de cada columna son de distinto tipo de dato, transformamos 'fecha_de_nacimiento' y 'fecha de_carga'
+#formularios_estudio.loc['fecha_de_nacimiento'] = pd.to_datetime(
+#    formularios_estudio['fecha_de_nacimiento'],
+#    errors='coerce'
+#)
+#
+#formularios_estudio.loc['fecha_carga'] = pd.to_datetime(
+#    formularios_estudio['fecha_carga'],
+#    errors='coerce'
+#)
+#
+##TODO:ver función lambda
+## Calcular edad aplicando relativedelta fila a fila
+#formularios_estudio['edad'] = formularios_estudio.apply(
+#    lambda row: relativedelta(row['fecha_carga'], row['fecha_de_nacimiento']).years 
+#                if pd.notnull(row['fecha_de_nacimiento']) else pd.NA,
+#    axis=1
+#)
