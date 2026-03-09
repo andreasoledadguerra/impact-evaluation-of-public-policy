@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from dateutil.relativedelta import relativedelta
 
@@ -56,8 +57,11 @@ formularios_estudio['edad'] = formularios_estudio.apply(
     axis=1
 )
 
-# -------------------------- Cálculo directo de media -----------------------------------------
+# --------------------------......... Cálculo directo de media -----------------------------------------
 
 vuln = float(round(formularios_estudio['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
 #paredes_ext_rev = float(round(formularios_estudio['paredes_ext_revocadas'].mean(skipna=True), 1))
 paredes_ext_rev = round(formularios_estudio['paredes_ext_revocadas'].mean(skipna=True), 1)
+
+# ------------------------------------ Filtro inicial de candidatos por grupo ----------------------------
+
