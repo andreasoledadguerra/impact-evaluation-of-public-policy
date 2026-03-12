@@ -60,10 +60,10 @@ def calculate_age(df: pd.DataFrame) -> pd.DataFrame:
     )
     return df
 # --------------------------......... Cálculo directo de media -----------------------------------------
-
-vuln = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
-#paredes_ext_rev = float(round(formularios_estudio['paredes_ext_revocadas'].mean(skipna=True), 1))
-paredes_ext_rev = round(df['paredes_ext_revocadas'].mean(skipna=True), 1)
+def calculate_mean(df: pd.DataFrame) -> pd.DataFrame:
+    df['escenario_vulnerabilidad_social'] = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
+    df['paredes_ext_revocadas'] = round(df['paredes_ext_revocadas'].mean(skipna=True), 1)
+    return df
 
 
 
