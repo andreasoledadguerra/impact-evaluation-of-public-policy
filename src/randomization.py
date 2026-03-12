@@ -25,17 +25,8 @@ def randomization(df: pd.DataFrame) -> pd.DataFrame:
 
     return df_control, df_tratamiento
 
-## Se eliminan columnas innecesarias en ambos dataframes
-#df_control_clean = df_control.drop(columns=[
-#    'codigo_municipio', 'codigo_region', 'nombre_region', 'codigo_area',
-#    'nombre_area', 'seccion_electoral',
-#    'superficie(km2)', 'intendente', 'partido_politico_actual', 
-#    'poblacion_censo_2010', 'poblacion_censo_2022'
-#])
-#
-#df_tratamiento_clean = df_tratamiento.drop(columns=[
-#    'codigo_municipio', 'codigo_region', 'nombre_region', 'codigo_area',
-#    'nombre_area', 'seccion_electoral',
-#    'superficie(km2)', 'intendente', 'partido_politico_actual', 
-#    'poblacion_censo_2010', 'poblacion_censo_2022'
-#])
+
+#------------------------------------- Muestreo ------------------------------------
+# Crear una función para calcular muestra
+def muestra_aleatoria_simple(df: pd.DataFrame, n:int, seed=42 ):
+    return df.sample(n=n,random_state=seed)
