@@ -7,21 +7,24 @@ from src.preprocessing import ProcessedDataframe
 
 # Initialize processed dataframe
 
-process_df = ProcessedDataframe()
+processed_df = ProcessedDataframe()
 
 # ------------------------------------ Filtro inicial de candidatos por grupo ----------------------------
+def randomization(df: pd.DataFrame) -> pd.DataFrame:
 
-## Se agrupa en 'Tratamiento' si se cumple 'solicitud_adjudicada', y 'control', en caso contrario
-#formularios_estudio['grupo'] = np.where( formularios_estudio['state'] == 'solicitud_adjudicada','Tratamiento', 'Control')
-#
-## Guardar extracción de datos en "Control" o "Tratamiento"
-#grupo_control = (formularios_estudio['grupo']) == 'Control' # es una serie que devuelve booleanos
-#grupo_tratamiento = (formularios_estudio['grupo']) == 'Tratamiento' # idem
-#
-## A cada grupo le damos estructura de dataframe nuevo
-#df_control = formularios_estudio[grupo_control]
-#df_tratamiento = formularios_estudio[grupo_tratamiento]
-#
+# Se agrupa en 'Tratamiento' si se cumple 'solicitud_adjudicada', y 'control', en caso contrario
+    df['grupo'] = np.where(df['state'] == 'solicitud_adjudicada','Tratamiento', 'Control')
+
+    # Guardar extracción de datos en "Control" o "Tratamiento"
+    grupo_control = (df['grupo']) == 'Control' # es una serie que devuelve booleanos
+    grupo_tratamiento = (df['grupo']) == 'Tratamiento' # idem
+
+    # A cada grupo le damos estructura de dataframe nuevo
+    df_control = df[grupo_control]
+    df_tratamiento = df[grupo_tratamiento]
+
+    return df_control, df_tratamiento
+
 ## Se eliminan columnas innecesarias en ambos dataframes
 #df_control_clean = df_control.drop(columns=[
 #    'codigo_municipio', 'codigo_region', 'nombre_region', 'codigo_area',
