@@ -4,6 +4,11 @@ import numpy as np
 from src.preprocessing import ProcessedDataframe
 
 
+
+# Initialize processed dataframe
+
+process_df = ProcessedDataframe()
+
 # ------------------------------------ Filtro inicial de candidatos por grupo ----------------------------
 
 ## Se agrupa en 'Tratamiento' si se cumple 'solicitud_adjudicada', y 'control', en caso contrario
