@@ -19,25 +19,25 @@ def concatenate_df(df_1:pd.DataFrame, df_2: pd.DataFrame, df_3: pd.DataFrame) ->
 
 # --------------------------------------- Filtración ------------------------------------------
 
-#def filter_df(df: pd.DataFrame) -> pd.DataFrame:
-#
-#    df.drop(['municipio'], axis=1, inplace=True)
-#
-#    # Filtramos solo los inscriptos en etapa 1
-#    form = df[df['etapa_inscripcion'] == 1 ]
-#
-#    #Filtramos solo los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente 
-#    form[form['state'] == 'solicitud_adjudicada']
-#    form[form['state'] =='solicitud_elegible_rechazadas_por_excedente']
-#
-#    # Asignamos variable al filtro de los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente
-#    filtro = (form['state'] == 'solicitud_adjudicada') | \
-#             (form['state'] == 'solicitud_elegible_rechazadas_por_excedente')
-#
-#    # Creamos el nuevo dataframe aplicando el filtro
-#    form = form[filtro]
-#    return form
-#
+def filter_df(df: pd.DataFrame) -> pd.DataFrame:
+
+    df.drop(['municipio'], axis=1, inplace=True)
+
+    # Filtramos solo los inscriptos en etapa 1
+    form = df[df['etapa_inscripcion'] == 1 ]
+
+    #Filtramos solo los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente 
+    form[form['state'] == 'solicitud_adjudicada']
+    form[form['state'] =='solicitud_elegible_rechazadas_por_excedente']
+
+    # Asignamos variable al filtro de los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente
+    filtro = (form['state'] == 'solicitud_adjudicada') | \
+             (form['state'] == 'solicitud_elegible_rechazadas_por_excedente')
+
+    # Creamos el nuevo dataframe aplicando el filtro
+    form = form[filtro]
+    return form
+
 ## --------------------------- Cálculo de atributo faltante (edad) -----------------------------
 #
 # Como los valores de cada columna son de distinto tipo de dato, transformamos 'fecha_de_nacimiento' y 'fecha de_carga'
