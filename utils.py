@@ -23,4 +23,18 @@ class Stats:
         print(f"The proportion of {condition} in {column} is {round(proportion, 1)}")
         return round(float(proportion), 1)
     
-    
+    # Creamos nueva función que calcula media y desviación estándar
+
+    #def calcular_media_std_1(df: pd.DataFrame, columna:str):
+     #   media = round(df[columna].mean(skipna=True),1)
+     #   std = round(df[columna].std(skipna=True),1)
+     #   return media, std
+
+    # Creamos una función que utiliza el cálculo anterior, y transformaciones a dataframe
+    def calcular_media_std_lista(df: pd.DataFrame, lista: list):
+        resultados = {}
+        for columna in lista:
+            media, std = calcular_media_std_1(df, columna)
+            resultados[f'media_{columna}'] = media
+            resultados[f'desv_{columna}'] = std
+        return pd.DataFrame([resultados]) # pandas necesita lista de diccionarios
