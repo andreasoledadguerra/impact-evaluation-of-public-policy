@@ -21,10 +21,17 @@ class ProcessedDataframe():
         return df
 
     # --------------------------------------- Filtración ------------------------------------------
+    #def drop_columns(df:pd.DataFrame) -> pd.DataFrame:
+    #    df = df.drop(columns=['codigo_municipio', 'codigo_region', 'nombre_region', 'codigo_area','nombre_area', 'seccion_electoral',
+    #            'superficie(km2)', 'intendente', 'partido_politico_actual', 
+    #        'poblacion_censo_2010', 'poblacion_censo_2022'
+    #        ])
+    #
+    #    df = df.drop(['municipio'], axis=1, inplace=True)
+    #    return df
 
-    def filter_df(df: pd.DataFrame) -> pd.DataFrame:
 
-        df.drop(['municipio'], axis=1, inplace=True)
+    def filter_df(df: pd.DataFrame) -> pd.DataFrame:   
 
         # Filtramos solo los inscriptos en etapa 1
         df = df[df['etapa_inscripcion'] == 1 ]
