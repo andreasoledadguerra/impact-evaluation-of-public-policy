@@ -39,11 +39,14 @@ class SampleAnalysis:
 #
 
 
-##este resultado debe sumarse al dataframe
+def calculate_media_round(df: pd.DataFrame, columna: str, decimales: int = 1) -> float:
+    return float(round(df[columna].mean(skipna=True), decimales))
+
+
+#----------------------------este resultado debe sumarse al dataframe-----------------------------------
 #def mean_vuln(df:pd.DataFrame):
 #    vuln = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
 #    return vuln
-#
 #
 ##este resultado debe sumarse al dataframe
 #def mean_ext_rev(df:pd.DataFrame):
