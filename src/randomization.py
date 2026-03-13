@@ -21,9 +21,9 @@ def randomization(df: pd.DataFrame) -> pd.DataFrame:
 
     # A cada grupo le damos estructura de dataframe nuevo
     df_control = df[grupo_control]
-    df_tratamiento = df[grupo_tratamiento]
+    df_treatment = df[grupo_tratamiento]
 
-    return df_control, df_tratamiento
+    return df_control, df_treatment
 
 
 #------------------------------------- Muestreo ------------------------------------
