@@ -1,11 +1,19 @@
 import pandas as pd
 
+class SampleAnalysis:
+
+    NUM_COLUMNS = ['ingreso_anual_hogar', 'edad', 'personas_por_ambiente']
+    CAT_COLUMNS = [
+        'sexo_dni',
+        'relación_de_parentezco_con jefe_del_hogar',
+        'conurbano_interior'
+    ]
+
+    def __init__(self, df: pd.DataFrame):
+        self.df = df
+    
 
 # Muestras aleatorias simples y resumen estadístico por grupo
-
-
-
-
 
 #Estos métodos se usan en ambos grupos (muestra)
 #def sample_media_std(df: pd.Dataframe, column: str) :
