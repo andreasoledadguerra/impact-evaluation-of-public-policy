@@ -1,4 +1,5 @@
 import pandas as pd
+from src.utils import calcular_media_std_lista
 
 class SampleAnalysis:
 
@@ -11,17 +12,18 @@ class SampleAnalysis:
 
     def __init__(self, df: pd.DataFrame):
         self.df = df
+
     
 
 # Muestras aleatorias simples y resumen estadístico por grupo
 
 #Estos métodos se usan en ambos grupos (muestra)
-#def sample_media_std(df: pd.Dataframe, column: str) :
-#        list = ['ingreso_anual_hogar', 'edad', 'personas_por_ambiente']
-#        sample = calcular_media_std_lista(df, list)
-#
-#        return sample
-#    
+    def sample_media_std(self, df: pd.DataFrame, columns: list[str]=None) -> pd.DataFrame:
+        cols = columns or self.NUM_COLUMNS
+        return calcular_media_std_lista(df, cols)
+
+    
+
 #def sample_media_condition(df:pd.DataFrame):
 #        dict_condiciones = {
 #        'sexo_dni': ['F','M'],
