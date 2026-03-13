@@ -25,22 +25,22 @@ class Stats:
     
     # Creamos nueva función que calcula media y desviación estándar
 
-    def _calcular_media_std_1(df: pd.DataFrame, columna:str):
+    def _calculate_media_std_1(df: pd.DataFrame, columna:str):
         media = round(df[columna].mean(skipna=True),1)
         std = round(df[columna].std(skipna=True),1)
         return media, std
 
     # Creamos una función que utiliza el cálculo anterior, y transformaciones a dataframe
-    def calcular_media_std_lista(df: pd.DataFrame, lista: list):
+    def calculate_media_std_list(df: pd.DataFrame, lista: list):
         resultados = {}
         for columna in lista:
-            media, std = _calcular_media_std_1(df, columna)
+            media, std = _calculate_media_std_1(df, columna)
             resultados[f'media_{columna}'] = media
             resultados[f'desv_{columna}'] = std
         return pd.DataFrame([resultados]) # pandas necesita lista de diccionarios
     
     # Crear una función que calcula la media del dato categórico que tiene una condición
-    def calcular_media_condicion(df: pd.DataFrame, dict_condiciones: dict):
+    def calculate_media_condition(df: pd.DataFrame, dict_condiciones: dict):
         resultado = {}
         for columna, lista_condiciones in dict_condiciones.items():
             for condicion in lista_condiciones:
