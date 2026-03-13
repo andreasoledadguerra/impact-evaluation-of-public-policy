@@ -1,5 +1,5 @@
 import pandas as pd
-from src.utils import calcular_media_std_lista
+from src.utils import calculate_media_std_list, calculate_media_condition
 
 class SampleAnalysis:
 
@@ -21,11 +21,11 @@ class SampleAnalysis:
 #Estos métodos se usan en ambos grupos (muestra)
     def sample_media_std(self, df: pd.DataFrame, columns: list[str]=None) -> pd.DataFrame:
         cols = columns or self.NUM_COLUMNS
-        return calcular_media_std_lista(df, cols)
+        return calculate_media_std_list(df, cols)
 
-    #def sample_media_condition(self, columns:list[str] = None) -> pd.DataFrame:
-#
-    #    num
+    def sample_media_condition(self, conditions: dict = None) -> pd.DataFrame:
+        conds = conditions or self.CAT_CONDITIONS
+        return calculate_media_condition(self.df, conds)
 
 #def sample_media_condition(df:pd.DataFrame):
 #        dict_condiciones = {
