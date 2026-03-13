@@ -1,0 +1,38 @@
+import pandas as pd
+
+
+# Muestras aleatorias simples y resumen estadístico por grupo
+
+
+
+
+
+#Estos métodos se usan en ambos grupos (muestra)
+#def sample_media_std(df: pd.Dataframe, column: str) :
+#        list = ['ingreso_anual_hogar', 'edad', 'personas_por_ambiente']
+#        sample = calcular_media_std_lista(df, list)
+#
+#        return sample
+#    
+#def sample_media_condition(df:pd.DataFrame):
+#        dict_condiciones = {
+#        'sexo_dni': ['F','M'],
+#        'relacion_de_parentezco_con_jefe_del_hogar': ['Soy jefa(e)'],
+#        'conurbano_interior': ['Conurbano']
+#            }
+#
+#        sample = calcular_media_condicion(df, dict_condiciones)
+#        return sample
+#
+#
+##este resultado debe sumarse al dataframe
+#def mean_vuln(df:pd.DataFrame):
+#    vuln = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
+#    return vuln
+#
+#
+##este resultado debe sumarse al dataframe
+#def mean_ext_rev(df:pd.DataFrame):
+#    ext_rev= float(round(df['paredes_ext_revocadas'].mean(skipna=True), 1))
+#    return ext_rev
+#
