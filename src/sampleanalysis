@@ -4,12 +4,13 @@ from src.utils import calcular_media_std_lista
 class SampleAnalysis:
 
     NUM_COLUMNS = ['ingreso_anual_hogar', 'edad', 'personas_por_ambiente']
-    CAT_COLUMNS = [
-        'sexo_dni',
-        'relación_de_parentezco_con jefe_del_hogar',
-        'conurbano_interior'
-    ]
-
+    CAT_CONDITIONS = {
+        'sexo_dni': ['F', 'M'],
+        'relación_de_parentezco_con jefe_del_hogar': ['Soy jefa(e)'],
+        'conurbano_interior': ['Conurbano']
+    }
+        
+    
     def __init__(self, df: pd.DataFrame):
         self.df = df
 
@@ -22,7 +23,9 @@ class SampleAnalysis:
         cols = columns or self.NUM_COLUMNS
         return calcular_media_std_lista(df, cols)
 
-    
+    #def sample_media_condition(self, columns:list[str] = None) -> pd.DataFrame:
+#
+    #    num
 
 #def sample_media_condition(df:pd.DataFrame):
 #        dict_condiciones = {
@@ -34,7 +37,8 @@ class SampleAnalysis:
 #        sample = calcular_media_condicion(df, dict_condiciones)
 #        return sample
 #
-#
+
+
 ##este resultado debe sumarse al dataframe
 #def mean_vuln(df:pd.DataFrame):
 #    vuln = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
