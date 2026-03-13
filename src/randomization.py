@@ -28,6 +28,9 @@ def randomization(df: pd.DataFrame) -> pd.DataFrame:
 
 #------------------------------------- Muestreo ------------------------------------
 # Crear una función para calcular muestra
-def muestra_aleatoria_simple(df: pd.DataFrame, n:int, seed=42 ):
+def simple_random_sample(df: pd.DataFrame, n:int, seed=42 ):
     df = df.sample(n=n,random_state=seed)
     return df 
+
+
+
