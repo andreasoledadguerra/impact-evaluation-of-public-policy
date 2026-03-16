@@ -62,4 +62,6 @@ def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.D
     return bootstrap_mean_c, bootstrap_mean_t
 
 #Calcular la media poblacional del ingreso anual del hogar del dataset original
-media_poblacional_iah = formularios_estudio['ingreso_anual_hogar'].mean()
+processed_df = ProcessedDataframe()
+mean_population_iah = processed_df['ingreso_anual_hogar'].mean()
+
