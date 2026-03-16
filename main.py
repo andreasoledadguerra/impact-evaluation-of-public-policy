@@ -2,6 +2,7 @@
 import pandas as pd
 import numpy as np
 from src.randomization import randomization, simple_random_sample
+from src.bootstrapping import get_sample_bootstrap, calculate_mean_bootstrap
 from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
 
@@ -40,3 +41,8 @@ def concatenate_df(data:tuple[pd.DataFrame, pd.DataFrame]) -> pd.DataFrame:
     df_groups = pd.concat([df_control, df_treatment], axis=1).reset_index(drop=True)
 
     return df_groups
+
+# ----------- BOOTSTRAPPING --------
+
+#sample_boots_c = (mas_control, 'ingreso_anual_hogar')
+
