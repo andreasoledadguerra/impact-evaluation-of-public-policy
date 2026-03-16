@@ -2,22 +2,25 @@
 import pandas as pd
 import numpy as np
 from src.randomization import randomization, simple_random_sample
+from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
+
+sample_analysis = SampleAnalysis()
 
 SAMPLE_SIZE = 1000
 # Generar muestras aleatorias del grupo control y tratamiento 
 def generate_samples(df_control:pd.DataFrame, df_treatment: pd.DataFrame)-> tuple[pd.DataFrame, pd.DataFrame]:
     srs_c= simple_random_sample(df_control, SAMPLE_SIZE)
-    srs_t = simple_random_sample(df_treatment,1000)
+    srs_t = simple_random_sample(df_treatment,SAMPLE_SIZE)
     return srs_c, srs_t  #----> dos muestras en forma de df
 
 
-#recibe los dataframes de generate_sample(), 
+#recibe los dataframes de generate_sample
 # y hace cálculos estadísticos sobre ciertas variables(columnas)
-#def compute_sample_statistics():
+#def compute_sample_statistics(tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame,pd.DataFrame]:
 #
 #    calculate_media_condition(df,)
-#    calculate_std_control(df,)
+#    calculate_std_condition(df,)
 #
 #    calculate_media_round(df, 'escenario_vulnerabilidad_social')
 #    calculate_media_round (df, 'paredes_ext_revocadas')
