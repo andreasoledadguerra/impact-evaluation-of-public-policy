@@ -5,6 +5,8 @@ from src.randomization import randomization, simple_random_sample
 from src.bootstrapping import get_sample_bootstrap, calculate_mean_bootstrap
 from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
+from src.preprocessing import ProcessedDataframe
+
 
 sample_analysis = SampleAnalysis()
 
@@ -59,3 +61,5 @@ def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.D
 
     return bootstrap_mean_c, bootstrap_mean_t
 
+#Calcular la media poblacional del ingreso anual del hogar del dataset original
+media_poblacional_iah = formularios_estudio['ingreso_anual_hogar'].mean()
