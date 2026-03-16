@@ -43,7 +43,8 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 #
 #    return df_groups
 
-# -------------------------------- BOOTSTRAPPING -----------------------------------------
+# -------------------------------- BOOTSTRAPPING 'ingreso_anual_hogar' -----------------------------------------
+
 def generate_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_control, df_treatment = data
     bootstrap_c = get_sample_bootstrap(df_control, COLUMN)
@@ -51,6 +52,10 @@ def generate_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
     return bootstrap_c, bootstrap_t
 
-#def mean_sample_bootstrap(data)
+def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    df_control, df_treatment = data
+    bootstrap_mean_c = calculate_mean_bootstrap(df_control)
+    bootstrap_mean_t = calculate_mean_bootstrap(df_treatment)
 
+    return bootstrap_mean_c, bootstrap_mean_t
 
