@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
  # Función para obtener una muestra bootstrap
