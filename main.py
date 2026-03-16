@@ -36,13 +36,19 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
 # --------------- CONCATENAR RESULTADOS DE AMBOS GRUPOS ---------------------------------
 
-def concatenate_df(data:tuple[pd.DataFrame, pd.DataFrame]) -> pd.DataFrame:
+#def concatenate_df(data:tuple[pd.DataFrame, pd.DataFrame]) -> pd.DataFrame:
+#    df_control, df_treatment = data
+#    df_groups = pd.concat([df_control, df_treatment], axis=1).reset_index(drop=True)
+#
+#    return df_groups
+
+# -------------------------------- BOOTSTRAPPING -----------------------------------------
+def generate_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_control, df_treatment = data
-    df_groups = pd.concat([df_control, df_treatment], axis=1).reset_index(drop=True)
+    bootstrap_c = get_sample_bootstrap(df_control)
+    bootstrap_t = get_sample_bootstrap(df_treatment)
 
-    return df_groups
+    return bootstrap_c, bootstrap_t
 
-# ----------- BOOTSTRAPPING --------
 
-#sample_boots_c = (mas_control, 'ingreso_anual_hogar')
 
