@@ -9,8 +9,8 @@ class SampleAnalysis:
         'relación_de_parentezco_con jefe_del_hogar': ['Soy jefa(e)'],
         'conurbano_interior': ['Conurbano']
     }
-
     SPC_COLUMNS = ['escenario_vulnerabilidad_social','paredes_ext_revocadas' ]
+
     
     def __init__(self, df: pd.DataFrame):
         self.df = df
@@ -39,8 +39,9 @@ class SampleAnalysis:
 #        return sample
 #
 
-def calculate_media_round(df: pd.DataFrame, columna: str, decimales: int = 1) -> float:
-    return float(round(df[columna].mean(skipna=True), decimales))
+    def calculate_media_round(self, df: pd.DataFrame, columns: list[str]=None, decimales: int = 1) -> float:
+        spc = columns or self.SPC_COLUMNS
+        return float(round(df[spc].mean(skipna=True), decimales))
 
 
 #----------------------------este resultado debe sumarse al dataframe-----------------------------------
