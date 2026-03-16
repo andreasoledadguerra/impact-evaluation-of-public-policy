@@ -9,6 +9,7 @@ from src.utils import Stats
 sample_analysis = SampleAnalysis()
 
 SAMPLE_SIZE = 1000
+COLUMN = ['ingreso_anual_hogar']
 
 # Generar muestras aleatorias del grupo control y tratamiento 
 def generate_samples(df_control:pd.DataFrame, df_treatment: pd.DataFrame)-> tuple[pd.DataFrame, pd.DataFrame]:
@@ -45,10 +46,11 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 # -------------------------------- BOOTSTRAPPING -----------------------------------------
 def generate_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_control, df_treatment = data
-    bootstrap_c = get_sample_bootstrap(df_control)
-    bootstrap_t = get_sample_bootstrap(df_treatment)
+    bootstrap_c = get_sample_bootstrap(df_control, COLUMN)
+    bootstrap_t = get_sample_bootstrap(df_treatment, COLUMN)
 
     return bootstrap_c, bootstrap_t
 
+#def mean_sample_bootstrap(data)
 
 
