@@ -35,8 +35,8 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
 # --------------- CONCATENAR RESULTADOS DE AMBOS GRUPOS ---------------------------------
 
-# Crear un dataframe resumen del grupo control
-df_media_condición_control = calcular_media_condicion(df_control_clean, dict_condiciones)
-df_media_std_control = calcular_media_std_lista(df_control_clean, lista_c)
-df_mean_control = pd.concat([fila_vuln_c, fila_per_c], axis= 1)
+def concatenate_df(data:tuple[pd.DataFrame, pd.DataFrame]) -> pd.DataFrame:
+    df_control, df_treatment = data
+    df_groups = pd.concat([df_control, df_treatment], axis=1).reset_index(drop=True)
 
+    return df_groups
