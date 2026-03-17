@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 from src.randomization import randomization, simple_random_sample
-from src.bootstrapping import get_sample_bootstrap, calculate_mean_bootstrap
+from bootstrap.bootstrapping import get_sample_bootstrap, calculate_mean_bootstrap
 from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
 from src.preprocessing import ProcessedDataframe
@@ -47,13 +47,8 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
 # -------------------------------- BOOTSTRAPPING 'ingreso_anual_hogar' -----------------------------------------
 
-def generate_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    df_control, df_treatment = data
-    bootstrap_c = get_sample_bootstrap(df_control, COLUMN)
-    bootstrap_t = get_sample_bootstrap(df_treatment, COLUMN)
 
-    return bootstrap_c, bootstrap_t
-
+#recibe el output de generate_sample_bootstrap()
 def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
     df_control, df_treatment = data
     bootstrap_mean_c = calculate_mean_bootstrap(df_control)
@@ -61,7 +56,49 @@ def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.D
 
     return bootstrap_mean_c, bootstrap_mean_t
 
-#Calcular la media poblacional del ingreso anual del hogar del dataset original
-processed_df = ProcessedDataframe()
-mean_population_iah = processed_df['ingreso_anual_hogar'].mean()
+#recibe el output de generate_sample_bootstrap()
+def var_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
+    df_control, df_treatment = data
+    bootstrap_var_c = df_control.var()
+    bootstrap_var_t = df_treatment.var()
 
+
+
+
+
+
+# Calcular la media poblacional del ingreso anual del hogar del dataset original
+processed_df = ProcessedDataframe()
+mean_population_iah = processed_df[COLUMN].mean()
+
+# ---- Coeficiente de representatividad de la muestra de cada grupo sobre la variable "iah" -----
+# --------- "representativeness coefficient" -------
+# Recibe el output de mean_sample_bootstrap()
+# Se necesitan: 
+# - las medias de la columna de cada grupo
+# - las varianzas de la columna de cada grupo
+# - utilizar la Diferencia Estandarizada (Standardized Mean Difference — SMD)
+
+#Interpretación:
+
+# - |SMD| < 0.10 → excelente representatividad
+# - |SMD| < 0.25 → aceptable
+# - |SMD| ≥ 0.25 → desequilibrio problemático (Cohen, 1988; Austin, 2009)
+
+
+def calculate_rep_coef(processed_df: pd.DataFrame, sample: tuple[pd.DataFrame, pd.DataFrame], COLUMN: str):
+    sample_c, sample_t = sample
+    mean_population_iah = processed_df[COLUMN].mean()
+    rep_coef_mean = 
+
+
+
+
+
+
+
+
+
+
+median_sample_c = sample_c[COLUMN].median()
+median_sample_t = sample_t[COLUMN].median()
