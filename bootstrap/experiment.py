@@ -39,18 +39,18 @@ class BootstrapExperiment:
         )
         return bootstrap_c, bootstrap_t
     
-    #def _calculate_stats(
-    #        self,
-    #        bootstrap_samples: pd.DataFrame
-    #) -> dict[str, BootstrapStats]:
-    #    return {
-    #        col: BootstrapStats(
-    #            mean = float(bootstrap_samples[col].mean()),
-    #            var = float(bootstrap_samples[col].var(ddof=1))
-    #        )
-    #        for col in self._columns
-    #    }
-    #
+    def _calculate_stats(
+            self,
+            bootstrap_samples: pd.DataFrame
+    ) -> dict[str, BootstrapStats]:
+        return {
+            col: BootstrapStats(
+                mean = float(bootstrap_samples[col].mean()),
+                var = float(bootstrap_samples[col].var(ddof=1))
+            )
+            for col in self._columns
+        }
+    
     #def _calculate_smd(self) -> dict[str, float]:
     #    return {
     #        col: (
