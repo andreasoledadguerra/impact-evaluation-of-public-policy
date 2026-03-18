@@ -48,23 +48,6 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 # -------------------------------- BOOTSTRAPPING 'ingreso_anual_hogar' -----------------------------------------
 
 
-#recibe el output de generate_sample_bootstrap()
-def mean_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    df_control, df_treatment = data
-    bootstrap_mean_c = calculate_mean_bootstrap(df_control)
-    bootstrap_mean_t = calculate_mean_bootstrap(df_treatment)
-
-    return bootstrap_mean_c, bootstrap_mean_t
-
-#recibe el output de generate_sample_bootstrap()
-def var_sample_bootstrap(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame, pd.DataFrame]:
-    df_control, df_treatment = data
-    bootstrap_var_c = df_control.var()
-    bootstrap_var_t = df_treatment.var()
-
-
-
-
 
 
 # Calcular la media poblacional del ingreso anual del hogar del dataset original
