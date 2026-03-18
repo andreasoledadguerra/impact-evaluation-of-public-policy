@@ -46,6 +46,7 @@ class BootstrapExperiment:
         return {
             col: BootstrapStats(
                 mean = float(bootstrap_samples[col].mean()),
+                std = float(bootstrap_samples[col].std(ddof=1)),
                 var = float(bootstrap_samples[col].var(ddof=1))
             )
             for col in self._columns
