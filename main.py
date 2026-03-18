@@ -6,12 +6,13 @@ from bootstrap.bootstrapping import get_sample_bootstrap, calculate_mean_bootstr
 from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
 from src.preprocessing import ProcessedDataframe
+from bootstrap.models import BoostrapStats
+from bootstrap.experiment import BootstrapExperiment
 
 
 sample_analysis = SampleAnalysis()
 
 SAMPLE_SIZE = 1000
-COLUMN = ['ingreso_anual_hogar']
 
 # Generar muestras aleatorias del grupo control y tratamiento 
 def generate_samples(df_control:pd.DataFrame, df_treatment: pd.DataFrame)-> tuple[pd.DataFrame, pd.DataFrame]:
@@ -29,23 +30,19 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
     return stats_c, stats_t
 
-#
-## Usando las condiciones default de la clase
-#analysis.sample_media_condition()
-#
-## Sobreescribiendo para un análisis puntual
-#analysis.sample_media_condition(conditions={'sexo_dni': ['F']})
-#
+# -------------------------------- BOOTSTRAPPING ('ingreso_anual_hogar', etc)-----------------------------------------
 
-# --------------- CONCATENAR RESULTADOS DE AMBOS GRUPOS ---------------------------------
+COLUMNS = ['ingreso_anual_hogar']
 
-#def concatenate_df(data:tuple[pd.DataFrame, pd.DataFrame]) -> pd.DataFrame:
-#    df_control, df_treatment = data
-#    df_groups = pd.concat([df_control, df_treatment], axis=1).reset_index(drop=True)
-#
-#    return df_groups
+#experiment 
 
-# -------------------------------- BOOTSTRAPPING 'ingreso_anual_hogar' -----------------------------------------
+
+
+
+
+
+
+
 
 
 
