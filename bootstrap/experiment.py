@@ -51,11 +51,11 @@ class BootstrapExperiment:
             for col in self._columns
         }
     
-    #def _calculate_smd(self) -> dict[str, float]:
-    #    return {
-    #        col: (
-    #            (self.stats_t[col].mean - self.stats_c[col].mean) /
-    #            np.sqrt((self.stats_t[col].var + self.stats_c[col].var) / 2)
-    #        )
-    #        for col in self._columns
-    #    }
+    def _calculate_smd(self) -> dict[str, float]:
+        return {
+            col: (
+                (self.stats_t[col].mean - self.stats_c[col].mean) /
+                np.sqrt((self.stats_t[col].var + self.stats_c[col].var) / 2)
+            )
+            for col in self._columns
+        }
