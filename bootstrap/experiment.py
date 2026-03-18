@@ -1,5 +1,7 @@
 import pandas as pd
 
+from bootstrap.models import BoostrapStats
+
 class BootstrapExperiment:
 
     def __init__(
@@ -20,6 +22,7 @@ class BootstrapExperiment:
         self.stats_t = self._calculate_stats(self.bootstrap_t)
         self.smd = self._calculate_smd()
 
+
     # Private methods
 
     def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
@@ -34,3 +37,15 @@ class BootstrapExperiment:
             random_state = self._random_state
         )
         return bootstrap_c, bootstrap_t
+    
+    def _calculate_stats(
+            self,
+            bootrap_samples: pd.DataFrame
+    ) -> dict[str, BootstrapStats]:
+        return {
+            col: BootstrapStats(
+                mean = float(bootstrap_samples[col].mean()),
+                var = float(bootrap_samples[col].var(ddof=1))
+            )
+            for col in self._columns
+        }
