@@ -1,6 +1,7 @@
 import pandas as pd
+import numpy as np
 
-from bootstrap.models import BoostrapStats
+from bootstrap.models import BootstrapStats
 
 class BootstrapExperiment:
 
@@ -25,27 +26,36 @@ class BootstrapExperiment:
 
     # Private methods
 
-    def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
-        bootstrap_c = self._df_control[self._columns].sample(
-                 n = len(self._df_control),
-            replace = True,
-            random_state = self._random_state
-        )
-        bootstrap_t = self._df_treatment[self._columns].sample(
-                 n = len(self._df_treatment),
-            replace = True,
-            random_state = self._random_state
-        )
-        return bootstrap_c, bootstrap_t
-    
-    def _calculate_stats(
-            self,
-            bootrap_samples: pd.DataFrame
-    ) -> dict[str, BootstrapStats]:
-        return {
-            col: BootstrapStats(
-                mean = float(bootstrap_samples[col].mean()),
-                var = float(bootrap_samples[col].var(ddof=1))
-            )
-            for col in self._columns
-        }
+    #def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
+    #    bootstrap_c = self._df_control[self._columns].sample(
+    #             n = len(self._df_control),
+    #        replace = True,
+    #        random_state = self._random_state
+    #    )
+    #    bootstrap_t = self._df_treatment[self._columns].sample(
+    #             n = len(self._df_treatment),
+    #        replace = True,
+    #        random_state = self._random_state
+    #    )
+    #    return bootstrap_c, bootstrap_t
+    #
+    #def _calculate_stats(
+    #        self,
+    #        bootstrap_samples: pd.DataFrame
+    #) -> dict[str, BootstrapStats]:
+    #    return {
+    #        col: BootstrapStats(
+    #            mean = float(bootstrap_samples[col].mean()),
+    #            var = float(bootstrap_samples[col].var(ddof=1))
+    #        )
+    #        for col in self._columns
+    #    }
+    #
+    #def _calculate_smd(self) -> dict[str, float]:
+    #    return {
+    #        col: (
+    #            (self.stats_t[col].mean - self.stats_c[col].mean) /
+    #            np.sqrt((self.stats_t[col].var + self.stats_c[col].var) / 2)
+    #        )
+    #        for col in self._columns
+    #    }
