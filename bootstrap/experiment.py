@@ -59,3 +59,19 @@ class BootstrapExperiment:
             )
             for col in self._columns
         }
+    
+    # Extra Public Property
+    @property
+    def smd_summary(self) -> pd.DataFrame:
+        """Return SMD in DataFrame format with interpretation"""
+        return pd.DataFrame({
+            'smd': self.smd,
+            'abs_smd': {col: abs(v) for col, v in self.smd.items()},
+            'representativo': {
+                col: '✅' if abs(v) < 0.1
+                     else '⚠️' if abs(v) < 0.25
+                     else '❌'
+                for col, v in self.smd.items()
+            }
+        })
+    
