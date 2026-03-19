@@ -34,11 +34,21 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
 COLUMNS = ['ingreso_anual_hogar']
 
-#experiment 
+experiment = BootstrapExperiment(
+    data = (df_control, df_treatment),
+    columns = COLUMNS,
+    random_state= 42
+)
 
+# Bootstrap samples
+experiment.bootstrap_c # df
+experiment.bootstrap_t # df
 
+# Stats per group and column
+#experiment.stats_c[].mean
+#experiment.stats_t[].var
 
-
+experiment.smd_summary
 
 
 
