@@ -52,27 +52,27 @@ class BootstrapExperiment:
             for col in self._columns
         }
     
-    def _calculate_smd(self) -> dict[str, float]:
-        return {
-            col: (
-                (self.stats_t[col].mean - self.stats_c[col].mean) /
-                np.sqrt((self.stats_t[col].var + self.stats_c[col].var) / 2)
-            )
-            for col in self._columns
-        }
-    
-    # Extra Public Property
-    @property
-    def smd_summary(self) -> pd.DataFrame:
-        """Return SMD in DataFrame format with interpretation"""
-        return pd.DataFrame({
-            'smd': self.smd,
-            'abs_smd': {col: abs(v) for col, v in self.smd.items()},
-            'representativo': {
-                col: '✅' if abs(v) < 0.1
-                     else '⚠️' if abs(v) < 0.25
-                     else '❌'
-                for col, v in self.smd.items()
-            }
-        })
+    #def _calculate_smd(self) -> dict[str, float]:
+    #    return {
+    #        col: (
+    #            (self.stats_t[col].mean - self.stats_c[col].mean) /
+    #            np.sqrt((self.stats_t[col].var + self.stats_c[col].var) / 2)
+    #        )
+    #        for col in self._columns
+    #    }
+    #
+    ## Extra Public Property
+    #@property
+    #def smd_summary(self) -> pd.DataFrame:
+    #    """Return SMD in DataFrame format with interpretation"""
+    #    return pd.DataFrame({
+    #        'smd': self.smd,
+    #        'abs_smd': {col: abs(v) for col, v in self.smd.items()},
+    #        'representativo': {
+    #            col: '✅' if abs(v) < 0.1
+    #                 else '⚠️' if abs(v) < 0.25
+    #                 else '❌'
+    #            for col, v in self.smd.items()
+    #        }
+    #    })
     
