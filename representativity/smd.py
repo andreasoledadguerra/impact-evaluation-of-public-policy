@@ -28,3 +28,35 @@ def smd_binary(x1, x2):
     p1, p2 = np.mean(x1), np.mean(x2)
     sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2)) / 2)
     return (p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
+
+
+#conurbano_interior , sexo_dni
+def smd_categorical(x1, x2, resumen="max"):
+    """
+    Calcula SMD para variable categórica nominal via dummies (k-1).
+
+    Parameters
+    ----------
+    x1, x2   : Series de cada grupo
+    resumen   : "max"    → retorna el máximo |SMD| (recomendado para balance tables)
+                "mean"   → retorna el promedio de |SMD|
+                "detail" → retorna el dict completo {categoria: SMD}
+    """
+    # Categorías ordenadas (determinístico) → se omite la última como referencia
+    categories = sorted(pd.concat([x1, x2]).astype(str).unique())
+
+    smds = {}
+    for cat in categories[:-1]:
+        d1 = (x1.astype(str) == cat).astype(float)
+        d2 = (x2.astype(str) == cat).astype(float)
+        smds[cat] = smd_binary(d1, d2)
+
+    # Filtrar NaN antes de resumir
+    valores = [v for v in smds.values() if not np.isnan(v)]
+
+    if resumen == "max":
+        return max(valores, key=abs) if valores else np.nan
+    elif resumen == "mean":
+        return np.mean(np.abs(valores)) if valores else np.nan
+    elif resumen == "detail":
+        return smds
