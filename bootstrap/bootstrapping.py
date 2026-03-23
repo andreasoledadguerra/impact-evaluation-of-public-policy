@@ -9,7 +9,4 @@ def get_sample_bootstrap(df_sample: pd.DataFrame, column_df_sample: str, random_
 
 # Función que calcula la media de una lista de datos obtenido por bootstrapping
 def calculate_bootstrap_stats(bootstrap_samples: np.ndarray) -> dict:
-    return {
-        
-    }
-        np.mean(bootstrap_samples)
+    return np.mean(bootstrap_samples)
