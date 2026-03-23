@@ -21,3 +21,10 @@ def smd_continuous(x1, x2):
     s1, s2 = np.std(x1, ddof=1), np.std(x2, ddof=1)
     sd_pooled = np.sqrt(((n1 - 1) * s1**2 + (n2 - 1) * s2**2) / (n1 + n2 - 2))
     return (m1 - m2) / sd_pooled if sd_pooled > 0 else np.nan
+
+def smd_binary(x1, x2):
+    """Cohen (1988) for bool variables.
+    (escenario_vulnerabilidad_social, paredes_ext_revocadas )"""
+    p1, p2 = np.mean(x1), np.mean(x2)
+    sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2)) / 2)
+    return (p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
