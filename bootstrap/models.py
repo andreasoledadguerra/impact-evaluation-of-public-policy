@@ -26,7 +26,7 @@ class BootstrapStats(BaseModel):
         frozen = True 
 
 # --- Subclase para variables binarias (bool) ---
-class BootstrapStatsBinaria(BootstrapStats):
+class BootstrapStatsBinary(BootstrapStats):
     """
     Para variables booleanas. mean = proporción p.
     Hereda validación de var = std² de la clase base.
@@ -36,3 +36,13 @@ class BootstrapStatsBinaria(BootstrapStats):
 
     class Config:
         frozen = True
+
+# --- Subclase para variables continuas ---
+class BootstrapStatsContinuous(BootstrapStats):
+    """Para variables numéricas continuas."""
+    dtype_kind: Literal["continua"] = "continua"
+    n: int = Field(..., gt=0)
+
+    class Config:
+        frozen = True
+
