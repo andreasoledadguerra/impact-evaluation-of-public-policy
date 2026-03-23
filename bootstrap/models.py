@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Literal
 from pydantic import BaseModel, Field, computed_field, model_validator
 
 class BootstrapStats(BaseModel):
@@ -23,3 +24,4 @@ class BootstrapStats(BaseModel):
     
     class Config:
         frozen = True 
+
