@@ -2,7 +2,7 @@ import numpy as np
 from typing import Literal
 from pydantic import BaseModel, Field, computed_field, model_validator
 
-class BootstrapStats(BaseModel):
+class BootstrapStats(BaseModel, frozen=True):
     mean: float = Field (..., description="Media de la muestra bootstrap")
     std:  float = Field(..., ge=0, description="Desviación estándar (ddof=1)")
     var: float = Field ( ..., ge=0, description="Varianza (ddof=1)") # sample variance
@@ -22,11 +22,9 @@ class BootstrapStats(BaseModel):
             )
         return self
     
-    class Config:
-        frozen = True 
 
 # --- Subclase para variables binarias (bool) ---
-class BootstrapStatsBinary(BootstrapStats):
+class BootstrapStatsBinary(BootstrapStats, frozen=True):
     """
     Para variables booleanas. mean = proporción p.
     Hereda validación de var = std² de la clase base.
@@ -34,20 +32,16 @@ class BootstrapStatsBinary(BootstrapStats):
     dtype_kind: Literal["binaria"] = "binaria"
     n: int = Field(..., gt=0)
 
-    class Config:
-        frozen = True
 
 # --- Subclase para variables continuas ---
-class BootstrapStatsContinuous(BootstrapStats):
+class BootstrapStatsContinuous(BootstrapStats, frozen=True):
     """Para variables numéricas continuas."""
     dtype_kind: Literal["continua"] = "continua"
     n: int = Field(..., gt=0)
 
-    class Config:
-        frozen = True
 
 # --- Clase independiente para categóricas (no hereda — no tiene mean/std/var) ---
-class BootstrapStatsCategorical(BaseModel):
+class BootstrapStatsCategorical(BaseModel, frozen=True):
     """
     Para variables nominales (object).
     No tiene mean/std/var — almacena proporciones por categoría.
@@ -65,8 +59,6 @@ class BootstrapStatsCategorical(BaseModel):
             raise ValueError(f"Las proporciones deben sumar 1.0, suman {total:.6f}")
         return self
 
-    class Config:
-        frozen = True
 
 # Tipo unión para anotaciones
 StatsType = BootstrapStatsContinuous | BootstrapStatsBinary | BootstrapStatsCategorical
