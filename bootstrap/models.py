@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Literal
+from typing import Literal, Annotated
 from pydantic import BaseModel, Field, computed_field, model_validator
 
 class BootstrapStats(BaseModel, frozen=True):
