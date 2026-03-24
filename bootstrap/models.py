@@ -68,28 +68,5 @@ class BootstrapStatsCategorical(BaseModel):
     class Config:
         frozen = True
 
-
-# --- Clase independiente para categóricas (no hereda — no tiene mean/std/var) ---
-class BootstrapStatsCategorical(BaseModel):
-    """
-    Para variables nominales (object).
-    No tiene mean/std/var — almacena proporciones por categoría.
-    """
-    dtype_kind: Literal["categorica"] = "categorica"
-    n: int = Field(..., gt=0)
-    proportions: dict[str, float] = Field(
-        ..., description="Proporción de cada categoría en el grupo"
-    )
-
-    @model_validator(mode='after')
-    def validate_proportions(self) -> 'BootstrapStatsCategorical':
-        total = sum(self.proportions.values())
-        if not np.isclose(total, 1.0, atol=1e-5):
-            raise ValueError(f"Las proporciones deben sumar 1.0, suman {total:.6f}")
-        return self
-
-    class Config:
-        frozen = True
-
 # Tipo unión para anotaciones
 StatsType = BootstrapStatsContinuous | BootstrapStatsBinary | BootstrapStatsCategorical
