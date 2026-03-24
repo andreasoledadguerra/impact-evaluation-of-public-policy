@@ -61,4 +61,4 @@ class BootstrapStatsCategorical(BaseModel, frozen=True):
 
 
 # Tipo unión para anotaciones
-StatsType = BootstrapStatsContinuous | BootstrapStatsBinary | BootstrapStatsCategorical
+StatsType = Annotated[BootstrapStatsContinuous | BootstrapStatsBinary | BootstrapStatsCategorical, Field(discriminator="dtype_kind")]
