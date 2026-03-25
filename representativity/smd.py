@@ -34,6 +34,7 @@ class SMDCalculator:
         sd_pooled = np.sqrt(((n1 - 1) * s1**2 + (n2 - 1) * s2**2) / (n1 + n2 - 2))
         return (m1 - m2) / sd_pooled if sd_pooled > 0 else np.nan
 
+    @staticmethod
     def smd_binary(x1, x2):
         """Cohen (1988) for bool variables.
         (escenario_vulnerabilidad_social, paredes_ext_revocadas )"""
@@ -43,6 +44,7 @@ class SMDCalculator:
 
 
     #conurbano_interior , sexo_dni
+
     def smd_categorical(x1, x2, resumen="max"):
         """
         Calcula SMD para variable categórica nominal via dummies (k-1).
