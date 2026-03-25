@@ -35,12 +35,14 @@ class SMDCalculator:
         return float(p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
 
     @staticmethod
-    def smd_binary(x1, x2):
+    def smd_binary(s1: BootstrapStatsBinary,
+                   s2: BootstrapStatsBinary,
+    ) -> float:
         """Cohen (1988) for bool variables.
         (escenario_vulnerabilidad_social, paredes_ext_revocadas )"""
-        p1, p2 = np.mean(x1), np.mean(x2)
+        p1, p2 = s1.mean, s2.mean
         sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2)) / 2)
-        return (p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
+        return float((p1 - p2) / sd_pooled) if sd_pooled > 0 else np.nan
 
 
     #conurbano_interior , sexo_dni
