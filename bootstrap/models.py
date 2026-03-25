@@ -44,6 +44,7 @@ class BootstrapStatsBinary(BootstrapStats, frozen=True):
                 f"Bernoulli variance mismatch: "
                 f"var ({self.var:.6f}) != mean*(1-mean) ({expected_var:.6f})"
             )
+        return self
 
 
 # --- Subclase para variables continuas ---
