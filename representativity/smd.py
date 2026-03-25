@@ -25,14 +25,14 @@ from bootstrap.models import (
 class SMDCalculator:
     
     @staticmethod
-    def smd_continuous(x1, x2):
+    def smd_continuous(s1:BootstrapStatsContinuous,
+                       s2:BootstrapStatsContinuous
+    ) -> float:
         """Cohen's d con SD pooled for continuous variables. 
         ("ingreso_anual_hogar", "personas_por_ambiente")"""
-        n1, n2 = len(x1), len(x2)
-        m1, m2 = np.mean(x1), np.mean(x2)
-        s1, s2 = np.std(x1, ddof=1), np.std(x2, ddof=1)
-        sd_pooled = np.sqrt(((n1 - 1) * s1**2 + (n2 - 1) * s2**2) / (n1 + n2 - 2))
-        return (m1 - m2) / sd_pooled if sd_pooled > 0 else np.nan
+        p1, p2 = s1.mean, s2.mean
+        sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2) / 2))
+        return float(p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
 
     @staticmethod
     def smd_binary(x1, x2):
