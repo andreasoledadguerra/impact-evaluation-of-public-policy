@@ -44,26 +44,30 @@ class SMDCalculator:
 
 
     #conurbano_interior , sexo_dni
-
-    def smd_categorical(x1, x2, resumen="max"):
+    @staticmethod
+    def smd_categorical(s1: BootstrapStatsCategorical,
+                        s2: BootstrapStatsCategorical, 
+                        resumen: Literal["max", "mean", "detail"] = "max",
+    ) -> float | dict[str, float]:
         """
         Calcula SMD para variable categórica nominal via dummies (k-1).
 
         Parameters
         ----------
-        x1, x2   : Series de cada grupo
         resumen   : "max"    → retorna el máximo |SMD| (recomendado para balance tables)
                     "mean"   → retorna el promedio de |SMD|
                     "detail" → retorna el dict completo {categoria: SMD}
         """
         # Categorías ordenadas (determinístico) → se omite la última como referencia
-        categories = sorted(pd.concat([x1, x2]).astype(str).unique())
+        categories = sorted(set(s1.proportions) | set(s2.proportions))
 
-        smds = {}
+        smds = dict[str, float] = {}
         for cat in categories[:-1]:
-            d1 = (x1.astype(str) == cat).astype(float)
-            d2 = (x2.astype(str) == cat).astype(float)
-            smds[cat] = smd_binary(d1, d2)
+            p1 = s1.proportions.get(cat, 0.0)
+            p2 = s2.proportions.get(cat, 0.0)
+            sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2)) / 2)
+            smds[cat] = float((p1 - p2) / sd_pooled) if sd_pooled > 0 else np.nan
+
 
         # Filtrar NaN antes de resumir
         valores = [v for v in smds.values() if not np.isnan(v)]
@@ -71,7 +75,7 @@ class SMDCalculator:
         if resumen == "max":
             return max(valores, key=abs) if valores else np.nan
         elif resumen == "mean":
-            return np.mean(np.abs(valores)) if valores else np.nan
+            return float(np.mean(np.abs(valores))) if valores else np.nan
         elif resumen == "detail":
             return smds
     
