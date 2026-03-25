@@ -31,6 +31,8 @@ class BootstrapStatsBinary(BootstrapStats, frozen=True):
     """
     dtype_kind: Literal["binaria"] = "binaria"
     n: int = Field(..., gt=0)
+    mean: float = Field(..., ge=0,le=1, # restringe a [0,1]
+                            description="Proporción p de la Bernoulli")
 
     @model_validator(mode='after')
     def validate_bernoulli_variance(self) -> 'BootstrapStatsBinary':
