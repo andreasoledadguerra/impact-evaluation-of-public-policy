@@ -32,6 +32,19 @@ class BootstrapStatsBinary(BootstrapStats, frozen=True):
     dtype_kind: Literal["binaria"] = "binaria"
     n: int = Field(..., gt=0)
 
+    @model_validator(mode='after')
+    def validate_bernoulli_variance(self) -> 'BootstrapStatsBinary':
+        """
+        Para una Bernoulli: var teórica = p * (1 - p).
+        Se ejecuta DESPUÉS del validador heredado de BootstrapStats.
+        """
+        expected_var = self.mean * (1 - self.mean)
+        if not np.isclose(self.var, expected_var, rtol=1e-5):
+            raise ValueError(
+                f"Bernoulli variance mismatch: "
+                f"var ({self.var:.6f}) != mean*(1-mean) ({expected_var:.6f})"
+            )
+
 
 # --- Subclase para variables continuas ---
 class BootstrapStatsContinuous(BootstrapStats, frozen=True):
