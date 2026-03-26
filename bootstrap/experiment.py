@@ -1,7 +1,15 @@
 import pandas as pd
 import numpy as np
 
-from bootstrap.models import BootstrapStats, BootstrapStatsBinary, BootstrapStatsCategorical, BootstrapStatsContinuous, StatsType
+from bootstrap.models import (
+    BootstrapStats, 
+    BootstrapStatsBinary, 
+    BootstrapStatsCategorical, 
+    BootstrapStatsContinuous, 
+    StatsType,
+)
+
+from representativity.smd import SMDCalculator
 
 class BootstrapExperiment:
 
@@ -39,6 +47,11 @@ class BootstrapExperiment:
         )
         return bootstrap_c, bootstrap_t
     
+
+    # se usa para iterar por grupo, es decir que al invocar
+    # debo implementarlo dos veces: uno para que haga cálculos sobre 
+    # el grupo control y otro sobre el grupo tratamiento
+
     def _calculate_stats(
             self,
             bootstrap_samples: pd.DataFrame
@@ -59,7 +72,6 @@ class BootstrapExperiment:
                     std = std,
                     var = float(s.var(ddof=1))
                 )
-        
     
     #def _calculate_smd(self) -> dict[str, float]:
     #    return {
