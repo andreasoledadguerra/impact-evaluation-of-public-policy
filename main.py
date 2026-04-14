@@ -8,7 +8,7 @@ from src.utils import Stats
 from src.preprocessing import ProcessedDataframe
 from bootstrap.models import BoostrapStats
 from bootstrap.experiment import BootstrapExperiment
-
+from representativity.smd import SMDCalculator
 
 sample_analysis = SampleAnalysis()
 
@@ -59,7 +59,14 @@ experiment.smd_summary
 
 # Calcular la media poblacional del ingreso anual del hogar del dataset original
 processed_df = ProcessedDataframe()
-mean_population_iah = processed_df[COLUMN].mean()
+calculate_smd = SMD_
+
+ # mean_COLUMN= processed_df[COLUMN].mean()  # cálculo genérico
+
+mean_population_iah = processed_df['ingreso_anual_hogar'].mean()
+std_population_iah = processed_df['ingreso_anual_hogar'].std()
+smd_iah = 
+
 
 # ---- Coeficiente de representatividad de la muestra de cada grupo sobre la variable "iah" -----
 # --------- "representativeness coefficient" -------
@@ -76,10 +83,10 @@ mean_population_iah = processed_df[COLUMN].mean()
 # - |SMD| ≥ 0.25 → desequilibrio problemático (Cohen, 1988; Austin, 2009)
 
 
-def calculate_rep_coef(processed_df: pd.DataFrame, sample: tuple[pd.DataFrame, pd.DataFrame], COLUMN: str):
-    sample_c, sample_t = sample
-    mean_population_iah = processed_df[COLUMN].mean()
-    rep_coef_mean = 
+#def calculate_rep_coef(processed_df: pd.DataFrame, sample: tuple[pd.DataFrame, pd.DataFrame], COLUMN: str):
+#    sample_c, sample_t = sample
+#    mean_population_iah = processed_df[COLUMN].mean()
+#    rep_coef_mean = 
 
 
 
@@ -90,5 +97,5 @@ def calculate_rep_coef(processed_df: pd.DataFrame, sample: tuple[pd.DataFrame, p
 
 
 
-median_sample_c = sample_c[COLUMN].median()
-median_sample_t = sample_t[COLUMN].median()
+#median_sample_c = sample_c[COLUMN].median()
+#median_sample_t = sample_t[COLUMN].median()
