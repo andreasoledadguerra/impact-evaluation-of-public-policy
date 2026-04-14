@@ -8,6 +8,7 @@ from src.utils import Stats
 from src.preprocessing import ProcessedDataframe
 from bootstrap.models import BoostrapStats
 from bootstrap.experiment import BootstrapExperiment
+from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 from representativity.smd import SMDCalculator
 
 sample_analysis = SampleAnalysis()
@@ -32,11 +33,10 @@ def compute_sample_statistics(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[
 
 # -------------------------------- BOOTSTRAPPING ('ingreso_anual_hogar', etc)-----------------------------------------
 
-COLUMNS = ['ingreso_anual_hogar']
 
 experiment = BootstrapExperiment(
     data = (df_control, df_treatment),
-    columns = COLUMNS,
+    columns = NUM_COLUMNS,
     random_state= 42
 )
 
@@ -50,9 +50,19 @@ experiment.bootstrap_t # df
 
 experiment.smd_summary
 
+# ---- Coeficiente de representatividad de la muestra de cada grupo sobre la variable "iah" -----
+# --------- "representativeness coefficient" -------
+# Recibe el output de mean_sample_bootstrap()
+# Se necesitan: 
+# - las medias de la columna de cada grupo
+# - las varianzas de la columna de cada grupo
+# - utilizar la Diferencia Estandarizada (Standardized Mean Difference — SMD)
 
+# Interpretación:
 
-
+# - |SMD| < 0.10 → excelente representatividad
+# - |SMD| < 0.25 → aceptable
+# - |SMD| ≥ 0.25 → desequilibrio problemático (Cohen, 1988; Austin, 2009)
 
 
 
@@ -67,20 +77,6 @@ mean_population_iah = processed_df['ingreso_anual_hogar'].mean()
 std_population_iah = processed_df['ingreso_anual_hogar'].std()
 smd_iah = calculate_smd['ingreso_anual_hogar']
 
-
-# ---- Coeficiente de representatividad de la muestra de cada grupo sobre la variable "iah" -----
-# --------- "representativeness coefficient" -------
-# Recibe el output de mean_sample_bootstrap()
-# Se necesitan: 
-# - las medias de la columna de cada grupo
-# - las varianzas de la columna de cada grupo
-# - utilizar la Diferencia Estandarizada (Standardized Mean Difference — SMD)
-
-#Interpretación:
-
-# - |SMD| < 0.10 → excelente representatividad
-# - |SMD| < 0.25 → aceptable
-# - |SMD| ≥ 0.25 → desequilibrio problemático (Cohen, 1988; Austin, 2009)
 
 
 #def calculate_rep_coef(processed_df: pd.DataFrame, sample: tuple[pd.DataFrame, pd.DataFrame], COLUMN: str):
