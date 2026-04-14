@@ -59,13 +59,13 @@ experiment.smd_summary
 
 # Calcular la media poblacional del ingreso anual del hogar del dataset original
 processed_df = ProcessedDataframe()
-calculate_smd = SMD_
+calculate_smd = SMDCalculator()
 
  # mean_COLUMN= processed_df[COLUMN].mean()  # cálculo genérico
 
 mean_population_iah = processed_df['ingreso_anual_hogar'].mean()
 std_population_iah = processed_df['ingreso_anual_hogar'].std()
-smd_iah = 
+smd_iah = calculate_smd['ingreso_anual_hogar']
 
 
 # ---- Coeficiente de representatividad de la muestra de cada grupo sobre la variable "iah" -----
