@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 
 from src.preprocessing import ProcessedDataframe
+from src.sampleanalysis import SampleAnalysis
 
 
 
