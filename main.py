@@ -23,14 +23,9 @@ SAMPLE_SIZE = 1000
 
 first_sample = generate_sample_first()
 
-#recibe los dataframes de generate_sample
-# y hace cálculos estadísticos sobre ciertas variables(columnas)
-def compute_sample_statistics_first(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame,pd.DataFrame]:
-    df_control, df_treatment = data #desempaquetado para poder aplicar los métodos
-    stats_c = SampleAnalysis(df_control)
-    stats_t = SampleAnalysis(df_treatment)
+#recibe los dataframes de generate_sample_first y hace cálculos estadísticos sobre ciertas variables
+first_sample_statistics = compute_sample_statistics_first
 
-    return stats_c, stats_t
 
 # -------------------------------- BOOTSTRAPPING OVER NUM_COLUMNS, CAT_COLUMNS & SPC_COLUMNS-----------------------------------------
 
