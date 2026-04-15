@@ -56,27 +56,86 @@ class BootstrapExperiment:
             self,
             bootstrap_samples: pd.DataFrame
     ) -> dict[str, StatsType]:
-            
+        """
+        Calcula estadísticas resumen para cada columna según su tipo:
+        - numérica continua (NUM_COLUMNS) -> media y desviación estándar (BootstrapStatsContinuous)
+        - categórica condicional (CAT_CONDITIONS) -> proporciones por categoría (BootstrapStatsCategorical)
+        - binario (SPC_COLUMNS) -> proporción 0-1 (BootstrapStatsBinary)
+        """
+
         stats = {}
         
         for col in self._columns:
             serie = bootstrap_samples[col].dropna()
             n     = int(serie.count())
 
-            if pd.api.types.is_bool_dtype(serie):
-                s = serie.astype(float)
-                p = float(s.mean())
-                var = p * (1 - p)
-                #std = float(s.std(ddof=1))
+            # ---------Rama 1: numérica continua--------------------------
+            if pd.api.types.is_numeric_dtype(serie) and col not in self._spc_columns:
+                stats[col] = self._stats_for_continuous(serie, n)
 
-                stats[col] = BootstrapStatsBinary(
-                    mean = p,
-                    std = float(np.sqrt(var)),
-                    var = var,
-                    n = n,
+            # ----------Rama 2: categórica condicional -------------------
+            elif col in self._cat_conditions:
+                stats[col]= self._stats_for_categorical(
+                serie, col, self._cat_conditions[col]
+            )
+
+            # ----------Rama 3: binario -----------------------------------
+            elif col in self._spc_columns:
+                stats[col] = self._stats_for_binary(serie,n)
+
+
+            # Si no entra en ninguna rama, registra una advertencia o ignorar
+            else:
+                logging.warning(f"Columna '{col}' de tipo no soportado, omitida.")
+
+            return stats
+
+        # -------------------Métodos auxiliares privados ---------------------
+        @staticmethod
+        def _stats_for_continuous(serie: pd.Series, n:int) -> BootstrapStatsContinuous:
+            """ 
+            Calcula estadísticas para variables numéricas continuas.
+
+            """
+            std = float(serie.std(ddof=1))
+            return BootstrapStatsContinuous(
+                mean=float(serie.mean()),
+                std=std,
+                var=float(serie.var(ddof=1)),
+                dtype_kind="continua",
+                n=n,
+            )
+
+        @staticmethod
+        def _stats_for_categorical(serie:pd.Series, col_name:str, allowed_categories: List[str]
+        ) -> BootstrapStatsCategorical:
+            """ 
+            Calcula proporciones para variables categóricas filtrando solo las categrorías permitidas definidas en _cat_conditions.
+            """
+            filtered = serie[serie.isin(allowed_categories)]
+            n_filtered= int(filtered.count())
+
+            if n_filtered == 0:
+                raise ValueError(
+                    f"Columna '{col_name}': ninguna observación pertenece a las categorías"
+                    f"permitidas {allowed_categories}."
                 )
-        return stats
-    
+            
+            # Calcular proporciones normalizadas (suman 1)
+            proportions = (filtered.value_counts(normalize=True)).to_dict()
+            # Convertir claves a string 
+            proportions = {str(k): float(v) for k, v in proportions.items()}
+
+            return BootstrapStatsCategorical(
+                n = n_filtered,
+                proportions=proportions,
+            )
+
+
+
+
+
+
 
 
     
