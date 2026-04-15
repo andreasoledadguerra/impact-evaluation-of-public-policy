@@ -10,6 +10,7 @@ from bootstrap.models import BoostrapStats
 from bootstrap.experiment import BootstrapExperiment
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 from representativity.smd import SMDCalculator
+from src.randomization import generate_samples_first
 
 sample_analysis = SampleAnalysis()
 
@@ -20,7 +21,7 @@ SAMPLE_SIZE = 1000
 
 # Generar muestras aleatorias del grupo control y tratamiento (paso previo al bootstrapping)
 
-#
+first_sample = generate_sample_first()
 
 #recibe los dataframes de generate_sample
 # y hace cálculos estadísticos sobre ciertas variables(columnas)
