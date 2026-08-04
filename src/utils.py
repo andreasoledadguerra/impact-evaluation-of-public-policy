@@ -21,7 +21,7 @@ def calculate_mean_std(df: pd.DataFrame, column: str, decimals: int = 1):
 def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: str, decimals: int = 1) -> tuple[float, float]:
     """Proporción de filas donde column == condition."""
     proportion = (df[column] == condition).mean(skipna=True)
-    print(f"The proportion of {condition} in {column} is {round(proportion, 1)}")
+    print(f"The proportion of {condition} in {column} is {round(proportion, decimals)}")
     return round(float(proportion), decimals)
 
 
@@ -40,10 +40,14 @@ def calculate_media_std_list(df: pd.DataFrame, lista: list, decimals: int = 1) -
 
 
 # Crear una función que calcula la media del dato categórico que tiene una condición
-def calculate_media_condition(df: pd.DataFrame, dict_condiciones: dict):
+def calculate_media_condition(df: pd.DataFrame, dict_condiciones: dict, decimals: int = 1) -> pd.DataFrame:
+    """
+    Calcula la proporción de cada valor categórico definido en dict_condiciones.
+    Retorna un DataFrame con una fila y columnas media_{col}_{condicion}.
+    """
     resultado = {}
     for columna, lista_condiciones in dict_condiciones.items():
         for condicion in lista_condiciones:
             proporcion = (df[columna] == condicion).mean(skipna=True)
-            resultado[f'media_{columna}_{condicion}'] = round(proporcion,1)
+            resultado[f'media_{columna}_{condicion}'] = round(proporcion, decimals)
     return pd.DataFrame([resultado])
