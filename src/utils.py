@@ -1,28 +1,31 @@
 import pandas as pd
 
 
-# Helper que calcula media y desviación estándar
-def _calculate_media_std(df: pd.DataFrame, columna:str, decimals:int = 1) -> tuple:
+# Helper function to calculate mean and standard deviation for a given column
+def _calculate_media_std(df: pd.DataFrame, column:str, decimals:int = 1) -> tuple:
     """Calcula media y std de una columna. Función interna."""
-    media = round(float(df[columna].mean(skipna=True)), decimals)
-    std = round(float(df[columna].std(skipna=True)), decimals)
+    media = round(float(df[column].mean(skipna=True)), decimals)
+    std = round(float(df[column].std(skipna=True)), decimals)
     return media, std
 
-
+# Function to calculate mean and standard deviation for a given column
 def calculate_mean_std(df: pd.DataFrame, column: str, decimals: int = 1):
+    
     return (
         f'The mean of {column} is {float(round(df[column].mean(skipna=True), decimals))} ',
         f'The standard deviation of {column} is {float(round(df[column].std(skipna=True), decimals))}'
     )
 
+
 # Implement a function to calculate the proportion under a condition
-def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: str):
+def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: str, decimals: int = 1) -> tuple[float, float]:
+    """Proporción de filas donde column == condition."""
     proportion = (df[column] == condition).mean(skipna=True)
     print(f"The proportion of {condition} in {column} is {round(proportion, 1)}")
-    return round(float(proportion), 1)
+    return round(float(proportion), decimals)
 
 
-# Creamos una función que utiliza el cálculo anterior, y transformaciones a dataframe
+# Implement a function to calculate mean and standard deviation for a list of columns
 def calculate_media_std_list(df: pd.DataFrame, lista: list):
     resultados = {}
     for columna in lista:
