@@ -11,12 +11,12 @@ class SampleAnalysis:
 # Muestras aleatorias simples y resumen estadístico por grupo
 
 #Estos métodos se usan en ambos grupos (muestra)
-    def sample_media_std(self, df: pd.DataFrame, columns: list[str]=None) -> pd.DataFrame:
-        cols = columns or self.NUM_COLUMNS
-        return calculate_media_std_list(df, cols)
+    def sample_media_std(self, columns: list[str]= None) -> pd.DataFrame:
+        cols = columns or NUM_COLUMNS
+        return calculate_media_std_list(self.df, cols)
 
     def sample_media_condition(self, conditions: dict = None) -> pd.DataFrame:
-        conds = conditions or self.CAT_CONDITIONS
+        conds = conditions or CAT_CONDITIONS
         return calculate_media_condition(self.df, conds)
 
 #def sample_media_condition(df:pd.DataFrame):
@@ -30,9 +30,12 @@ class SampleAnalysis:
 #        return sample
 #
 
-    def calculate_media_round(self, df: pd.DataFrame, columns: list[str]=None, decimales: int = 1) -> float:
-        spc = columns or self.SPC_COLUMNS
-        return float(round(df[spc].mean(skipna=True), decimales))
+    def calculate_media_round(self, columns: list[str]= None, decimales: int = 1) -> dict[str, float]:
+        cols = columns or SPC_COLUMNS
+        return {
+            col: float(round(self.df[col].mean(skipna=True), decimales)) 
+            for col in cols
+        }
 
 
 #----------------------------este resultado debe sumarse al dataframe-----------------------------------
