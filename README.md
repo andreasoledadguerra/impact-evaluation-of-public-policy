@@ -12,12 +12,16 @@ A modular Python pipeline for evaluating the causal impact of public policy inte
 IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │
 ├── config.py                  # Centralized paths and parameters
-├── experiment.py              # Experiment orchestration
-├── models.py                  # Statistical models
+├── experiment.py              # Experiment orchestration ------------x
+├── models.py                  # Statistical models ------------------x
+├── constants.py               # 
+
 │
 ├── bootstrap/                 # Bootstrapping modules
 │   ├── __init__.py
-│   └── bootstrapping.py
+│   └── bootstrapping_application.py
+│   └── bootstrapping_experiment.py
+│   └── models.py
 │
 ├── data/
 │   ├── raw/                   # Original source files — never modified
@@ -28,15 +32,17 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │   └── impact_evaluation_policy.ipynb   # EDA and exploratory analysis
 │
 ├── representativity/          # Balance checks and SMD analysis
+│   └── __init__.pyç
+│   └── smd.py
 │
 ├── src/
 │   ├── __init__.py
 │   ├── preprocessing.py       # Data cleaning and transformation
-│   ├── group_splitting.py     # Control / treatment group separation
-│   ├── randomization.py       # Simple random sampling (SRS)
-│   ├── analysis.py            # Statistical and econometric analysis
+│   ├── randomization.py     # Control / treatment group separation
+│   ├── sampleanalysis.py            # Statistical and econometric analysis
 │   ├── visualization.py       # Plots and charts
 │   └── reporting.py           # Report and export generation
+│   └── utils.py
 │
 ├── .gitignore
 ├── LICENSE
@@ -68,21 +74,6 @@ reporting.py           → Exports results to Excel / visualizations
 
 Each stage is **independent and testable** — outputs are persisted as Parquet files between runs, so stages can be executed separately without rerunning the full pipeline.
 
----
-
-## Key Design Decisions
-
-**Single Responsibility per module** — each `.py` file has one clearly defined role. Changing the group assignment logic never touches preprocessing, and vice versa.
-
-**Parquet over CSV** — intermediate data is stored in Parquet format to preserve column types (dates, categoricals, booleans) across pipeline runs without manual re-casting.
-
-**Centralized configuration** — all file paths and parameters live in `config.py` at the project root. No hardcoded paths inside modules.
-
-**Immutable raw data** — `data/raw/` is never written to. All transformations produce new files in `data/processed/` or `data/final/`.
-
-**Privacy by convention** — the `_` prefix marks internal helper functions (e.g. `_calcular_media_std`) that are implementation details, not part of the public module API.
-
----
 
 ## Statistical Methods
 
