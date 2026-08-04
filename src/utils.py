@@ -47,3 +47,4 @@ class Stats:
                 proporcion = (df[columna] == condicion).mean(skipna=True)
                 resultado[f'media_{columna}_{condicion}'] = round(proporcion,1)
         return pd.DataFrame([resultado])
+

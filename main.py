@@ -2,35 +2,36 @@
 import pandas as pd
 import numpy as np
 from src.randomization import randomization, simple_random_sample
-from bootstrap.bootstrapping import get_sample_bootstrap, calculate_mean_bootstrap
+from bootstrap.bootstrapping_application import get_sample_bootstrap, calculate_mean_bootstrap
 from src.sampleanalysis import SampleAnalysis  
 from src.utils import Stats
 from src.preprocessing import ProcessedDataframe
 from bootstrap.models import BoostrapStats
-from bootstrap.experiment import BootstrapExperiment
+from bootstrap.bootstrapping_experiment import BootstrapExperiment
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 from representativity.smd import SMDCalculator
-from src.randomization import generate_samples_first
+from src.randomization import generate_samples_first, compute_sample_statistics_first
 
 sample_analysis = SampleAnalysis()
 
+
+# ------------------------------- PRIMERA EXTRACCIÓN DE MUESTRA Y CÁLCULO ESTADÍSTICO POR GRUPO --------------------------------------
+
+
 SAMPLE_SIZE = 1000
 
-
-
-
 # Generar muestras aleatorias del grupo control y tratamiento (paso previo al bootstrapping)
+first_sample = generate_samples_first
 
-first_sample = generate_sample_first()
-
-#recibe los dataframes de generate_sample_first y hace cálculos estadísticos sobre ciertas variables
+# Recibe los dataframes de generate_sample_first y hace cálculos estadísticos sobre ciertas variables
 first_sample_statistics = compute_sample_statistics_first
 
 
-# -------------------------------- BOOTSTRAPPING OVER NUM_COLUMNS, CAT_COLUMNS & SPC_COLUMNS-----------------------------------------
+# -------------------------------- BOOTSTRAPPING SOBRE NUM_COLUMNS, CAT_COLUMNS & SPC_COLUMNS-----------------------------------------
 
 columns = [NUM_COLUMNS, CAT_CONDITIONS , SPC_COLUMNS]
 
+# Generamos muestras bootstraping, calculamos estadísticas y smd por grupo (por vavriable)
 experiment = BootstrapExperiment(
     data = (df_control, df_treatment),
     columns = NUM_COLUMNS,
