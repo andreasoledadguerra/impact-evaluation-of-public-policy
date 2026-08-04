@@ -26,13 +26,18 @@ def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: s
 
 
 # Implement a function to calculate mean and standard deviation for a list of columns
-def calculate_media_std_list(df: pd.DataFrame, lista: list):
+def calculate_media_std_list(df: pd.DataFrame, lista: list, decimals: int = 1) -> pd.DataFrame:
+    """
+    Calcula media y std para una lista de columnas.
+    Retorna un DataFrame con una fila y columnas media_X / desv_X.
+    """
     resultados = {}
     for columna in lista:
         media, std = _calculate_media_std(df, columna)
         resultados[f'media_{columna}'] = media
         resultados[f'desv_{columna}'] = std
     return pd.DataFrame([resultados]) # pandas necesita lista de diccionarios
+
 
 # Crear una función que calcula la media del dato categórico que tiene una condición
 def calculate_media_condition(df: pd.DataFrame, dict_condiciones: dict):
