@@ -12,17 +12,30 @@ A modular Python pipeline for evaluating the causal impact of public policy inte
 IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │
 ├── config.py                  # Centralized paths and parameters
+├── constants.py               # Domain contants (column names, thresholds, sample size)
 ├── experiment.py              # Experiment orchestration ------------x
 ├── models.py                  # Statistical models ------------------x
-├── constants.py               # 
 
 │
 ├── bootstrap/                 # Bootstrapping modules
 │   ├── __init__.py
-│   └── bootstrapping_application.py
-│   └── bootstrapping_experiment.py
-│   └── models.py
+│   └── bootstrapping_application.py # Low-level bootstrap sampling (numpy)
+│   └── bootstrapping_experiment.py  # BootstrapExperiment - orchestrates sampling + stats + SMD
+│   └── models.py # Pydantic models for bootstrap statistics
 │
+├── representativity/         
+│   └── __init__.py
+│   └── smd.py                 # SMDCalculator - Standardized Mean Diffference by variable type
+|
+├── src/
+│   ├── __init__.py
+│   ├── preprocessing.py       # Data cleaning and transformation
+│   ├── randomization.py       # Simple random sampling (SRS) per group
+│   ├── sampleanalysis.py      # SAmpleAnalysis class - descroptive stats on samples
+│   ├── visualization.py       # Plots and charts-----------------X
+│   └── reporting.py           # Report and export generation-----X
+│   └── utils.py               # Pure utility functions (mean, std, proportions)
+|
 ├── data/
 │   ├── raw/                   # Original source files — never modified
 │   ├── processed/             # Output of preprocessing (Parquet)
@@ -31,48 +44,13 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 ├── notebooks/
 │   └── impact_evaluation_policy.ipynb   # EDA and exploratory analysis
 │
-├── representativity/          # Balance checks and SMD analysis
-│   └── __init__.pyç
-│   └── smd.py
-│
-├── src/
-│   ├── __init__.py
-│   ├── preprocessing.py       # Data cleaning and transformation
-│   ├── randomization.py     # Control / treatment group separation
-│   ├── sampleanalysis.py            # Statistical and econometric analysis
-│   ├── visualization.py       # Plots and charts
-│   └── reporting.py           # Report and export generation
-│   └── utils.py
-│
 ├── .gitignore
 ├── LICENSE
+├── README.md
 └── requirements.txt
 ```
 
 ---
-
-## Pipeline Overview
-
-```
-Raw Data
-   │
-   ▼
-preprocessing.py       → Cleans, imputes, transforms → saves to data/processed/
-   │
-   ▼
-group_splitting.py     → Separates control and treatment groups → saves to data/final/
-   │
-   ▼
-randomization.py       → Draws simple random samples (n=1000) from each group
-   │
-   ▼
-analysis.py            → Computes descriptive stats, SMD balance checks
-   │
-   ▼
-reporting.py           → Exports results to Excel / visualizations
-```
-
-Each stage is **independent and testable** — outputs are persisted as Parquet files between runs, so stages can be executed separately without rerunning the full pipeline.
 
 
 ## Statistical Methods
