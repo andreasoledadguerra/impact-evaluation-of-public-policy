@@ -24,45 +24,55 @@ from bootstrap.models import (
 class SMDCalculator:
     
     @staticmethod
-    def smd_continuous(s1:BootstrapStatsContinuous,
-                       s2:BootstrapStatsContinuous
+    def smd_continuous(
+        s1:BootstrapStatsContinuous,
+        s2:BootstrapStatsContinuous
     ) -> float:
-        """Cohen's d con SD pooled for continuous variables. 
-        ("ingreso_anual_hogar", "personas_por_ambiente")"""
-        p1, p2 = s1.mean, s2.mean
-        sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2) / 2))
-        return float(p1 - p2) / sd_pooled if sd_pooled > 0 else np.nan
+        """
+        Cohen's d con SD pooled for continuous variables. 
+        ("ingreso_anual_hogar", "personas_por_ambiente")
+        """
+        mean_diff = s1.mean - s2.mean
+        sd_pooled = np.sqrt((s1.var + s2.var) / 2)
+        return float(mean_diff) / sd_pooled if sd_pooled > 0 else np.nan
 
     @staticmethod
     def smd_binary(s1: BootstrapStatsBinary,
                    s2: BootstrapStatsBinary,
     ) -> float:
-        """Cohen (1988) for bool variables.
-        (escenario_vulnerabilidad_social, paredes_ext_revocadas )"""
-        p1, p2 = s1.mean, s2.mean
-        sd_pooled = np.sqrt((p1 * (1 - p1) + p2 * (1 - p2)) / 2)
-        return float((p1 - p2) / sd_pooled) if sd_pooled > 0 else np.nan
+        """
+        Cohen (1988) for Boolean variables.
+        (social_vulnerability_scenario, exterior_walls_plastered)
+
+        Reuse s1.var / s2.var instead of recalculating p*(1-p): it has already been
+        validated in the model that var == mean*(1-mean).
+        """
+        mean_diff = s1.mean - s2.mean
+        sd_pooled = np.sqrt((s1.var + s2.var) / 2)
+        return float(mean_diff) / sd_pooled if sd_pooled > 0 else np.nan
 
 
     #conurbano_interior , sexo_dni
     @staticmethod
-    def smd_categorical(s1: BootstrapStatsCategorical,
-                        s2: BootstrapStatsCategorical, 
-                        resumen: Literal["max", "mean", "detail"] = "max",
+    def smd_categorical(
+        s1: BootstrapStatsCategorical,
+        s2: BootstrapStatsCategorical, 
+        resumen: Literal["max", "mean", "detail"] = "max",
     ) -> float | dict[str, float]:
         """
-        Calcula SMD para variable categórica nominal via dummies (k-1).
+        Calculates SMD for a nominal categorical variable using dummies (k-1).
 
         Parameters
         ----------
-        resumen   : "max"    → retorna el máximo |SMD| (recomendado para balance tables)
-                    "mean"   → retorna el promedio de |SMD|
-                    "detail" → retorna el dict completo {categoria: SMD}
+        summary   : “max”    -> returns the maximum |SMD| (recommended for balance tables)
+                    “mean”   -> returns the mean of |SMD|
+                    “detail” -> returns the complete dictionary {category: SMD}
         """
+
         # Categorías ordenadas (determinístico) → se omite la última como referencia
         categories = sorted(set(s1.proportions) | set(s2.proportions))
 
-        smds = dict[str, float] = {}
+        smds : dict[str, float] = {}
         for cat in categories[:-1]:
             p1 = s1.proportions.get(cat, 0.0)
             p2 = s2.proportions.get(cat, 0.0)
@@ -79,6 +89,11 @@ class SMDCalculator:
             return float(np.mean(np.abs(valores))) if valores else np.nan
         elif resumen == "detail":
             return smds
+        else:
+            raise ValueError(
+                f"resumen debe ser 'max', 'mean' o 'detail', recibido: {resumen!r}"
+            )
+ 
     
 
     
