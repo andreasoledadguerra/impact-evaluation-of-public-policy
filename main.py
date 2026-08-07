@@ -1,24 +1,21 @@
 
 import pandas as pd
-import numpy as np
-from src.randomization import randomization, simple_random_sample
-from bootstrap.bootstrapping_application import get_sample_bootstrap, calculate_mean_bootstrap
-from src.sampleanalysis import SampleAnalysis  
-from src.utils import Stats
+
 from src.preprocessing import ProcessedDataframe
-from bootstrap.models import BoostrapStats
-from bootstrap.bootstrapping_experiment import BootstrapExperiment
-from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
-from representativity.smd import SMDCalculator
 from src.randomization import generate_samples_first, compute_sample_statistics_first
+from src.sampleanalysis import SampleAnalysis
+from bootstrap.bootstrapping_experiment import BootstrapExperiment
+from representativity.smd import SMDCalculator
+from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
 sample_analysis = SampleAnalysis()
 
+SAMPLE_SIZE = 1000
+RANDOM_STATE = 42
 
 # ------------------------------- PRIMERA EXTRACCIÓN DE MUESTRA Y CÁLCULO ESTADÍSTICO POR GRUPO --------------------------------------
 
 
-SAMPLE_SIZE = 1000
 
 # Generar muestras aleatorias del grupo control y tratamiento (paso previo al bootstrapping)
 first_sample = generate_samples_first
