@@ -60,7 +60,110 @@ def calculate_rep_coef(
         "smd_treatment": smd_t,
     }
 
+def main() -> dict:
+    # -----------------------------------------------------------------
+    # 0. Carga de datos procesados
+    # -----------------------------------------------------------------
+    # TODO: confirmar si ProcessedDataframe() devuelve directamente un
+    # pd.DataFrame o si hay que acceder a un atributo (ej. .data / .df)
+    processed_df = ProcessedDataframe()
 
+    # -----------------------------------------------------------------
+    # 1. Primera extracción de muestra y cálculo estadístico por grupo
+    # -----------------------------------------------------------------
+    df_control, df_treatment = generate_samples_first(
+        processed_df, sample_size=SAMPLE_SIZE, random_state=RANDOM_STATE
+    )
+
+    first_sample_statistics = compute_sample_statistics_first(df_control, df_treatment)
+
+    # -----------------------------------------------------------------
+    # 2. Bootstrapping sobre NUM_COLUMNS, CAT_CONDITIONS y SPC_COLUMNS
+    # -----------------------------------------------------------------
+    # Cada tipo de columna requiere una ruta de cálculo distinta:
+    #   - NUM_COLUMNS    -> continua: mean + std + var + cv
+    #                       (BootstrapStatsContinuous)
+    #   - CAT_CONDITIONS -> condición puntual por (columna, valor), ej.
+    #                       ('relación_de_parentezco_con_jefe_del_hogar',
+    #                       'Soy jefa(e)'). NO es exhaustivo por columna,
+    #                       así que debería resolverse como
+    #                       BootstrapStatsBinary por cada condición
+    #                       (proporción + p*(1-p)), no como
+    #                       BootstrapStatsCategorical — ese modelo exige
+    #                       sum(proportions) == 1.0, cosa que una condición
+    #                       aislada como 'Soy jefa(e)' no cumple.
+    #   - SPC_COLUMNS    -> numérica codificada / ordinal: media redondeada,
+    #                       sin var/std (revisar si alguna, ej.
+    #                       'paredes_ext_revocadas', es en realidad binaria
+    #                       y debería ir por BootstrapStatsBinary también)
+    #
+    # TODO: confirmar que BootstrapExperiment acepta estos tres parámetros
+    # por separado. Si el constructor real solo toma "columns" (como en el
+    # borrador original), hay que ampliarlo o instanciar el experimento
+    # tres veces, una por tipo de variable.
+    experiment = BootstrapExperiment(
+        data=(df_control, df_treatment),
+        num_columns=NUM_COLUMNS,
+        cat_conditions=CAT_CONDITIONS,
+        spc_columns=SPC_COLUMNS,
+        random_state=RANDOM_STATE,
+    )
+
+    # TODO: confirmar si el bootstrap corre al instanciar la clase o si hace
+    # falta un método explícito, ej. experiment.run()
+    # experiment.run()
+
+    bootstrap_c = experiment.bootstrap_c
+    bootstrap_t = experiment.bootstrap_t
+    smd_summary = experiment.smd_summary  # balance control vs. tratamiento
+
+    # -----------------------------------------------------------------
+    # 3. Coeficiente de representatividad de la muestra vs. población
+    #    (ejemplo con "ingreso_anual_hogar" — extensible a otras columnas
+    #    iterando sobre NUM_COLUMNS)
+    # -----------------------------------------------------------------
+    rep_coef_iah = calculate_rep_coef(
+        processed_df=processed_df,
+        sample=(df_control, df_treatment),
+        column="ingreso_anual_hogar",
+    )
+
+    # TODO: si SMDCalculator (representativity/smd.py) ya implementa esta
+    # lógica de representatividad, calculate_rep_coef() de acá arriba
+    # debería llamarlo en vez de reimplementar la fórmula. Evaluar si
+    # conviene mover calculate_rep_coef() dentro de SMDCalculator.
+
+    # -----------------------------------------------------------------
+    # 4. Estadística descriptiva final sobre las muestras
+    # -----------------------------------------------------------------
+    # TODO: confirmar si SampleAnalysis recibe los DataFrames en el
+    # constructor o en un método aparte (ej. .analyze(df_control))
+    sample_analysis = SampleAnalysis()
+
+    # -----------------------------------------------------------------
+    # 5. Exportación de resultados
+    # -----------------------------------------------------------------
+    # TODO: definir rutas reales de salida (ej. data/final/, reports/) y
+    # descomentar / adaptar según config.py
+    # smd_summary.to_excel(FINAL_DATA_PATH / "smd_summary.xlsx")
+    # bootstrap_c.to_parquet(FINAL_DATA_PATH / "bootstrap_control.parquet")
+    # bootstrap_t.to_parquet(FINAL_DATA_PATH / "bootstrap_treatment.parquet")
+
+    results = {
+        "first_sample_statistics": first_sample_statistics,
+        "bootstrap_c": bootstrap_c,
+        "bootstrap_t": bootstrap_t,
+        "smd_summary": smd_summary,
+        "rep_coef_iah": rep_coef_iah,
+        "sample_analysis": sample_analysis,
+    }
+
+    return results
+    
+    
+if __name__ == "__main__":
+    main()
+ 
 
 
 
