@@ -50,6 +50,18 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 └── requirements.txt
 ```
 
+## Pipeline orchestration entry point - main.py
+
+Workflow:
+    1. Loading processed data
+    2. Initial sample extraction (SRS) by group + descriptive statistics
+    3. Bootstrapping by group (control / treatment)
+    4. Calculation of SMD to assess balance between groups
+    5. Sample representativeness coefficient vs. population
+    6. Final descriptive analysis of the samples
+    7. Export of results
+
+
 ---
 
 
