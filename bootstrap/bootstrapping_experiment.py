@@ -87,49 +87,43 @@ class BootstrapExperiment:
 
         return stats
 
-        # -------------------Métodos auxiliares privados ---------------------
-        @staticmethod
-        def _stats_for_continuous(serie: pd.Series, n:int) -> BootstrapStatsContinuous:
-            """ 
-            Calcula estadísticas para variables numéricas continuas.
+    # ----------------------------- Private helper methods -----------------------------
 
-            """
-            std = float(serie.std(ddof=1))
-            return BootstrapStatsContinuous(
-                mean=float(serie.mean()),
-                std=std,
-                var=float(serie.var(ddof=1)),
-                dtype_kind="continua",
-                n=n,
+
+    @staticmethod
+    def _stats_for_continuous(serie: pd.Series, n:int) -> BootstrapStatsContinuous:
+        """ 
+        Calcula estadísticas para variables numéricas continuas.
+        """
+        return BootstrapStatsContinuous(
+            mean=float(serie.mean()),
+            std = float(serie.std(ddof=1)),
+            var=float(serie.var(ddof=1)),
+            n=n,
+        )
+    
+    @staticmethod
+    def _stats_for_categorical(serie:pd.Series, col_name:str, allowed_categories: List[str]
+    ) -> BootstrapStatsCategorical:
+        """ 
+        Calcula proporciones para variables categóricas filtrando solo las categrorías permitidas definidas en _cat_conditions.
+        """
+        filtered = serie[serie.isin(allowed_categories)]
+        n_filtered= int(filtered.count())
+        if n_filtered == 0:
+            raise ValueError(
+                f"Columna '{col_name}': ninguna observación pertenece a las categorías"
+                f"permitidas {allowed_categories}."
             )
-
-        @staticmethod
-        def _stats_for_categorical(serie:pd.Series, col_name:str, allowed_categories: List[str]
-        ) -> BootstrapStatsCategorical:
-            """ 
-            Calcula proporciones para variables categóricas filtrando solo las categrorías permitidas definidas en _cat_conditions.
-            """
-            filtered = serie[serie.isin(allowed_categories)]
-            n_filtered= int(filtered.count())
-
-            if n_filtered == 0:
-                raise ValueError(
-                    f"Columna '{col_name}': ninguna observación pertenece a las categorías"
-                    f"permitidas {allowed_categories}."
-                )
-            
-            # Calcular proporciones normalizadas (suman 1)
-            proportions = (filtered.value_counts(normalize=True)).to_dict()
-            # Convertir claves a string 
-            proportions = {str(k): float(v) for k, v in proportions.items()}
-
-            return BootstrapStatsCategorical(
-                n = n_filtered,
-                proportions=proportions,
-            )
-
-
-
+        
+        # Calcular proporciones normalizadas (suman 1)
+        proportions = (filtered.value_counts(normalize=True)).to_dict()
+        # Convertir claves a string 
+        proportions = {str(k): float(v) for k, v in proportions.items()}
+        return BootstrapStatsCategorical(
+            n = n_filtered,
+            proportions=proportions,
+        )
 
 
 
