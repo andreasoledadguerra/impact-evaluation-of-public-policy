@@ -33,3 +33,13 @@ class ColumnRegistry:
             )
         self._kind_by_column[col] = kind
  
+    def kind_of(self, col: str) -> ColumnKind:
+        """Tipo de una columna. Lanza KeyError si no está registrada."""
+        try:
+            return self._kind_by_column[col]
+        except KeyError:
+            raise KeyError(
+                f"La columna '{col}' no está registrada en NUM_COLUMNS, "
+                f"CAT_CONDITIONS ni SPC_COLUMNS."
+            ) from None
+ 
