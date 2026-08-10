@@ -47,3 +47,20 @@ class ColumnRegistry:
         """Categorías permitidas para una columna categórica (CAT_CONDITIONS)."""
         return self._cat_conditions[col]
  
+    @property
+    def columns(self) -> list[str]:
+        """Todas las columnas registradas, sin importar el tipo."""
+        return list(self._kind_by_column)
+ 
+    @property
+    def continuous_columns(self) -> list[str]:
+        return [c for c, k in self._kind_by_column.items() if k == "continua"]
+ 
+    @property
+    def categorical_columns(self) -> list[str]:
+        return [c for c, k in self._kind_by_column.items() if k == "categorica"]
+ 
+    @property
+    def binary_columns(self) -> list[str]:
+        return [c for c, k in self._kind_by_column.items() if k == "binaria"]
+ 
