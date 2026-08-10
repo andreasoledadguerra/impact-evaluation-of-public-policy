@@ -1,8 +1,9 @@
+import logging
+
 import pandas as pd
 import numpy as np
 
-from bootstrap.models import (
-    BootstrapStats, 
+from bootstrap.models import (    
     BootstrapStatsBinary, 
     BootstrapStatsCategorical, 
     BootstrapStatsContinuous, 
@@ -10,6 +11,8 @@ from bootstrap.models import (
 )
 
 from representativity.smd import SMDCalculator
+
+logger = logging.getLogger(__name__)
 
 class BootstrapExperiment:
 
