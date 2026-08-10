@@ -19,12 +19,17 @@ class BootstrapExperiment:
     def __init__(
         self,
         data: tuple[pd.DataFrame, pd.DataFrame],
-        columns: list[str],
+        num_columns: list[str],
+        cat_conditions: dict[str, list[str]],
+        spc_columns: list[str],
         random_state: int = 42
     ) -> None:
         
         self._df_control, self._df_treatment = data
-        self._columns = columns
+        self._num_columns = num_columns
+        self._cat_conditions = cat_conditions
+        self._spc_columns = spc_columns
+        self._columns = num_columns + list(cat_conditions.keys()) + spc_columns
         self._random_state = random_state
 
     # Automatization
