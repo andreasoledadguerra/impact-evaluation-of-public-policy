@@ -103,25 +103,36 @@ class BootstrapExperiment:
         )
     
     @staticmethod
-    def _stats_for_categorical(serie:pd.Series, col_name:str, allowed_categories: List[str]
+    def _stats_for_categorical(
+        serie:pd.Series, allowed_categories: list[str]
     ) -> BootstrapStatsCategorical:
-        """ 
-        Calcula proporciones para variables categóricas filtrando solo las categrorías permitidas definidas en _cat_conditions.
         """
-        filtered = serie[serie.isin(allowed_categories)]
-        n_filtered= int(filtered.count())
-        if n_filtered == 0:
-            raise ValueError(
-                f"Columna '{col_name}': ninguna observación pertenece a las categorías"
-                f"permitidas {allowed_categories}."
+        Calcula la proporción de cada categoría permitida sobre la serie
+        COMPLETA — no sobre un subconjunto ya filtrado a esas categorías.
+ 
+        Si allowed_categories no cubre toda la serie (ej. una condición
+        aislada como 'Soy jefa(e)' en vez del listado completo de
+        parentescos), el resto se agrupa en "otros" para satisfacer el
+        validador proportions.sum() == 1.0 de BootstrapStatsCategorical.
+        """
+        n = int(serie.count())
+
+        proportions = {
+            str(cat): float((serie == cat).sum() / n) for cat in allowed_categories
+        }
+        if sum(proportions.values()) == 0:
+            logger.warning(
+                f"Ninguna observación pertenece a las categorías"
+                f"{allowed_categories}; revisar si están definidas correctamente."
             )
         
         # Calcular proporciones normalizadas (suman 1)
-        proportions = (filtered.value_counts(normalize=True)).to_dict()
-        # Convertir claves a string 
-        proportions = {str(k): float(v) for k, v in proportions.items()}
+        residual = 1.0 - sum(proportions.values())
+        if residual > 1e-9:
+            proportions["otros"] = residual
+
         return BootstrapStatsCategorical(
-            n = n_filtered,
+            n = n,
             proportions=proportions,
         )
 
