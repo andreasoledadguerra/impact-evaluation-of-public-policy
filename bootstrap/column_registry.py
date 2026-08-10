@@ -22,3 +22,14 @@ class ColumnRegistry:
             self._register(col, "categorica")
         for col in spc_columns:
             self._register(col, "binaria")
+
+    def _register(self, col: str, kind: ColumnKind) -> None:
+        if col in self._kind_by_column:
+            raise ValueError(
+                f"La columna '{col}' está declarada en más de un grupo de "
+                f"tipo ({self._kind_by_column[col]!r} y {kind!r}). Cada "
+                f"columna debe pertenecer a exactamente un tipo "
+                f"(NUM_COLUMNS / CAT_CONDITIONS / SPC_COLUMNS)."
+            )
+        self._kind_by_column[col] = kind
+ 
