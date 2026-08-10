@@ -66,12 +66,12 @@ class BootstrapExperiment:
     ) -> dict[str, StatsType]:
         """
         Calcula estadísticas resumen para cada columna según su tipo:
-        - numérica continua (NUM_COLUMNS) -> media y desviación estándar (BootstrapStatsContinuous)
-        - categórica condicional (CAT_CONDITIONS) -> proporciones por categoría (BootstrapStatsCategorical)
-        - binario (SPC_COLUMNS) -> proporción 0-1 (BootstrapStatsBinary)
+        - NUM_COLUMNS -> continua:  media + std + var (BootstrapStatsContinuous)
+        - CAT_CONDITIONS -> proporciones por categoría, calculadas sobre la serie completa, no sobre un subcnjunto ya filtrado (BootstrapStatsCategorical)
+        - SPC_COLUMNS -> proporción 0-1 de varables bool(BootstrapStatsBinary)
         """
 
-        stats = {}
+        stats: dict[str, StatsType] = {}
         
         for col in self._all_columns:
             serie = bootstrap_samples[col].dropna()
