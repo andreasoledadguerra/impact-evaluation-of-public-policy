@@ -43,3 +43,7 @@ class ColumnRegistry:
                 f"CAT_CONDITIONS ni SPC_COLUMNS."
             ) from None
  
+    def allowed_categories(self, col: str) -> list[str]:
+        """Categorías permitidas para una columna categórica (CAT_CONDITIONS)."""
+        return self._cat_conditions[col]
+ 
