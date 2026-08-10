@@ -29,7 +29,7 @@ class BootstrapExperiment:
         self._num_columns = num_columns
         self._cat_conditions = cat_conditions
         self._spc_columns = spc_columns
-        self._columns = num_columns + list(cat_conditions.keys()) + spc_columns
+        self._all_columns = num_columns + list(cat_conditions.keys()) + spc_columns
         self._random_state = random_state
 
     # Automatization
@@ -40,18 +40,18 @@ class BootstrapExperiment:
         self.smd = self._calculate_smd()
 
 
-    # Private methods
+    #------------------------Private methods-----------------------------------
 
     def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
-        bootstrap_c = self._df_control[self._columns].sample(
-                 n = len(self._df_control),
+        bootstrap_c = self._df_control[self._all_columns].sample(
+            n = len(self._df_control),
             replace = True,
-            random_state = self._random_state
+            random_state = self._random_state,
         )
-        bootstrap_t = self._df_treatment[self._columns].sample(
+        bootstrap_t = self._df_treatment[self._all_columns].sample(
                  n = len(self._df_treatment),
             replace = True,
-            random_state = self._random_state
+            random_state = self._random_state,
         )
         return bootstrap_c, bootstrap_t
 
@@ -73,7 +73,7 @@ class BootstrapExperiment:
 
         stats = {}
         
-        for col in self._columns:
+        for col in self._all_columns:
             serie = bootstrap_samples[col].dropna()
             n     = int(serie.count())
 
