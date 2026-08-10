@@ -73,30 +73,19 @@ class BootstrapExperiment:
 
         stats: dict[str, StatsType] = {}
         
-        for col in self._all_columns:
+        for col in self._num_columns:
             serie = bootstrap_samples[col].dropna()
-            n     = int(serie.count())
+            stats[col] = self._stats_for_continuous(serie, int(serie.count()))
 
-            # ---------Rama 1: numérica continua--------------------------
-            if pd.api.types.is_numeric_dtype(serie) and col not in self._spc_columns:
-                stats[col] = self._stats_for_continuous(serie, n)
+        for col, allowed_categories in self._cat_conditions.items():
+            serie = bootstrap_samples[col].dropna()
+            stats[col]= self._stats_for_categorical(serie, allowed_categories)
+   
+        for col in self._spc_columns:
+            serie = bootstrap_samples[col].dropna()
+            stats[col] = self._stats_for_binary(serie, int(serie.count()))
 
-            # ----------Rama 2: categórica condicional -------------------
-            elif col in self._cat_conditions:
-                stats[col]= self._stats_for_categorical(
-                serie, col, self._cat_conditions[col]
-            )
-
-            # ----------Rama 3: binario -----------------------------------
-            elif col in self._spc_columns:
-                stats[col] = self._stats_for_binary(serie,n)
-
-
-            # Si no entra en ninguna rama, registra una advertencia o ignorar
-            else:
-                logging.warning(f"Columna '{col}' de tipo no soportado, omitida.")
-
-            return stats
+        return stats
 
         # -------------------Métodos auxiliares privados ---------------------
         @staticmethod
