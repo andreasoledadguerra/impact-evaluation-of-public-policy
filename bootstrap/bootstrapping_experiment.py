@@ -65,10 +65,10 @@ class BootstrapExperiment:
             bootstrap_samples: pd.DataFrame
     ) -> dict[str, StatsType]:
         """
-        Calcula estadísticas resumen para cada columna según su tipo:
-        - NUM_COLUMNS -> continua:  media + std + var (BootstrapStatsContinuous)
-        - CAT_CONDITIONS -> proporciones por categoría, calculadas sobre la serie completa, no sobre un subcnjunto ya filtrado (BootstrapStatsCategorical)
-        - SPC_COLUMNS -> proporción 0-1 de varables bool(BootstrapStatsBinary)
+          Calculates summary statistics for each column based on its type:
+            - NUM_COLUMNS -> continuous:  mean + std + var (BootstrapStatsContinuous)
+            - CAT_CONDITIONS -> proportions by category, calculated over the entire data set, not over a pre-filtered subset (BootstrapStatsCategorical)
+            - SPC_COLUMNS -> 0-1 proportion of Boolean variables (BootstrapStatsBinary)
         """
 
         stats: dict[str, StatsType] = {}
@@ -93,7 +93,7 @@ class BootstrapExperiment:
     @staticmethod
     def _stats_for_continuous(serie: pd.Series, n:int) -> BootstrapStatsContinuous:
         """ 
-        Calcula estadísticas para variables numéricas continuas.
+        Calculates statistics for continuous numeric variables.
         """
         return BootstrapStatsContinuous(
             mean=float(serie.mean()),
@@ -107,13 +107,8 @@ class BootstrapExperiment:
         serie:pd.Series, allowed_categories: list[str]
     ) -> BootstrapStatsCategorical:
         """
-        Calcula la proporción de cada categoría permitida sobre la serie
-        COMPLETA — no sobre un subconjunto ya filtrado a esas categorías.
- 
-        Si allowed_categories no cubre toda la serie (ej. una condición
-        aislada como 'Soy jefa(e)' en vez del listado completo de
-        parentescos), el resto se agrupa en "otros" para satisfacer el
-        validador proportions.sum() == 1.0 de BootstrapStatsCategorical.
+        Calculate the proportion of each allowed category relative to the
+        ENTIRE data set—not relative to a subset that has already been filtered to those categories.
         """
         n = int(serie.count())
 
@@ -160,14 +155,8 @@ class BootstrapExperiment:
  
     def _calculate_smd(self) -> pd.DataFrame:
         """
-        Calcula el balance (SMD) entre grupo control y tratamiento,
-        usando self.stats_c / self.stats_t — que ya están calculados sobre
-        las muestras BOOTSTRAP (self.bootstrap_c / self.bootstrap_t), no
-        sobre self._df_control / self._df_treatment directamente.
- 
-        Esto no es una elección de diseño: SMDCalculator opera sobre
-        objetos BootstrapStats*, no sobre DataFrames, así que stats_c/
-        stats_t es la única fuente posible.
+        Calculate the (SMD) balance between the control and treatment groups,
+        using self.stats_c / self.stats_t.
         """
         results = []
  
@@ -195,7 +184,9 @@ class BootstrapExperiment:
 
     @staticmethod
     def _smd_row(variable: str, tipo: str, smd: float) -> dict:
-        """Arma una fila del resumen de SMD con interpretación de balance."""
+        """
+        Generate a row in the SMD summary with balance interpretation
+        """
         is_valid = smd is not None and not np.isnan(smd)
         abs_smd = abs(smd) if is_valid else np.nan
  
