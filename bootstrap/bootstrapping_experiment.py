@@ -136,9 +136,27 @@ class BootstrapExperiment:
             proportions=proportions,
         )
 
+    @staticmethod
+    def _stats_for_binary(serie: pd.Series, n: int) -> BootstrapStatsBinary:
+        """
+        Calculates statistics for Boolean variables (SPC_COLUMNS).
+    
+        var and std are calculated as p*(1-p) / sqrt(p*(1-p)) — NOT with
+        serie.var(ddof=1) — because validate_bernoulli_variance requires
+        exact consistency with the theoretical formula (rtol=1e-5), and the
+        sample variance with ddof=1 does not satisfy this condition unless n is very large.
+        """
 
-
-
+        p = float(serie.mean())
+        var = p * (1 - p)
+        std = float(np.sqrt(var))
+        return BootstrapStatsBinary(
+            mean=p,
+            std=std,
+            var=var,
+            n=n,
+        )
+ 
 
     
     def calculate_smd(self, df, columns, grupo_col, df_treatment, df_control):
