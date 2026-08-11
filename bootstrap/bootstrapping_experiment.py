@@ -156,64 +156,40 @@ class BootstrapExperiment:
             var=var,
             n=n,
         )
+
  
-
-    
-    def calculate_smd(self, df, columns, grupo_col, df_treatment, df_control):
+    def _calculate_smd(self) -> pd.DataFrame:
         """
-        Calcula el SMD para un conjunto de columnas dado un grupo tratamiento/control.
-
-        Parameters
-        ----------
-        df          : DataFrame completo
-        columnas    : lista de columnas a evaluar
-        grupo_col   : nombre de la columna que define los grupos
-        grupo_trat  : valor del grupo tratamiento
-        grupo_ctrl  : valor del grupo control
+        Calcula el balance (SMD) entre grupo control y tratamiento,
+        usando self.stats_c / self.stats_t — que ya están calculados sobre
+        las muestras BOOTSTRAP (self.bootstrap_c / self.bootstrap_t), no
+        sobre self._df_control / self._df_treatment directamente.
+ 
+        Esto no es una elección de diseño: SMDCalculator opera sobre
+        objetos BootstrapStats*, no sobre DataFrames, así que stats_c/
+        stats_t es la única fuente posible.
         """
-        g1 = df[df[grupo_col] == df_treatment]
-        g2 = df[df[grupo_col] == df_control]
-
         results = []
-
-        for col in columns:
-            x1 = g1[col].dropna()
-            x2 = g2[col].dropna()
-            dtype = df[col].dtype
-
-            # --- Continua ---
-            if pd.api.types.is_numeric_dtype(dtype) and not pd.api.types.is_bool_dtype(dtype):
-                smd = smd_continuous(x1, x2)
-                results.append({
-                    "variable": col,
-                    "tipo": "continua",
-                    "categoria": "-",
-                    "SMD": round(smd, 4),
-                    "abs_SMD": round(abs(smd), 4)
-                })
-
-            # --- Booleana / binaria ---
-            elif pd.api.types.is_bool_dtype(dtype):
-                smd = smd_binary(x1.astype(float), x2.astype(float))
-                results.append({
-                    "variable": col,
-                    "tipo": "binaria (bool)",
-                    "categoria": "-",
-                    "SMD": round(smd, 4),
-                    "abs_SMD": round(abs(smd), 4)
-                })
-
-            # --- Categórica nominal (object) ---
-            elif pd.api.types.is_object_dtype(dtype):
-                smds_cat = smd_categorical(x1, x2)
-                for cat, smd in smds_cat.items():
-                    if not np.isnan(smd):
-                        results.append({
-                            "variable": col,
-                            "tipo": "categórica (dummy)",
-                            "categoria": cat,
-                            "SMD": round(smd, 4),
-                            "abs_SMD": round(abs(smd), 4)
-                        })
-
-        return pd.DataFrame(results).sort_values("abs_SMD", ascending=False)
+ 
+        for col in self._num_columns:
+            smd = SMDCalculator.smd_continuous(self.stats_c[col], self.stats_t[col])
+            results.append(self._smd_row(col, "continua", smd))
+ 
+        for col in self._spc_columns:
+            smd = SMDCalculator.smd_binary(self.stats_c[col], self.stats_t[col])
+            results.append(self._smd_row(col, "binaria", smd))
+ 
+        for col in self._cat_conditions:
+            smd = SMDCalculator.smd_categorical(
+                self.stats_c[col], self.stats_t[col], resumen="max"
+            )
+            results.append(
+                self._smd_row(col, "categórica (max |SMD| entre dummies)", smd)
+            )
+ 
+        return (
+            pd.DataFrame(results)
+            .sort_values("abs_SMD", ascending=False, na_position="last")
+            .reset_index(drop=True)
+        )
+ 
