@@ -192,4 +192,27 @@ class BootstrapExperiment:
             .sort_values("abs_SMD", ascending=False, na_position="last")
             .reset_index(drop=True)
         )
+
+    @staticmethod
+    def _smd_row(variable: str, tipo: str, smd: float) -> dict:
+        """Arma una fila del resumen de SMD con interpretación de balance."""
+        is_valid = smd is not None and not np.isnan(smd)
+        abs_smd = abs(smd) if is_valid else np.nan
+ 
+        if not is_valid:
+            balance = "N/A"
+        elif abs_smd < 0.10:
+            balance = "excelente"
+        elif abs_smd < 0.25:
+            balance = "aceptable"
+        else:
+            balance = "desequilibrado"
+ 
+        return {
+            "variable": variable,
+            "tipo": tipo,
+            "SMD": round(smd, 4) if is_valid else np.nan,
+            "abs_SMD": round(abs_smd, 4) if is_valid else np.nan,
+            "balance": balance,
+        }
  
