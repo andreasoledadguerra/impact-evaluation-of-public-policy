@@ -3,7 +3,7 @@ import pandas as pd
 
 # Helper function to calculate mean and standard deviation for a given column
 def _calculate_media_std(df: pd.DataFrame, column:str, decimals:int = 1) -> tuple:
-    """Calcula media y std de una columna. Función interna."""
+    """Calculates the mean and standard deviation of a column. Built-in function."""
     media = round(float(df[column].mean(skipna=True)), decimals)
     std = round(float(df[column].std(skipna=True)), decimals)
     return media, std
@@ -23,13 +23,12 @@ def _calculate_media_std(df: pd.DataFrame, column:str, decimals:int = 1) -> tupl
 #    proportion = (df[column] == condition).mean(skipna=True)
 #    print(f"The proportion of {condition} in {column} is {round(proportion, decimals)}")
 #    return round(float(proportion), decimals)
-#
-#
-# Implement a function to calculate mean and standard deviation for a list of columns
+
+
 def calculate_media_std_list(df: pd.DataFrame, lista: list, decimals: int = 1) -> pd.DataFrame:
     """
-    Calcula media y std para una lista de columnas.
-    Retorna un DataFrame con una fila y columnas media_X / desv_X.
+    Calculate the mean and standard deviation for a list of columns.
+    Returns a DataFrame with one row and columns named mean_X and dev_X.
     """
     resultados = {}
     for columna in lista:
@@ -39,11 +38,10 @@ def calculate_media_std_list(df: pd.DataFrame, lista: list, decimals: int = 1) -
     return pd.DataFrame([resultados]) # pandas necesita lista de diccionarios
 
 
-# Crear una función que calcula la media del dato categórico que tiene una condición
 def calculate_media_condition(df: pd.DataFrame, dict_condiciones: dict, decimals: int = 1) -> pd.DataFrame:
     """
-    Calcula la proporción de cada valor categórico definido en dict_condiciones.
-    Retorna un DataFrame con una fila y columnas media_{col}_{condicion}.
+    Calculates the proportion of each categorical value defined in dict_conditions.
+    Returns a DataFrame with one row and columns named mean_{col}_{condition}.
     """
     resultado = {}
     for columna, lista_condiciones in dict_condiciones.items():
