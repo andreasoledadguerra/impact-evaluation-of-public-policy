@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from src.utils import calculate_media_std_list, calculate_media_condition
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
