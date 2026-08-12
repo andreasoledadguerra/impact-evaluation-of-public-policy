@@ -9,22 +9,22 @@ def _calculate_media_std(df: pd.DataFrame, column:str, decimals:int = 1) -> tupl
     return media, std
 
 # Function to calculate mean and standard deviation for a given column
-def calculate_mean_std(df: pd.DataFrame, column: str, decimals: int = 1):
-    
-    return (
-        f'The mean of {column} is {float(round(df[column].mean(skipna=True), decimals))} ',
-        f'The standard deviation of {column} is {float(round(df[column].std(skipna=True), decimals))}'
-    )
-
-
-# Implement a function to calculate the proportion under a condition
-def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: str, decimals: int = 1) -> tuple[float, float]:
-    """Proporción de filas donde column == condition."""
-    proportion = (df[column] == condition).mean(skipna=True)
-    print(f"The proportion of {condition} in {column} is {round(proportion, decimals)}")
-    return round(float(proportion), decimals)
-
-
+#def calculate_mean_std(df: pd.DataFrame, column: str, decimals: int = 1):
+#    
+#    return (
+#        f'The mean of {column} is {float(round(df[column].mean(skipna=True), decimals))} ',
+#        f'The standard deviation of {column} is {float(round(df[column].std(skipna=True), decimals))}'
+#    )
+#
+#
+## Implement a function to calculate the proportion under a condition
+#def calculate_conditional_proportion(df: pd.DataFrame, column: str, condition: str, decimals: int = 1) -> tuple[float, float]:
+#    """Proporción de filas donde column == condition."""
+#    proportion = (df[column] == condition).mean(skipna=True)
+#    print(f"The proportion of {condition} in {column} is {round(proportion, decimals)}")
+#    return round(float(proportion), decimals)
+#
+#
 # Implement a function to calculate mean and standard deviation for a list of columns
 def calculate_media_std_list(df: pd.DataFrame, lista: list, decimals: int = 1) -> pd.DataFrame:
     """
