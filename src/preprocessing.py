@@ -69,9 +69,5 @@ class ProcessedDataframe():
             axis=1
         )
         return df
-    # --------------------------......... Cálculo directo de media -----------------------------------------
-    def calculate_mean(df: pd.DataFrame) -> pd.DataFrame:
-        df['escenario_vulnerabilidad_social'] = float(round(df['escenario_vulnerabilidad_social'].mean(skipna=True), 1))
-        df['paredes_ext_revocadas'] = round(df['paredes_ext_revocadas'].mean(skipna=True), 1)
-        return df
+
     
