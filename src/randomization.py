@@ -22,11 +22,10 @@ def randomization(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
 # ------------------------------------------- Sampling ------------------------------------....
 
-def simple_random_sample(df: pd.DataFrame, n:int, seed=42) -> pd.DataFrame:
-        return df.sample(n=n,random_state=seed)
+def simple_random_sample(df: pd.DataFrame, n:int, random_state=42) -> pd.DataFrame:
+        return df.sample(n=n,random_state=random_state)
 
-     
-#Método para extraer muestra antes del bootstrapping
+# Method for Sampling Before Bootstrapping     
 def generate_samples_first(df_control:pd.DataFrame, df_treatment: pd.DataFrame)-> tuple[pd.DataFrame, pd.DataFrame]:
     srs_c= simple_random_sample(df_control, SAMPLE_SIZE)
     srs_t = simple_random_sample(df_treatment,SAMPLE_SIZE)
