@@ -34,11 +34,10 @@ def generate_samples_first(df_control:pd.DataFrame, df_treatment: pd.DataFrame, 
     srs_t = simple_random_sample(df_treatment,SAMPLE_SIZE, random_state)
     return srs_c, srs_t  
     
-# Recibe los dataframes de generate_sample_first y hace cálculos estadísticos sobre ciertas variables(columnas)
-def compute_sample_statistics_first(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame,pd.DataFrame]:
-    df_control, df_treatment = data #desempaquetado para poder aplicar los métodos
-    stats_c = SampleAnalysis(df_control)
-    stats_t = SampleAnalysis(df_treatment)
 
-    return stats_c, stats_t
-
+def compute_sample_statistics_first(data: tuple[pd.DataFrame, pd.DataFrame]) -> SampleAnalysis:
+    """
+     It receives the SRS samples from `generate_samples_first` and creates ONE instance of `SampleAnalysis` 
+    """
+    df_control, df_treatment = data  # unpacked so that the methods can be applied
+    return SampleAnalysis(df_control, df_treatment)
