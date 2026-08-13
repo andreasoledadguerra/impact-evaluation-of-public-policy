@@ -4,8 +4,9 @@ from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
 class SampleAnalysis:
     
-    def __init__(self, df: pd.DataFrame):
-        self.df = df
+    def __init__(self, df_control: pd.DataFrame, df_treatment: pd.DataFrame):
+        self.df_control = df_control
+        self.df_treatment = df_treatment
 
 # Muestras aleatorias simples y resumen estadístico por grupo
 
