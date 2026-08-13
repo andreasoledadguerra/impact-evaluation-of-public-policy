@@ -29,13 +29,17 @@ class SampleAnalysis:
 #        return sample
 #
 
-    def calculate_media_round(self, columns: list[str]= None, decimales: int = 1) -> dict[str, float]:
-        cols = columns or SPC_COLUMNS
-        return {
-            col: float(round(self.df[col].mean(skipna=True), decimales)) 
-            for col in cols
-        }
+    def calculate_media_round(self, columns: list[str] | None = None, decimals: int = 1) -> pd.DataFrame:
+        cols = columns if columns is not None else SPC_COLUMNS
 
+        rows = []
+        for grupo, df in (("Control", self.df_control), ("Tratamiento", self.df_treatment)):
+            fila = {"grupo": grupo}
+            fila.update(
+                {col: float(round(df[col].mean(skipna=True), decimals)) for col in cols}
+            )
+            rows.append(fila)
+        return pd.DataFrame(rows)
 
 
 #----------------------------este resultado debe sumarse al dataframe-----------------------------------
@@ -46,7 +50,6 @@ class SampleAnalysis:
 #def mean_ext_rev(df:pd.DataFrame):
 #    ext_rev= float(round(df['paredes_ext_revocadas'].mean(skipna=True), 1))
 #    return ext_rev
-#
 
 
 
