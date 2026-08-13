@@ -1,3 +1,5 @@
+SAMPLE_SIZE = 1000 
+
 NUM_COLUMNS = ['ingreso_anual_hogar', 'edad', 'personas_por_ambiente']
 
 CAT_CONDITIONS = {

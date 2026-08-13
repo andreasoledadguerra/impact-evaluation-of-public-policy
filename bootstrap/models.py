@@ -24,7 +24,7 @@ class BootstrapStats(BaseModel, frozen=True):
     
 
 # --- Subclase para variables binarias (bool) ---
-class BootstrapStatsBinary(BootstrapStats, frozen=True):
+class BootstrapStatsBinary(BootstrapStats, frozen=True): 
     """
     Para variables booleanas. mean = proporción p.
     Hereda validación de var = std² de la clase base.
