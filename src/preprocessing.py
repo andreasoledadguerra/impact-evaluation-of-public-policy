@@ -48,7 +48,7 @@ class ProcessedDataframe():
             errors='coerce'
         )
 
-        # Calcular edad aplicando relativedelta fila a fila
+        # Calculate age by applying `relativeDelta` row by row
         df['edad'] = df.apply(
             lambda row: relativedelta(row['fecha_carga'], row['fecha_de_nacimiento']).years 
                         if pd.notnull(row['fecha_de_nacimiento']) and pd.notnull(row["fecha_carga"]) else pd.NA,
