@@ -50,6 +50,15 @@ class SampleAnalysis:
 #def mean_ext_rev(df:pd.DataFrame):
 #    ext_rev= float(round(df['paredes_ext_revocadas'].mean(skipna=True), 1))
 #    return ext_rev
+#--------------------------------------------------------------------------------------------------------
 
-
+    def _for_both_groups(self, func, arg) -> pd.DataFrame:
+        """
+        Run `func` on both groups and combine the results into a single
+        DataFrame.
+        """
+        result_c = func(self.df_control, arg).assign(grupo="Control")
+        result_t = func(self.df_treatment, arg).assign(grupo="Tratamiento")
+        return pd.concat([result_c, result_t], ignore_index=True)
+ 
 
