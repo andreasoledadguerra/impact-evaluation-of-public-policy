@@ -34,24 +34,24 @@ class ProcessedDataframe():
         df = df[filtro].copy()
         return df
 
-    ## --------------------------- Cálculo de atributo faltante (edad) -----------------------------
+    # --------------------------------------- Calculation of a Missing Attribute (Age)  -----------------------------------------
+    @staticmethod
     def calculate_age(df: pd.DataFrame) -> pd.DataFrame:
-        # Como los valores de cada columna son de distinto tipo de dato, transformamos 'fecha_de_nacimiento' y 'fecha de_carga'
-        df.loc['fecha_de_nacimiento'] = pd.to_datetime(
+
+        df['fecha_de_nacimiento'] = pd.to_datetime(
             df['fecha_de_nacimiento'],
             errors='coerce'
         )
 
-        df.loc['fecha_carga'] = pd.to_datetime(
+        df['fecha_carga'] = pd.to_datetime(
             df['fecha_carga'],
             errors='coerce'
         )
 
-        #TODO:ver función lambda
         # Calcular edad aplicando relativedelta fila a fila
         df['edad'] = df.apply(
             lambda row: relativedelta(row['fecha_carga'], row['fecha_de_nacimiento']).years 
-                        if pd.notnull(row['fecha_de_nacimiento']) else pd.NA,
+                        if pd.notnull(row['fecha_de_nacimiento']) and pd.notnull(row["fecha_carga"]) else pd.NA,
             axis=1
         )
         return df
