@@ -10,10 +10,10 @@ class SampleAnalysis:
 
 # Muestras aleatorias simples y resumen estadístico por grupo
 
-#Estos métodos se usan en ambos grupos (muestra)
     def sample_media_std(self, columns: list[str]= None) -> pd.DataFrame:
-        cols = columns or NUM_COLUMNS
-        return calculate_media_std_list(self.df, cols)
+        cols = columns if columns is not None else NUM_COLUMNS
+        return self._for_both_groups(calculate_media_std_list, cols)
+
 
     def sample_media_condition(self, conditions: dict = None) -> pd.DataFrame:
         conds = conditions or CAT_CONDITIONS
