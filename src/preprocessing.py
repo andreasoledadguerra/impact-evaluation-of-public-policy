@@ -8,36 +8,30 @@ class ProcessedDataframe():
     def __init__(self, df: pd.DataFrame ) -> None:
         self.df = df
 
-    # ---------------------------------------- pre-procesamiento ------------------------------
+    # ---------------------------------------- pre-processing ------------------------------
     @staticmethod
     def concatenate_df() -> pd.DataFrame: 
-        
-        # Descargamos el dataframe con información de los municipios, los inscriptos al programa y los formularios completos por dichos inscriptos
+
         df_1 = pd.read_excel("ficha_inscriptos.xlsx")
         df_2 = pd.read_excel("formularios_curso.xlsx")
 
-        # Concatenamos dataframes por columna
+        # Concatenating dataframes by column
         df = pd.concat([df_1, df_2], axis=1)
 
         return df
 
 
+    # ------------------------------------------------- Initial filtering of candidates by group ----------------------------
+    @staticmethod
+    def filter_df(df: pd.DataFrame) -> pd.DataFrame:  
 
-    def filter_df(df: pd.DataFrame) -> pd.DataFrame:   
-
-        # Filtramos solo los inscriptos en etapa 1
+        # We filter only those registered for Stage 1
         df = df[df['etapa_inscripcion'] == 1 ]
 
-        #Filtramos solo los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente 
-        df[df['state'] == 'solicitud_adjudicada']
-        df[df['state'] =='solicitud_elegible_rechazadas_por_excedente']
-
-        # Asignamos variable al filtro de los inscriptos en estado solicitud_adjudicada ó solicitud_elegible_rechazadas_por_excedente
         filtro = (df['state'] == 'solicitud_adjudicada') | \
                  (df['state'] == 'solicitud_elegible_rechazadas_por_excedente')
 
-        # Creamos el nuevo dataframe aplicando el filtro
-        df = df[filtro]
+        df = df[filtro].copy()
         return df
 
     ## --------------------------- Cálculo de atributo faltante (edad) -----------------------------
