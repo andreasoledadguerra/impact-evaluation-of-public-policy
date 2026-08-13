@@ -10,14 +10,13 @@ class SampleAnalysis:
 
 # Muestras aleatorias simples y resumen estadístico por grupo
 
-    def sample_media_std(self, columns: list[str]= None) -> pd.DataFrame:
+    def sample_media_std(self, columns: list[str] | None = None) -> pd.DataFrame:
         cols = columns if columns is not None else NUM_COLUMNS
         return self._for_both_groups(calculate_media_std_list, cols)
 
-
-    def sample_media_condition(self, conditions: dict = None) -> pd.DataFrame:
-        conds = conditions or CAT_CONDITIONS
-        return calculate_media_condition(self.df, conds)
+    def sample_media_condition(self, conditions: dict | None = None) -> pd.DataFrame:
+        conds = conditions if conditions is not None else CAT_CONDITIONS
+        return self._for_both_groups(calculate_media_condition, conds)
 
 #def sample_media_condition(df:pd.DataFrame):
 #        dict_condiciones = {
@@ -36,6 +35,7 @@ class SampleAnalysis:
             col: float(round(self.df[col].mean(skipna=True), decimales)) 
             for col in cols
         }
+
 
 
 #----------------------------este resultado debe sumarse al dataframe-----------------------------------
