@@ -2,14 +2,8 @@ import pandas as pd
 import numpy as np
 
 from constants import SAMPLE_SIZE
-from src.preprocessing import ProcessedDataframe
 from src.sampleanalysis import SampleAnalysis
 
-
-
-# Initialize processed dataframe
-
-processed_df = ProcessedDataframe()
 
 # ------------------------------------ Filtro inicial de candidatos por grupo ----------------------------
 def randomization(df: pd.DataFrame) -> pd.DataFrame:
