@@ -5,17 +5,16 @@ from constants import SAMPLE_SIZE
 from src.sampleanalysis import SampleAnalysis
 
 
-# ------------------------------------ Filtro inicial de candidatos por grupo ----------------------------
-def randomization(df: pd.DataFrame) -> pd.DataFrame:
-
-# Se agrupa en 'Tratamiento' si se cumple 'solicitud_adjudicada', y 'control', en caso contrario
+# ------------------------------------ Initial filtering of candidates by group ----------------------------
+def randomization(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    It is grouped under “Processing” if ‘request_approved’ is true, and under “Control” otherwise
+    """
     df['grupo'] = np.where(df['state'] == 'solicitud_adjudicada','Tratamiento', 'Control')
 
-    # Guardar extracción de datos en "Control" o "Tratamiento"
     grupo_control = (df['grupo']) == 'Control' # es una serie que devuelve booleanos
     grupo_tratamiento = (df['grupo']) == 'Tratamiento' # idem
 
-    # A cada grupo le damos estructura de dataframe nuevo
     df_control = df[grupo_control]
     df_treatment = df[grupo_tratamiento]
 
