@@ -20,16 +20,19 @@ def randomization(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:
 
     return df_control, df_treatment
 
-# ------------------------------------------- Sampling ------------------------------------....
+# ---------------------------------------------------- Sampling ------------------------------------------------
 
 def simple_random_sample(df: pd.DataFrame, n:int, random_state=42) -> pd.DataFrame:
         return df.sample(n=n,random_state=random_state)
 
-# Method for Sampling Before Bootstrapping     
-def generate_samples_first(df_control:pd.DataFrame, df_treatment: pd.DataFrame)-> tuple[pd.DataFrame, pd.DataFrame]:
-    srs_c= simple_random_sample(df_control, SAMPLE_SIZE)
-    srs_t = simple_random_sample(df_treatment,SAMPLE_SIZE)
-    return srs_c, srs_t  #----> dos muestras en forma de df
+
+def generate_samples_first(df_control:pd.DataFrame, df_treatment: pd.DataFrame, random_state=42)-> tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Extract a simple random sample (SRS) from each group prior to bootstrapping.
+    """
+    srs_c= simple_random_sample(df_control, SAMPLE_SIZE, random_state)
+    srs_t = simple_random_sample(df_treatment,SAMPLE_SIZE, random_state)
+    return srs_c, srs_t  
     
 # Recibe los dataframes de generate_sample_first y hace cálculos estadísticos sobre ciertas variables(columnas)
 def compute_sample_statistics_first(data: tuple[pd.DataFrame, pd.DataFrame]) -> tuple[pd.DataFrame,pd.DataFrame]:
