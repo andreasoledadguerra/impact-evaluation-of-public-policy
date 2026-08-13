@@ -1,34 +1,26 @@
 import pandas as pd
-import numpy as np
 
 from dateutil.relativedelta import relativedelta
 
+
 class ProcessedDataframe():
 
-    def __init__(self, df):
+    def __init__(self, df: pd.DataFrame ) -> None:
         self.df = df
 
     # ---------------------------------------- pre-procesamiento ------------------------------
-    def concatenate_df(df_1:pd.DataFrame, df_2: pd.DataFrame, df_3: pd.DataFrame) -> pd.DataFrame: 
+    @staticmethod
+    def concatenate_df() -> pd.DataFrame: 
+        
         # Descargamos el dataframe con información de los municipios, los inscriptos al programa y los formularios completos por dichos inscriptos
-        df_1= pd.read_excel("base_municipios.xlsx")
-        df_2 = pd.read_excel("ficha_inscriptos.xlsx")
-        df_3= pd.read_excel("formularios_curso.xlsx")
+        df_1 = pd.read_excel("ficha_inscriptos.xlsx")
+        df_2 = pd.read_excel("formularios_curso.xlsx")
 
         # Concatenamos dataframes por columna
-        df = pd.concat([df_1, df_2, df_3], axis=1)
+        df = pd.concat([df_1, df_2], axis=1)
 
         return df
 
-    # --------------------------------------- Filtración ------------------------------------------
-    #def drop_columns(df:pd.DataFrame) -> pd.DataFrame:
-    #    df = df.drop(columns=['codigo_municipio', 'codigo_region', 'nombre_region', 'codigo_area','nombre_area', 'seccion_electoral',
-    #            'superficie(km2)', 'intendente', 'partido_politico_actual', 
-    #        'poblacion_censo_2010', 'poblacion_censo_2022'
-    #        ])
-    #
-    #    df = df.drop(['municipio'], axis=1, inplace=True)
-    #    return df
 
 
     def filter_df(df: pd.DataFrame) -> pd.DataFrame:   
