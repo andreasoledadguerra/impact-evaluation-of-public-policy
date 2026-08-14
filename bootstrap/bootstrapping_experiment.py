@@ -104,6 +104,7 @@ class BootstrapExperiment:
             var=float(serie.var(ddof=1)),
             n=n,
         )
+
     
     @staticmethod
     def _stats_for_categorical(
@@ -116,15 +117,16 @@ class BootstrapExperiment:
         n = int(serie.count())
 
         proportions = {
-            str(cat): float((serie == cat).sum() / n) for cat in allowed_categories
+            str(cat): float((serie == cat).mean()) for cat in allowed_categories
         }
+
         if sum(proportions.values()) == 0:
             logger.warning(
                 f"Ninguna observación pertenece a las categorías"
                 f"{allowed_categories}; revisar si están definidas correctamente."
             )
         
-        # Calcular proporciones normalizadas (suman 1)
+        # Calculate normalized ratios (that sum to 1)
         residual = 1.0 - sum(proportions.values())
         if residual > 1e-9:
             proportions["otros"] = residual
