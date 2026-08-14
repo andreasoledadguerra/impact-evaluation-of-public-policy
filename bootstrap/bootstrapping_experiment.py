@@ -41,16 +41,17 @@ class BootstrapExperiment:
         self.smd_summary = self._calculate_smd()
 
 
-    #------------------------Private methods-----------------------------------
+    #----------------------------------Private methods-----------------------------------
 
     def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
-        bootstrap_c = self._df_control[self._all_columns].sample(
+        columns = self._registry.columns
+        bootstrap_c = self._df_control[columns].sample(
             n = len(self._df_control),
             replace = True,
             random_state = self._random_state,
         )
-        bootstrap_t = self._df_treatment[self._all_columns].sample(
-                 n = len(self._df_treatment),
+        bootstrap_t = self._df_treatment[columns].sample(
+            n = len(self._df_treatment),
             replace = True,
             random_state = self._random_state,
         )
@@ -62,7 +63,7 @@ class BootstrapExperiment:
     # el grupo control y otro sobre el grupo tratamiento
 
     def _calculate_stats(
-            self,
+            self,  
             bootstrap_samples: pd.DataFrame
     ) -> dict[str, StatsType]:
         """
