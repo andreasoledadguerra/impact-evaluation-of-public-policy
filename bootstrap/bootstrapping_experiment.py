@@ -38,7 +38,7 @@ class BootstrapExperiment:
         self.bootstrap_c, self.bootstrap_t = self._generate_samples()
         self.stats_c = self._calculate_stats(self.bootstrap_c)
         self.stats_t = self._calculate_stats(self.bootstrap_t)
-        self.smd = self._calculate_smd()
+        self.smd_summary = self._calculate_smd()
 
 
     #------------------------Private methods-----------------------------------
