@@ -16,6 +16,8 @@ from representativity.smd import SMDCalculator
 
 logger = logging.getLogger(__name__)
 
+
+
 class BootstrapExperiment:
 
     def __init__(
@@ -28,10 +30,7 @@ class BootstrapExperiment:
     ) -> None:
         
         self._df_control, self._df_treatment = data
-        self._num_columns = num_columns
-        self._cat_conditions = cat_conditions
-        self._spc_columns = spc_columns
-        self._all_columns = num_columns + list(cat_conditions.keys()) + spc_columns
+        self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._random_state = random_state
 
     # Automatization
