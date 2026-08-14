@@ -75,15 +75,16 @@ class BootstrapExperiment:
 
         stats: dict[str, StatsType] = {}
         
-        for col in self._num_columns:
+        for col in self._registry.continuous_columns:
             serie = bootstrap_samples[col].dropna()
             stats[col] = self._stats_for_continuous(serie, int(serie.count()))
 
-        for col, allowed_categories in self._cat_conditions.items():
+        for col in self._registry.categorical_columns:
             serie = bootstrap_samples[col].dropna()
+            allowed_categories = self._registry.allowed_categories(col)
             stats[col]= self._stats_for_categorical(serie, allowed_categories)
    
-        for col in self._spc_columns:
+        for col in self._registry.binary_columns:
             serie = bootstrap_samples[col].dropna()
             stats[col] = self._stats_for_binary(serie, int(serie.count()))
 
