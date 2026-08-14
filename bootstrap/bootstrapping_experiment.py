@@ -136,6 +136,7 @@ class BootstrapExperiment:
             proportions=proportions,
         )
 
+
     @staticmethod
     def _stats_for_binary(serie: pd.Series, n: int) -> BootstrapStatsBinary:
         """
@@ -157,6 +158,7 @@ class BootstrapExperiment:
             n=n,
         )
 
+
  
     def _calculate_smd(self) -> pd.DataFrame:
         """
@@ -165,15 +167,15 @@ class BootstrapExperiment:
         """
         results = []
  
-        for col in self._num_columns:
+        for col in self._registry.continuous_columns:
             smd = SMDCalculator.smd_continuous(self.stats_c[col], self.stats_t[col])
             results.append(self._smd_row(col, "continua", smd))
  
-        for col in self._spc_columns:
+        for col in self._registry.binary_columns:
             smd = SMDCalculator.smd_binary(self.stats_c[col], self.stats_t[col])
             results.append(self._smd_row(col, "binaria", smd))
  
-        for col in self._cat_conditions:
+        for col in self._registry.categorical_columns:
             smd = SMDCalculator.smd_categorical(
                 self.stats_c[col], self.stats_t[col], resumen="max"
             )
@@ -186,6 +188,7 @@ class BootstrapExperiment:
             .sort_values("abs_SMD", ascending=False, na_position="last")
             .reset_index(drop=True)
         )
+
 
     @staticmethod
     def _smd_row(variable: str, tipo: str, smd: float) -> dict:
