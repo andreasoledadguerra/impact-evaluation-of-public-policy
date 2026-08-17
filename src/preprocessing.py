@@ -1,6 +1,7 @@
 import pandas as pd
 
 from dateutil.relativedelta import relativedelta
+from config import INSCRIPTOS_PATH, FORMULARIOS_PATH
 
 
 class ProcessedDataframe():
@@ -12,8 +13,8 @@ class ProcessedDataframe():
     @staticmethod
     def concatenate_df() -> pd.DataFrame: 
 
-        df_1 = pd.read_excel("ficha_inscriptos.xlsx")
-        df_2 = pd.read_excel("formularios_curso.xlsx")
+        df_1 = pd.read_excel(INSCRIPTOS_PATH)
+        df_2 = pd.read_excel(FORMULARIOS_PATH)
 
         # Concatenating dataframes by column
         df = pd.concat([df_1, df_2], axis=1)
