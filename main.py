@@ -8,8 +8,6 @@ from src.sampleanalysis import SampleAnalysis
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
-sample_analysis = SampleAnalysis()
-
 RANDOM_STATE = 42
 
 def calculate_rep_coef(
