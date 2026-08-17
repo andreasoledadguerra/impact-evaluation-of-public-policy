@@ -10,7 +10,6 @@ from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
 sample_analysis = SampleAnalysis()
 
-SAMPLE_SIZE = 1000
 RANDOM_STATE = 42
 
 def calculate_rep_coef(
