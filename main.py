@@ -115,11 +115,12 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 4. Estadística descriptiva final sobre las muestras
+    # 4. Final Descriptive Statistics
     # -----------------------------------------------------------------
-    # TODO: confirmar si SampleAnalysis recibe los DataFrames en el
-    # constructor o en un método aparte (ej. .analyze(df_control))
-    sample_analysis = SampleAnalysis()
+    sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
+    media_std = sample_analysis.sample_media_std()
+    media_condition = sample_analysis.sample_media_condition()
+    media_round = sample_analysis.calculate_media_round()
 
     # -----------------------------------------------------------------
     # 5. Exportación de resultados
