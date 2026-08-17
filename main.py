@@ -106,20 +106,13 @@ def main() -> dict:
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
     # -----------------------------------------------------------------
-    # 3. Coeficiente de representatividad de la muestra vs. población
-    #    (ejemplo con "ingreso_anual_hogar" — extensible a otras columnas
-    #    iterando sobre NUM_COLUMNS)
+    # 3. Representativeness coefficient of the sample vs. the population
     # -----------------------------------------------------------------
     rep_coef_iah = calculate_rep_coef(
-        processed_df=processed_df,
-        sample=(df_control, df_treatment),
+        processed_df=processed_df.df,
+        sample=(srs_c, srs_t),
         column="ingreso_anual_hogar",
     )
-
-    # TODO: si SMDCalculator (representativity/smd.py) ya implementa esta
-    # lógica de representatividad, calculate_rep_coef() de acá arriba
-    # debería llamarlo en vez de reimplementar la fórmula. Evaluar si
-    # conviene mover calculate_rep_coef() dentro de SMDCalculator.
 
     # -----------------------------------------------------------------
     # 4. Estadística descriptiva final sobre las muestras
