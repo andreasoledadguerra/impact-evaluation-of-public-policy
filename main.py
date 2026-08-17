@@ -67,54 +67,43 @@ def main() -> dict:
     aged_df = ProcessedDataframe.calculate_age(filtered_df)
     processed_df = ProcessedDataframe(aged_df)
 
-    # -----------------------------------------------------------------
-    # 1. Primera extracción de muestra y cálculo estadístico por grupo
-    # -----------------------------------------------------------------
-    df_control, df_treatment = generate_samples_first(
-        processed_df, sample_size=SAMPLE_SIZE, random_state=RANDOM_STATE
-    )
-
-    first_sample_statistics = compute_sample_statistics_first(df_control, df_treatment)
 
     # -----------------------------------------------------------------
-    # 2. Bootstrapping sobre NUM_COLUMNS, CAT_CONDITIONS y SPC_COLUMNS
+    # 1. Grouping + simple random sampling (SRS)
     # -----------------------------------------------------------------
-    # Cada tipo de columna requiere una ruta de cálculo distinta:
-    #   - NUM_COLUMNS    -> continua: mean + std + var + cv
+    df_control, df_treatment = randomization(processed_df.df)
+    srs_c, srs_t = generate_samples_first(df_control, df_treatment, random_state=RANDOM_STATE)
+    
+
+    # -----------------------------------------------------------------
+    # 2. Bootstrapping on SRS Samples
+    # -----------------------------------------------------------------
+    # Each column type requires a different calculation path:
+    #   - NUM_COLUMNS    -> continuous: mean + std + var + cv
     #                       (BootstrapStatsContinuous)
-    #   - CAT_CONDITIONS -> condición puntual por (columna, valor), ej.
-    #                       ('relación_de_parentezco_con_jefe_del_hogar',
-    #                       'Soy jefa(e)'). NO es exhaustivo por columna,
-    #                       así que debería resolverse como
-    #                       BootstrapStatsBinary por cada condición
-    #                       (proporción + p*(1-p)), no como
-    #                       BootstrapStatsCategorical — ese modelo exige
-    #                       sum(proportions) == 1.0, cosa que una condición
-    #                       aislada como 'Soy jefa(e)' no cumple.
-    #   - SPC_COLUMNS    -> numérica codificada / ordinal: media redondeada,
-    #                       sin var/std (revisar si alguna, ej.
-    #                       'paredes_ext_revocadas', es en realidad binaria
-    #                       y debería ir por BootstrapStatsBinary también)
-    #
-    # TODO: confirmar que BootstrapExperiment acepta estos tres parámetros
-    # por separado. Si el constructor real solo toma "columns" (como en el
-    # borrador original), hay que ampliarlo o instanciar el experimento
-    # tres veces, una por tipo de variable.
+    #   - CAT_CONDITIONS -> specific condition by (column, value), e.g.
+    #                       (‘relacion_de_parentezco_con jefe_del hogar'’,
+    #                       ‘'Soy jefa(e)’). This is NOT exhaustive per column,
+    #                       so it should be resolved as
+    #                       BootstrapStatsBinary for each condition
+    #                       (proportion + p*(1-p)), not as
+    #                       BootstrapStatsCategorical—that model requires
+    #                       sum(proportions) == 1.0.
+    #   - SPC_COLUMNS    -> coded numerical / ordinal: rounded mean,
+    #                       no var/std 
+
     experiment = BootstrapExperiment(
-        data=(df_control, df_treatment),
+        data=(srs_c, srs_t),
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
         random_state=RANDOM_STATE,
     )
 
-    # TODO: confirmar si el bootstrap corre al instanciar la clase o si hace
-    # falta un método explícito, ej. experiment.run()
-    # experiment.run()
 
     bootstrap_c = experiment.bootstrap_c
     bootstrap_t = experiment.bootstrap_t
-    smd_summary = experiment.smd_summary  # balance control vs. tratamiento
+    smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
     # -----------------------------------------------------------------
     # 3. Coeficiente de representatividad de la muestra vs. población
