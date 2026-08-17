@@ -60,11 +60,12 @@ def calculate_rep_coef(
 
 def main() -> dict:
     # -----------------------------------------------------------------
-    # 0. Carga de datos procesados
+    # 0. Preprocessing
     # -----------------------------------------------------------------
-    # TODO: confirmar si ProcessedDataframe() devuelve directamente un
-    # pd.DataFrame o si hay que acceder a un atributo (ej. .data / .df)
-    processed_df = ProcessedDataframe()
+    raw_df = ProcessedDataframe.concatenate_df()
+    filtered_df = ProcessedDataframe.filter_df(raw_df)
+    aged_df = ProcessedDataframe.calculate_age(filtered_df)
+    processed_df = ProcessedDataframe(aged_df)
 
     # -----------------------------------------------------------------
     # 1. Primera extracción de muestra y cálculo estadístico por grupo
