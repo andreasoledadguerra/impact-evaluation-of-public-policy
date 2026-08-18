@@ -1,7 +1,7 @@
 import pandas as pd
 
 from dateutil.relativedelta import relativedelta
-from config import INSCRIPTOS_PATH, FORMULARIOS_PATH
+from config import MUNICIPIOS_PATH, INSCRIPTOS_PATH, FORMULARIOS_PATH
 
 
 class ProcessedDataframe():
@@ -15,9 +15,10 @@ class ProcessedDataframe():
 
         df_1 = pd.read_excel(INSCRIPTOS_PATH)
         df_2 = pd.read_excel(FORMULARIOS_PATH)
+        df_3 = pd.read_excel(MUNICIPIOS_PATH)
 
         # Concatenating dataframes by column
-        df = pd.concat([df_1, df_2], axis=1)
+        df = pd.concat([df_1, df_2, df_3], axis=1)
 
         return df
 
