@@ -100,14 +100,6 @@ def main() -> dict:
     #   - SPC_COLUMNS    -> coded numerical / ordinal: rounded mean,
     #                       no var/std 
 
-    for col in CAT_CONDITIONS:
-        print(f"\nColumna: {col}")
-        print(f"  Control: nulos={df_control[col].isna().sum()} / total={len(df_control)}")
-        print(f"  Tratamiento: nulos={df_treatment[col].isna().sum()} / total={len(df_treatment)}")
-        print(f"  Categorías en control: {df_control[col].dropna().unique()}")
-        print(f"  Categorías en tratamiento: {df_treatment[col].dropna().unique()}")
-
-        
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
         num_columns=NUM_COLUMNS,
