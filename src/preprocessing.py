@@ -13,12 +13,17 @@ class ProcessedDataframe():
     @staticmethod
     def concatenate_df() -> pd.DataFrame: 
 
-        df_1 = pd.read_excel(INSCRIPTOS_PATH)
-        df_2 = pd.read_excel(FORMULARIOS_PATH)
-        df_3 = pd.read_excel(MUNICIPIOS_PATH)
+        df_1 = pd.read_excel(MUNICIPIOS_PATH)
+        df_2 = pd.read_excel(INSCRIPTOS_PATH)
+        df_3 = pd.read_excel(FORMULARIOS_PATH)
 
         # Concatenating dataframes by column
-        df = pd.concat([df_1, df_2, df_3], axis=1)
+        df = pd.concat([df_2, df_3], axis=1)
+
+        if 'municipio' not in df.columns or 'municipio' not in df_1.columns:
+            raise ValueError("Falta columna 'municipio' para el merge con municipios")
+
+        df = df.merge(df_1, on='municipio', how='left')
 
         return df
 
