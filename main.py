@@ -62,9 +62,18 @@ def main() -> dict:
     # 0. Preprocessing
     # -----------------------------------------------------------------
     raw_df = ProcessedDataframe.concatenate_df()
+    #print("Columnas después de concatenar:", raw_df.columns.tolist())
+    #print("¿Está conurbano_interior?", 'conurbano_interior' in raw_df.columns)
+    #print("¿Está relación...?", 'relacion_de_parentezco_con_jefe_del_hogar' in raw_df.columns)
+
+
     filtered_df = ProcessedDataframe.filter_df(raw_df)
+    #print("Columnas después de filtrar:", filtered_df.columns.tolist())
+
+
     aged_df = ProcessedDataframe.calculate_age(filtered_df)
     processed_df = ProcessedDataframe(aged_df)
+    #print("Columnas después de calcular edad:", aged_df.columns.tolist())
 
 
     # -----------------------------------------------------------------
@@ -91,6 +100,14 @@ def main() -> dict:
     #   - SPC_COLUMNS    -> coded numerical / ordinal: rounded mean,
     #                       no var/std 
 
+    for col in CAT_CONDITIONS:
+        print(f"\nColumna: {col}")
+        print(f"  Control: nulos={df_control[col].isna().sum()} / total={len(df_control)}")
+        print(f"  Tratamiento: nulos={df_treatment[col].isna().sum()} / total={len(df_treatment)}")
+        print(f"  Categorías en control: {df_control[col].dropna().unique()}")
+        print(f"  Categorías en tratamiento: {df_treatment[col].dropna().unique()}")
+
+        
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
         num_columns=NUM_COLUMNS,
