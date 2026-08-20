@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 RANDOM_STATE = 42
 
-def calculate_rep_coef(
+def calculate_rep_coef_smd(
     processed_df: pd.DataFrame,
     sample: tuple[pd.DataFrame, pd.DataFrame],
     column: str,
