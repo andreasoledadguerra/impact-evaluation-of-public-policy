@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 RANDOM_STATE = 42
 
+# Este método no va acá
 def calculate_rep_coef_smd(
     processed_df: pd.DataFrame,
     sample: tuple[pd.DataFrame, pd.DataFrame],
@@ -70,7 +71,7 @@ def main() -> dict:
     logger.info("Starting preprocessing...")
 
     raw_df = ProcessedDataframe.concatenate_df()
-    logger.info("Preprocessing completed: {len(raw_df)} rows, {len(raw_df.columns)} columns.")
+    logger.info(f"Preprocessing completed: {len(raw_df)} rows, {len(raw_df.columns)} columns.")
     #print("Columnas después de concatenar:", raw_df.columns.tolist())
     #print("¿Está conurbano_interior?", 'conurbano_interior' in raw_df.columns)
     #print("¿Está relación...?", 'relacion_de_parentezco_con_jefe_del_hogar' in raw_df.columns)
@@ -82,21 +83,24 @@ def main() -> dict:
 
     aged_df = ProcessedDataframe.calculate_age(filtered_df)
     processed_df = ProcessedDataframe(aged_df)
-    logger.info("Age calculation completed: {len(aged_df)} rows, {len(aged_df.columns)} columns.")
+    logger.info(f"Age calculation completed: {len(aged_df)} rows, {len(aged_df.columns)} columns.")
     #print("Columnas después de calcular edad:", aged_df.columns.tolist())
 
+    # -----------------------------------------------------------------
+    # 1. Statistical Summary of the Population
+    # -----------------------------------------------------------------
 
     # -----------------------------------------------------------------
-    # 1. Grouping + simple random sampling (SRS)
+    # 2. Grouping + simple random sampling (SRS)
     # -----------------------------------------------------------------
     df_control, df_treatment = randomization(processed_df.df)
-    logger.info("Randomization completed: {len(df_control)} control rows, {len(df_treatment)} treatment rows.")
+    logger.info(f"Randomization completed: {len(df_control)} control rows, {len(df_treatment)} treatment rows.")
 
     srs_c, srs_t = generate_samples_first(df_control, df_treatment, random_state=RANDOM_STATE)
-    logger.info("SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
+    logger.info(f"SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
 
     # -----------------------------------------------------------------
-    # 2. Bootstrapping on SRS Samples
+    # 3. Bootstrapping on SRS Samples
     # -----------------------------------------------------------------
     # Each column type requires a different calculation path:
     #   - NUM_COLUMNS    -> continuous: mean + std + var + cv
@@ -127,7 +131,7 @@ def main() -> dict:
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
     # -----------------------------------------------------------------
-    # 3. Representativeness coefficient of the sample vs. the population
+    # 4. Representativeness coefficient of the sample vs. the population
     # -----------------------------------------------------------------
     rep_coef_iah = calculate_rep_coef(
         processed_df=processed_df.df,
@@ -141,7 +145,7 @@ def main() -> dict:
 
     )
     # -----------------------------------------------------------------
-    # 4. Final Descriptive Statistics
+    # 5. Final Descriptive Statistics
     # -----------------------------------------------------------------
     sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
     media_std = sample_analysis.sample_media_std()
@@ -152,7 +156,7 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 5. Exporting Results
+    # 6. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
