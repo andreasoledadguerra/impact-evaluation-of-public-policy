@@ -31,6 +31,7 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │   ├── __init__.py
 │   ├── preprocessing.py       # Data cleaning and transformation
 │   ├── randomization.py       # Simple random sampling (SRS) per group
+│   ├── population.py          # population's statistics
 │   ├── sampleanalysis.py      # SampleAnalysis class - descriptive stats on samples
 │   ├── visualization.py       # Plots and charts-----------------X
 │   └── reporting.py           # Report and export generation-----X
