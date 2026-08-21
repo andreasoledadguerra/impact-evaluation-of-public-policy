@@ -3,6 +3,7 @@ import logging
 import pandas as pd
 
 from config import FINAL_DATA_PATH
+from src.population import PopulationSummary
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
@@ -89,6 +90,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
+    population_stats = PopulationSummary(processed_df)
 
     # -----------------------------------------------------------------
     # 2. Grouping + simple random sampling (SRS)
@@ -122,6 +124,7 @@ def main() -> dict:
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
         random_state=RANDOM_STATE,
+        population_stats = population_stats.summary
     )
 
     logger.info("Bootstrapping completed")
