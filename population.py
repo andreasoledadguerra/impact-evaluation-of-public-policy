@@ -21,3 +21,5 @@ class PopulationProportions(BaseModel, frozen=True):
       raise ValueError(f"Total proportion must be 1.0, got {total_proportion}")
     return self
 
+PopulationStatsType = PopulationStats | PopulationProportions
+
