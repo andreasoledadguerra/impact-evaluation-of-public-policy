@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 
 from config import FINAL_DATA_PATH
-from src.population import PopulationSummary
+from models import GruopSummary, SubGroupSummary
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
@@ -90,7 +90,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
-    population_stats = PopulationSummary(processed_df)
+    population_stats = GruopSummary(processed_df)
 
     # -----------------------------------------------------------------
     # 2. Grouping (Statistical summary of the control group and the treatment group) + simple random sampling (SRS)
@@ -102,7 +102,12 @@ def main() -> dict:
     logger.info(f"SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
 
     # -----------------------------------------------------------------
-    # 3. Bootstrapping on SRS Samples
+    # 3. Validate group representativeness
+    # -----------------------------------------------------------------
+
+
+    # -----------------------------------------------------------------
+    # 4. Bootstrapping on SRS Samples
     # -----------------------------------------------------------------
     # Each column type requires a different calculation path:
     #   - NUM_COLUMNS    -> continuous: mean + std + var + cv
@@ -134,7 +139,7 @@ def main() -> dict:
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
     # -----------------------------------------------------------------
-    # 4. Representativeness coefficient of the sample vs. the population
+    # 5. Representativeness coefficient of the sample vs. the population
     # -----------------------------------------------------------------
     rep_coef_iah = calculate_rep_coef(
         processed_df=processed_df.df,
@@ -148,7 +153,7 @@ def main() -> dict:
 
     )
     # -----------------------------------------------------------------
-    # 5. Final Descriptive Statistics
+    # 6. Final Descriptive Statistics
     # -----------------------------------------------------------------
     sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
     media_std = sample_analysis.sample_media_std()
@@ -159,7 +164,7 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 6. Exporting Results
+    # 7. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
