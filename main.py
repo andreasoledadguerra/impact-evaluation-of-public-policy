@@ -91,6 +91,11 @@ def main() -> dict:
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
     population_stats = GruopSummary(processed_df)
+    logger.info(
+        f"Population baseline calculated:"
+        f"{len(population_stats.summary)} variables summarized"
+    )
+
 
     # -----------------------------------------------------------------
     # 2. Grouping (Statistical summary of the control group and the treatment group) + simple random sampling (SRS)
@@ -101,6 +106,11 @@ def main() -> dict:
     srs_c, srs_t = generate_samples_first(df_control, df_treatment, random_state=RANDOM_STATE)
     logger.info(f"SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
 
+    control_treatment_stats = SubGroupSummary((srs_c, srs_t))
+    logger.info(
+        f"Control ({len(control_treatment_stats.summary_control)} vars)"
+        f"Treatment ({len(control_treatment_stats.summary_treatment)} vars)"
+    )
     # -----------------------------------------------------------------
     # 3. Validate group representativeness
     # -----------------------------------------------------------------
