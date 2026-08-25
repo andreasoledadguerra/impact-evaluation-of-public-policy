@@ -60,7 +60,21 @@ class GruopSummary:
 
     return result
   
+class SubGroupSummary:
 
+  def __init__(self,data:tuple[pd.Dataframe, pd.DataFrame]):
+    df_control, df_treatment = data   #unpack the tuple
+    self.summary_control = GruopSummary(df_control).summary
+    self.summary_treatment = GruopSummary(df_treatment).summary
+
+  def get(self, group: str) -> dict[str, StatType]:
+
+    if group == 'control':
+      return self.summary_control
+    elif group == 'treatment':
+      return self.summary_treatment
+    else:
+      raise ValueError(f" '{group}' not valid. Use 'control' or 'treatment'.")
 
 
 
