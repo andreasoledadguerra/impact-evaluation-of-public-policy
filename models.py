@@ -22,7 +22,7 @@ class Proportions(BaseModel, frozen=True):
     return self
 
 
-PopulationStatType = Stats | Proportions
+StatType = Stats | Proportions
 
 class GruopSummary:
 
@@ -30,7 +30,7 @@ class GruopSummary:
     self.df = df
     self.summary = self._calculate()
 
-  def _calculate(self) -> dict[str, PopulationStatType]:
+  def _calculate(self) -> dict[str, StatType]:
     result = {}
 
     for col in NUM_COLUMNS + SPC_COLUMNS:
@@ -59,5 +59,8 @@ class GruopSummary:
       )
 
     return result
-
   
+
+
+
+
