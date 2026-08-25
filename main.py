@@ -93,7 +93,7 @@ def main() -> dict:
     population_stats = PopulationSummary(processed_df)
 
     # -----------------------------------------------------------------
-    # 2. Grouping + simple random sampling (SRS)
+    # 2. Grouping (Statistical summary of the control group and the treatment group) + simple random sampling (SRS)
     # -----------------------------------------------------------------
     df_control, df_treatment = randomization(processed_df.df)
     logger.info(f"Randomization completed: {len(df_control)} control rows, {len(df_treatment)} treatment rows.")
