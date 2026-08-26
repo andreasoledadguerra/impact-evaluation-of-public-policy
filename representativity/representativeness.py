@@ -1,6 +1,6 @@
 import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
-from models import Mean
+from models import Mean, Proportions
 
 def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]) -> dict:
 
@@ -21,6 +21,37 @@ def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]) -> dict:
             t_n = int(serie_t.count())
 
         )
+
+    for col, categories in CAT_CONDITIONS.items():
+       serie_c.df_control[col].dropna()
+       serie_t.df_treatment[col].dropna()
+       filtered_c = serie_c[serie_c.isin(categories)]
+       props_c = (
+          filtered_c
+         .value_counts(normalize=True)
+         .round(4)
+         .to_dict()
+       )
+       filtered_t = serie_t[serie_c.isin(categories)]
+       props_t = (
+        filtered_t
+         .value_counts(normalize=True)
+         .round(4)
+         .to_dict()
+       )
+
+       result[col] = Proportions(
+         column = col,
+         proportions = {str(k): float(v) for k, v in props_c.items()},
+               n = int(serie_c.count())
+          )
+       result[col] = Proportions(
+         column = col,
+         proportions = {str(k): float(v) for k, v in props_t.items()},
+               n = int(serie_t.count())
+          )
+
+    
     return result
 
 
