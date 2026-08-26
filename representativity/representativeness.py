@@ -1,14 +1,28 @@
 import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
+from models import Mean
 
-def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]):
+def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]) -> dict:
 
     df_control, df_treatment = data
 
+    # puede no ser un dict
+    result = {}
+
     for col in NUM_COLUMNS + SPC_COLUMNS:
-        serie = df_control[col].dropna()
-        mean_c = serie.mean()
-        
+        serie_c = df_control[col].dropna()
+        serie_t = df_treatment[col].dropna()
+    
+        result[col] = Mean(
+            column = col,
+            c_mean = serie_c.mean(),
+            c_n = int(serie_c.count()),
+            t_mean = serie_t.mean(),
+            t_n = int(serie_t.count())
+
+        )
+    return result
+
 
 # p_mean quizá sea una constante
 
