@@ -25,7 +25,7 @@ class Proportions(BaseModel, frozen=True):
 
 StatType = Stats | Proportions
 
-class GruopSummary:
+class GroupSummary:
 
   def __init__(self, df):
     self.df = df
@@ -63,10 +63,10 @@ class GruopSummary:
   
 class SubGroupSummary:
 
-  def __init__(self,data:tuple[pd.Dataframe, pd.DataFrame]):
+  def __init__(self,data:tuple[pd.DataFrame, pd.DataFrame]):
     df_control, df_treatment = data   #unpack the tuple
-    self.summary_control = GruopSummary(df_control).summary
-    self.summary_treatment = GruopSummary(df_treatment).summary
+    self.summary_control = GroupSummary(df_control).summary
+    self.summary_treatment = GroupSummary(df_treatment).summary
 
   def get(self, group: str) -> dict[str, StatType]:
 

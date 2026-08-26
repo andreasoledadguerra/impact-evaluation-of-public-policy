@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 
 from config import FINAL_DATA_PATH
-from models import GruopSummary, SubGroupSummary
+from models import GroupSummary, SubGroupSummary
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
@@ -90,7 +90,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
-    population_stats = GruopSummary(processed_df)
+    population_stats = GroupSummary(processed_df)
     logger.info(
         f"Population baseline calculated:"
         f"{len(population_stats.summary)} variables summarized"
@@ -107,14 +107,29 @@ def main() -> dict:
     logger.info(f"SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
 
     control_treatment_stats = SubGroupSummary((srs_c, srs_t))
+    # este debe aparecer como argumento en BootstrapExperiment or so
     logger.info(
         f"Control ({len(control_treatment_stats.summary_control)} vars)"
         f"Treatment ({len(control_treatment_stats.summary_treatment)} vars)"
     )
+
+
     # -----------------------------------------------------------------
     # 3. Validate group representativeness
     # -----------------------------------------------------------------
+    # 5. Representativeness coefficient of the sample vs. the population
+    # -----------------------------------------------------------------
+    rep_coef_iah = calculate_rep_coef(
+        processed_df=processed_df.df,
+        sample=(srs_c, srs_t),
+        column="ingreso_anual_hogar",
+    )
 
+    logger.info("Representativeness coefficient calculated for 'ingreso_anual_hogar': "
+                f"SMD control={{rep_coef_iah['smd_control']:.4f}},"
+                f"SMD treatment={{rep_coef_iah['smd_treatment']:.4f}}"
+
+    )
 
     # -----------------------------------------------------------------
     # 4. Bootstrapping on SRS Samples
@@ -148,20 +163,6 @@ def main() -> dict:
     bootstrap_t = experiment.bootstrap_t
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
-    # -----------------------------------------------------------------
-    # 5. Representativeness coefficient of the sample vs. the population
-    # -----------------------------------------------------------------
-    rep_coef_iah = calculate_rep_coef(
-        processed_df=processed_df.df,
-        sample=(srs_c, srs_t),
-        column="ingreso_anual_hogar",
-    )
-
-    logger.info("Representativeness coefficient calculated for 'ingreso_anual_hogar': "
-                f"SMD control={{rep_coef_iah['smd_control']:.4f}},"
-                f"SMD treatment={{rep_coef_iah['smd_treatment']:.4f}}"
-
-    )
     # -----------------------------------------------------------------
     # 6. Final Descriptive Statistics
     # -----------------------------------------------------------------
