@@ -1,8 +1,16 @@
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field, model_validator
+from typing import NamedTuple
 from src.utils import _calculate_media_std, calculate_media_condition
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
+
+class Mean(NamedTuple):
+  column: str
+  c_mean: float
+  c_n: int = Field(..., gt=0)
+  t_mean: float
+  t_n: int = Field(...,gt=0 )
 
 class Stats(BaseModel, frozen=True):
   column: str
