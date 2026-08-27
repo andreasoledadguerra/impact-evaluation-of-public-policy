@@ -8,6 +8,10 @@ def abs_error_vs_population(sample_mean:float, population_mean: float) -> float:
         return np.nan
     return float(abs(sample_mean - population_mean))
 
+def rel_error_vs_population(sample_mean: float, population_mean:float) -> float:
+    if np.isnan(sample_mean) or np.isnan(population_mean):
+        return np.nan
+    return float(abs(sample_mean - population_mean))
 
 #@classmethod
 def _mean_in_columns(
