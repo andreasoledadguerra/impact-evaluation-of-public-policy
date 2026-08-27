@@ -1,6 +1,12 @@
+import numpy as np
 import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 from schema import Mean, Proportions
+
+def abs_error_vs_population(sample_mean:float, population_mean: float) -> float:
+    if np.isnan(sample_mean) or np.isnan(population_mean):
+        return np.nan
+    return float(abs(sample_mean - population_mean))
 
 
 #@classmethod
