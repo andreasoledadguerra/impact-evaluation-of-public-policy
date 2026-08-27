@@ -22,6 +22,21 @@ def perc_error_vs_population(sample_mean: float, population_mean: float) ->float
     return float(relative_error * 100)
 
 
+def representativeness_coefficient(sample_mean: float, population_mean: float) ->float:
+  """
+      Representativeness coefficient = 1 - relative_error
+      Close to 1.0 -> high representativeness (low relative error).
+      Since relative_error is always >= 0 (it is derived from the absolute error),
+      this coefficient never exceeds 1.0, but it CAN be negative if the relative error exceeds 
+      100% of the population mean (the sample deviates more than the value of the reference mean itself)
+
+  """
+  relative_error =rel_error_vs_population(sample_mean, population_mean)
+  if np.isnan(relative_error):
+      return np.nan
+  return float(1 - relative_error)
+
+
 #@classmethod
 def _mean_in_columns(
     processed_df: pd.DataFrame,
