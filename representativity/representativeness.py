@@ -21,22 +21,24 @@ class RepresentativenessCalculator:
 
       return float(mask.mean())
 
+  @classmethod
   def _get_mean(
-          df:pd.DataFrame,
-          column: str,
-          var_config: dict,
+      cls,
+      df:pd.DataFrame,
+      column: str,
+      var_config: dict,
   ) -> float:
       vtype = var_config.get("type", "numeric")
 
       if vtype == "numeric":
-          return _numeric_mean(df[column])
+          return cls._numeric_mean(df[column])
 
       if vtype == "categorical":
             condition = var_config["condition"]
-            return _categorical_mean(df[column], condition)
+            return cls._categorical_mean(df[column], condition)
 
       if vtype == "special":
-            return _numeric_mean(df[column])
+            return cls._numeric_mean(df[column])
 
       raise ValueError(f"Unknown variable type: {vtype}") 
 
@@ -47,20 +49,22 @@ class RepresentativenessCalculator:
       return float(abs(sample_mean - population_mean))
 
 
-  def rel_error_vs_population(sample_mean: float, population_mean:float) -> float:
-      if np.isnan(sample_mean) or np.isnan(population_mean):
+  @classmethod
+  def rel_error_vs_population(cls, sample_mean: float, population_mean:float) -> float:
+      abs_error = cls.abs_error_vs_population(sample_mean, population_mean)
+      if population_mean == 0 or np.isnan(population_mean) or np.isnan(abs_error):
           return np.nan
-      return float(abs(sample_mean - population_mean))
+      return float(abs_error / population_mean)
 
-
-  def perc_error_vs_population(sample_mean: float, population_mean: float) ->float:
-      relative_error = rel_error_vs_population(sample_mean, population_mean)
+  @classmethod
+  def perc_error_vs_population(cls, sample_mean: float, population_mean: float) ->float:
+      relative_error = cls.rel_error_vs_population(sample_mean, population_mean)
       if np.isnan(relative_error):
           return np.nan
       return float(relative_error * 100)
 
-
-  def representativeness_coefficient(sample_mean: float, population_mean: float) ->float:
+  @classmethod
+  def representativeness_coefficient(cls, sample_mean: float, population_mean: float) ->float:
     """
         Representativeness coefficient = 1 - relative_error
         Close to 1.0 -> high representativeness (low relative error).
@@ -69,13 +73,11 @@ class RepresentativenessCalculator:
         100% of the population mean (the sample deviates more than the value of the reference mean itself)
 
     """
-    relative_error =rel_error_vs_population(sample_mean, population_mean)
-    if np.isnan(relative_error):
-        return np.nan
-    return float(1 - relative_error)
+    relative_error = cls.el_error_vs_population(sample_mean, population_mean)
+    return np.nan if np.isnan(relative_error) else float(1 - relative_error)
 
 
-  #@classmethod
+  #classmethod
   def _mean_in_columns(
       processed_df: pd.DataFrame,
       data: tuple[pd.DataFrame, pd.DataFrame],
