@@ -3,6 +3,42 @@ import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 from schema import Mean, Proportions
 
+
+
+
+def _numeric_mean(series: pd.Series) -> float:
+    return float(series.mean())
+
+def _categorical_mean(series: pd.Series, condition) -> float:
+    if callable(condition):
+        mask = series.apply(condition)
+    elif isinstance(condition, (list, tuple, set)):
+        mask = series.isin(condition)
+    else:
+        mask = series == condition
+
+    return float(mask.mean())
+
+def _get_mean(
+        df:pd.DataFrame,
+        column: str,
+        var_config: dict,
+) -> float:
+    vtype = var_config.get("type", "numeric")
+
+    if vtype == "numeric":
+        return _numeric_mean(df[column])
+    
+    if vtype == "categorical":
+          condition = var_config["condition"]
+          return _categorical_mean(df[column], condition)
+
+    if vtype == "special":
+          return _numeric_mean(df[column])
+
+    raise ValueError(f"Unknown variable type: {vtype}") 
+
+
 def abs_error_vs_population(sample_mean:float, population_mean: float) -> float:
     if np.isnan(sample_mean) or np.isnan(population_mean):
         return np.nan
