@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
 from pydantic import BaseModel, Field, model_validator
-from typing import NamedTuple
 from src.utils import _calculate_media_std, calculate_media_condition
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
 
-class Mean(NamedTuple):
+class Mean(BaseModel,frozen=True):
   column: str
   c_mean: float
   c_n: int = Field(..., gt=0)
@@ -33,11 +32,14 @@ class Proportions(BaseModel, frozen=True):
 
 StatType = Stats | Proportions
 
+
 class GroupSummary:
 
-  def __init__(self, df):
+
+  def __init__(self, df: pd.DataFrame):
     self.df = df
     self.summary = self._calculate()
+
 
   def _calculate(self) -> dict[str, StatType]:
     result = {}
@@ -52,20 +54,8 @@ class GroupSummary:
         n = int(serie.count())
       )
 
-    for col, categories in CAT_CONDITIONS.items():
-      serie = self.df[col].dropna()
-      filtered = serie[serie.isin(categories)]
-      props = (
-        filtered
-        .value_counts(normalize=True)
-        .round(4)
-        .to_dict()
-      )
-      result[col] = Proportions(
-        column = col,
-        proportions = {str(k): float(v) for k, v in props.items()},
-              n = int(serie.count())
-      )
+
+
 
     return result
   
