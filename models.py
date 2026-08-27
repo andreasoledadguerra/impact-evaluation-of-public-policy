@@ -54,7 +54,20 @@ class GroupSummary:
         n = int(serie.count())
       )
 
+    for col, categories in CAT_CONDITIONS.items():
+      serie = self.df[col].dropna()
+      proportions = {
+          str(cat): round(float((serie == cat).mean()), 4) for cat in categories
+      }
+      residual = round(1.0 - sum(proportions.values()), 4)
+      if residual > 0:
+          proportions["otros"] = residual
 
+      result[col] = Proportions(
+        column = col,
+        proportions=proportions,
+              n = int(serie.count())
+      )
 
 
     return result
