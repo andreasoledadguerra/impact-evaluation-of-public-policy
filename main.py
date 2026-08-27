@@ -90,7 +90,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
-    population_stats = GroupSummary(processed_df)
+    population_stats = GroupSummary(processed_df.df)
     logger.info(
         f"Population baseline calculated:"
         f"{len(population_stats.summary)} variables summarized"
@@ -117,19 +117,6 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 3. Validate group representativeness
     # -----------------------------------------------------------------
-    # 5. Representativeness coefficient of the sample vs. the population
-    # -----------------------------------------------------------------
-    rep_coef_iah = calculate_rep_coef(
-        processed_df=processed_df.df,
-        sample=(srs_c, srs_t),
-        column="ingreso_anual_hogar",
-    )
-
-    logger.info("Representativeness coefficient calculated for 'ingreso_anual_hogar': "
-                f"SMD control={{rep_coef_iah['smd_control']:.4f}},"
-                f"SMD treatment={{rep_coef_iah['smd_treatment']:.4f}}"
-
-    )
 
     # -----------------------------------------------------------------
     # 4. Bootstrapping on SRS Samples

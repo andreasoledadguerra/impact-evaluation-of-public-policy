@@ -1,59 +1,28 @@
 import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
-from models import Mean, Proportions
+from schema import Mean, Proportions
 
-def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]) -> dict:
 
+#@classmethod
+def _mean_in_columns(
+    processed_df: pd.DataFrame,
+    data: tuple[pd.DataFrame, pd.DataFrame],
+    column: str,
+) -> dict:
     df_control, df_treatment = data
 
-    # puede no ser un dict
-    result = {}
+    mean_population = processed_df[column].mean()
 
-    for col in NUM_COLUMNS + SPC_COLUMNS:
-        serie_c = df_control[col].dropna()
-        serie_t = df_treatment[col].dropna()
-    
-        result[col] = Mean(
-            column = col,
-            c_mean = serie_c.mean(),
-            c_n = int(serie_c.count()),
-            t_mean = serie_t.mean(),
-            t_n = int(serie_t.count())
+    mean_c = df_control[column].mean()
+    mean_t = df_treatment[column].mean()
 
-        )
+    return {
+      "column": column,
+      "mean_population": mean_population,
+      "mean_control": mean_c,
+      "mean_treatment": mean_t,
 
-    for col, categories in CAT_CONDITIONS.items():
-       serie_c.df_control[col].dropna()
-       serie_t.df_treatment[col].dropna()
-       filtered_c = serie_c[serie_c.isin(categories)]
-       props_c = (
-          filtered_c
-         .value_counts(normalize=True)
-         .round(4)
-         .to_dict()
-       )
-       filtered_t = serie_t[serie_c.isin(categories)]
-       props_t = (
-        filtered_t
-         .value_counts(normalize=True)
-         .round(4)
-         .to_dict()
-       )
-
-       result[col] = Proportions(
-         column = col,
-         proportions = {str(k): float(v) for k, v in props_c.items()},
-               n = int(serie_c.count())
-          )
-       result[col] = Proportions(
-         column = col,
-         proportions = {str(k): float(v) for k, v in props_t.items()},
-               n = int(serie_t.count())
-          )
-
-    
-    return result
-
+  }
 
 # p_mean quizá sea una constante
 
@@ -62,9 +31,9 @@ def mean_in_columns(data: tuple[pd.DataFrame, pd.DataFrame]) -> dict:
 # Toma processed_data (df) sólo para calcular la media poblacional sobre cada variable
 # Luego  tomar df_control, df_treatment (tupla) para calcular la media de cada grupo 
 
-# ver qué puedp usar de utils.py , o directamente usar .mean() dependiendo del tipo de dato
+# ver qué puedo usar de utils.py , o directamente usar .mean() dependiendo del tipo de dato
 
-# Método para calcular la media sobre cada grupo dependiendo deltipo de variable:
+# Método para calcular la media sobre cada grupo dependiendo del tipo de variable:
 
 
 #def evaluate_repr_c_t(data:tuple[pd.DataFrame, pd.DataFrame], p_mean:float) -> pd.DataFrame:
