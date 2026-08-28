@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
-from schema import Mean, Proportions
 
 
 class RepresentativenessCalculator:
@@ -73,11 +72,11 @@ class RepresentativenessCalculator:
         100% of the population mean (the sample deviates more than the value of the reference mean itself)
 
     """
-    relative_error = cls.el_error_vs_population(sample_mean, population_mean)
+    relative_error = cls.rel_error_vs_population(sample_mean, population_mean)
     return np.nan if np.isnan(relative_error) else float(1 - relative_error)
 
 
-  classmethod
+  @classmethod
   def _mean_in_columns(cls,
       processed_df: pd.DataFrame,
       data: tuple[pd.DataFrame, pd.DataFrame],
@@ -105,3 +104,32 @@ class RepresentativenessCalculator:
         "coef_representatividad_treatment": cls.representativeness_coefficient(mean_t, mean_population),
 
     }
+
+  @classmethod
+  def evaluate_sample_representativeness(
+          cls,
+          processed_df: pd.DataFrame,
+          data: tuple[pd.DataFrame, pd.DataFrame],
+    ) -> pd.DataFrame:
+      rows = []
+
+      for col in NUM_COLUMNS:
+          rows.append(
+              cls._mean_in_columns(processed_df,data, col, {"type":"numeric"})
+          )
+      for col in SPC_COLUMNS:
+          rows.append(
+              cls._mean_in_columns(processed_df, data, col, {"type":"special"})
+          )
+      for col, conditions in CAT_CONDITIONS.items():
+          for condition in conditions:
+              row = cls._mean_in_columns(
+                  processed_df,
+                  data,
+                  col,
+                  {"type":"categorical", "condition": condition},
+              )
+              row["column"] = f"{col} = {condition}"
+              rows.append(row)
+
+      return pd.DataFrame(rows)
