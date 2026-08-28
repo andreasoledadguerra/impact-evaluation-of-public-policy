@@ -96,4 +96,49 @@ class SMDCalculator:
  
     
 
-    
+def calculate_rep_coef_smd(
+    processed_df: pd.DataFrame,
+    sample: tuple[pd.DataFrame, pd.DataFrame],
+    column: str,
+) -> dict:
+    """
+    Calculates the representativeness coefficient for each group (control and
+    treatment) relative to the original population, for a given column.
+
+    Uses the Standardized Mean Difference (SMD) between the sample mean of each
+    group and the population mean, weighted by the population standard deviation.
+
+
+    Interpretation (Cohen, 1988; Austin, 2009):
+        |SMD| < 0.10  -> excellent representativeness
+        |SMD| < 0.25  -> acceptable
+        |SMD| >= 0.25 -> problematic imbalance
+
+    Args:
+        processed_df: DataFrame containing the entire population (post-preprocessing).
+        sample: tuple (df_control, df_treatment) containing the extracted samples.
+        column: name of the column to evaluate (e.g., “annual_household_income”).
+
+    Returns:
+        dict containing population means/standard deviations and the SMD for each group.
+    """
+
+    sample_c, sample_t = sample
+ 
+    mean_population = processed_df[column].mean()
+    std_population = processed_df[column].std()
+ 
+    mean_c = sample_c[column].mean()
+    mean_t = sample_t[column].mean()
+ 
+    # SMD = (media_muestra - media_poblacion) / std_poblacion
+    smd_c = (mean_c - mean_population) / std_population
+    smd_t = (mean_t - mean_population) / std_population
+ 
+    return {
+        "column": column,
+        "mean_population": mean_population,
+        "std_population": std_population,
+        "smd_control": smd_c,
+        "smd_treatment": smd_t,
+    }
