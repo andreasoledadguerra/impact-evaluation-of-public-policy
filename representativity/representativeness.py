@@ -76,8 +76,8 @@ class RepresentativenessCalculator:
     relative_error = cls.el_error_vs_population(sample_mean, population_mean)
     return np.nan if np.isnan(relative_error) else float(1 - relative_error)
 
-#TODO refactorizar dde Kimi
-  #classmethod
+
+  classmethod
   def _mean_in_columns(cls,
       processed_df: pd.DataFrame,
       data: tuple[pd.DataFrame, pd.DataFrame],
