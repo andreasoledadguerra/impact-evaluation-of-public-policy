@@ -4,6 +4,7 @@ import pandas as pd
 
 from config import FINAL_DATA_PATH
 from schema import GroupSummary, SubGroupSummary
+from representativity.representativeness import RepresentativenessCalculator
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
@@ -72,6 +73,11 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 3. Validate group representativeness
     # -----------------------------------------------------------------
+    repr = RepresentativenessCalculator.evaluate_sample_representativeness(
+        processed_df = processed_df.df,
+        data =(srs_c, srs_t),
+        columns=NUM_COLUMNS + SPC_COLUMNS + CAT_CONDITIONS,
+    )
 
     # -----------------------------------------------------------------
     # 4. Bootstrapping on SRS Samples
