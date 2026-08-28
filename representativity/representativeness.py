@@ -78,17 +78,17 @@ class RepresentativenessCalculator:
 
 #TODO refactorizar dde Kimi
   #classmethod
-  def _mean_in_columns(
+  def _mean_in_columns(cls,
       processed_df: pd.DataFrame,
       data: tuple[pd.DataFrame, pd.DataFrame],
       column: str,
+      var_config: dict, 
   ) -> dict:
       df_control, df_treatment = data
 
-      mean_population = processed_df[column].mean()
-
-      mean_c = df_control[column].mean()
-      mean_t = df_treatment[column].mean()
+      mean_population= cls._get_mean(processed_df, column, var_config)
+      mean_c = cls._get_mean(df_control, column, var_config)
+      mean_t = cls._get_mean(df_treatment, column, var_config)
 
       return {
         "column": column,
