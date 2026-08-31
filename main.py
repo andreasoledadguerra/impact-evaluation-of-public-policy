@@ -101,7 +101,6 @@ def main() -> dict:
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
         random_state=RANDOM_STATE,
-        population_stats = population_stats.summary
     )
 
     logger.info("Bootstrapping completed")
@@ -141,7 +140,7 @@ def main() -> dict:
         "bootstrap_c": bootstrap_c,
         "bootstrap_t": bootstrap_t,
         "smd_summary": smd_summary,
-        "rep_coef_iah": rep_coef_iah,
+        #"rep_coef_iah": rep_coef_iah,
         "sample_analysis": sample_analysis,
         "media_std": media_std,
         "media_condition": media_condition,
