@@ -133,8 +133,13 @@ def main() -> dict:
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
     
     smd_summary.to_excel(FINAL_DATA_PATH / "smd_summary.xlsx", index=False)
+
     bootstrap_c.to_parquet(FINAL_DATA_PATH / "bootstrap_control.parquet", index=False)
+    bootstrap_c.to_excel(FINAL_DATA_PATH / "bootstrap_control.xlsx", index=False)
+
     bootstrap_t.to_parquet(FINAL_DATA_PATH / "bootstrap_treatment.parquet", index=False)
+    bootstrap_t.to_excel(FINAL_DATA_PATH / "bootstrap_treatment.xlsx", index=False)
+
 
     results = {
         "bootstrap_c": bootstrap_c,
