@@ -78,6 +78,11 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
+    logger.info(
+        f"Representativeness evaluation completed: "
+        f"{len(repr)} variables/conditions assessed"
+    )
+
     # -----------------------------------------------------------------
     # 4. Bootstrapping on SRS Samples
     # -----------------------------------------------------------------
