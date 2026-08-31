@@ -35,7 +35,7 @@ def main() -> dict:
 
 
     filtered_df = ProcessedDataframe.filter_df(raw_df)
-    logger.info("Filtering completed: {len(filtered_df)} rows, {len(filtered_df.columns)} columns.")
+    logger.info(f"Filtering completed: {len(filtered_df)} rows, {len(filtered_df.columns)} columns.")
     #print("Columnas después de filtrar:", filtered_df.columns.tolist())
 
     aged_df = ProcessedDataframe.calculate_age(filtered_df)
@@ -76,7 +76,6 @@ def main() -> dict:
     repr = RepresentativenessCalculator.evaluate_sample_representativeness(
         processed_df = processed_df.df,
         data =(srs_c, srs_t),
-        columns=NUM_COLUMNS + SPC_COLUMNS + CAT_CONDITIONS,
     )
 
     # -----------------------------------------------------------------
