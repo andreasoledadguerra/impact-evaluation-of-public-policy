@@ -14,6 +14,8 @@
 
 
 import numpy as np
+import pandas as pd
+
 from typing import Literal
 from bootstrap.models import (
     BootstrapStatsContinuous,

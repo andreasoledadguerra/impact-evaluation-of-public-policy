@@ -111,8 +111,14 @@ def main() -> dict:
     bootstrap_t = experiment.bootstrap_t
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
+
+
     # -----------------------------------------------------------------
-    # 6. Final Descriptive Statistics
+    # 6. Standardised mean difference (smd.py)
+    # -----------------------------------------------------------------
+
+    # -----------------------------------------------------------------
+    # 7. Final Descriptive Statistics
     # -----------------------------------------------------------------
     sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
     media_std = sample_analysis.sample_media_std()
@@ -123,7 +129,7 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 7. Exporting Results
+    # 8. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
