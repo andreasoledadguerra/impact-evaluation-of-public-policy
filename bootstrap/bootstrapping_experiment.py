@@ -25,7 +25,11 @@ class BootstrapResults:
             "treatment": {},
         }
 
-    
+    #  
+    def __add(self, group:str, column: str, stats: StatsType) -> None:
+        if column not in self._data[group]:
+            self._data[group][column] = []
+        self._data[group][column].append(stats)
 
 class BootstrapExperiment:
 
