@@ -25,11 +25,39 @@ class BootstrapResults:
             "treatment": {},
         }
 
-    #  
+    #  helper method to add stats for a specific group and column
     def __add(self, group:str, column: str, stats: StatsType) -> None:
         if column not in self._data[group]:
             self._data[group][column] = []
         self._data[group][column].append(stats)
+
+    def get_distribution(
+            self,
+            group: str,
+            column: str,
+            field: str,
+            category: str | None = None,
+    ) -> np.array:
+        if group not in self._data:
+            raise ValueError(f"Group '{group}' not found.")
+        if column not in self._data[group]:
+            raise KeyError(f"Column '{column}' not found in group '{group}'.")
+
+        replicas = self._data[group][column]
+
+        if not replicas:
+            return np.array([])
+
+        if category is not None:
+            values = [
+                getattr(r, "proportions" , {}).get(category, np.nan) for r in replicas
+
+                ]
+        else:
+            values = [getattr(r, field, np.nan) for r in replicas]
+
+        return np.array(values, dtype=float)
+        
 
 class BootstrapExperiment:
 
