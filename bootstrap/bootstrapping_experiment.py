@@ -17,6 +17,15 @@ from representativity.smd import SMDCalculator
 logger = logging.getLogger(__name__)
 
 
+class BootstrapResults:
+
+    def __init__(self) -> None:
+        self._data: dict[str, dict[str, list[StatsType]]] = {
+            "control": {},
+            "treatment": {},
+        }
+
+    
 
 class BootstrapExperiment:
 

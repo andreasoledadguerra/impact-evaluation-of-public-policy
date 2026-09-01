@@ -100,6 +100,8 @@ def main() -> dict:
     #   - SPC_COLUMNS    -> coded numerical / ordinal: rounded mean,
     #                       no var/std 
 
+    logger.info("Starting bootstrapping on SRS samples...")
+
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
         num_columns=NUM_COLUMNS,
@@ -122,6 +124,8 @@ def main() -> dict:
         processed_df = processed_df.df,
         data =(bootstrap_c, bootstrap_t),
     )
+
+    
 
     # -----------------------------------------------------------------
     # 6. Standardised mean difference (smd.py)
