@@ -115,6 +115,13 @@ def main() -> dict:
     smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
 
+    # -----------------------------------------------------------------
+    # 5. Validate group representativeness using bootstrap samples 
+    # -----------------------------------------------------------------
+    repr_bootstrap = RepresentativenessCalculator.evaluate_sample_representativeness( 
+        processed_df = processed_df.df,
+        data =(bootstrap_c, bootstrap_t),
+    )
 
     # -----------------------------------------------------------------
     # 6. Standardised mean difference (smd.py)
