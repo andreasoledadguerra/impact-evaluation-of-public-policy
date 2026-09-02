@@ -129,13 +129,14 @@ class BootstrapExperiment:
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
         n_bootstrap: int = 10000, # 1000
-        # random_state: int | np.random.Generator | None = 42
+        random_state: int | np.random.Generator | None = 42
     ) -> None:
         
         self._df_control, self._df_treatment = data
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._random_state = random_state
         self._n_bootstrap = n_bootstrap
+        self._rng = np.random.default_rng(random_state)
 
     # Automatization
 
