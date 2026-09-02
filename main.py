@@ -111,14 +111,15 @@ def main() -> dict:
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
-        random_state= int | np.random.Generator | None = RANDOM_STATE
+        n_bootstrap=10000,  # 1000
+        random_state= int | np.random.Generator | None = RANDOM_STATE,
     )
 
     logger.info("Bootstrapping completed")
 
     bootstrap_c = experiment.bootstrap_c
     bootstrap_t = experiment.bootstrap_t
-    smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
+    # smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
 
     # -----------------------------------------------------------------
