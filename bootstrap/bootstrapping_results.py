@@ -1,8 +1,9 @@
+from typing import Any
+
 import pandas as pd
 import numpy as np
 
-from typing import Any
-from bootstrap.models import StatsType, BootstrapStatsBinary, BootstrapStatsCategorical, BootstrapStatsContinuous
+from bootstrap.models import (StatsType, BootstrapStatsBinary, BootstrapStatsCategorical, BootstrapStatsContinuous)
 
 class BootstrapResults:
 
@@ -14,6 +15,8 @@ class BootstrapResults:
 
     #  helper method to add stats for a specific group and column
     def __add(self, group:str, column: str, stats: StatsType) -> None:
+        if group not in self._data:
+            raise ValueError(f"Group '{group}' not found.")
         if column not in self._data[group]:
             self._data[group][column] = []
         self._data[group][column].append(stats)
