@@ -4,6 +4,7 @@ from typing import Any
 import pandas as pd
 import numpy as np
 
+from constants import RANDOM_STATE
 
 from bootstrap.column_registry import ColumnRegistry
 from bootstrap.models import (    
@@ -27,7 +28,7 @@ class BootstrapExperiment:
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
         n_bootstrap: int = 10000, # 1000
-        random_state: int | np.random.Generator | None = 42
+        random_state: int | np.random.Generator | None = RANDOM_STATE
     ) -> None:
         
         self._df_control, self._df_treatment = data
