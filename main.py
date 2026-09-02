@@ -1,5 +1,6 @@
 
 import logging
+import numpy as np
 import pandas as pd
 
 from config import FINAL_DATA_PATH
@@ -46,6 +47,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 1. Statistical Summary of the Population
     # -----------------------------------------------------------------
+    logger.info("Calculating statistical summary of the population...")
     population_stats = GroupSummary(processed_df.df)
     logger.info(
         f"Population baseline calculated:"
@@ -56,6 +58,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 2. Grouping (Statistical summary of the control group and the treatment group) + simple random sampling (SRS)
     # -----------------------------------------------------------------
+    logger.info("Starting randomization and SRS sampling...")
     df_control, df_treatment = randomization(processed_df.df)
     logger.info(f"Randomization completed: {len(df_control)} control rows, {len(df_treatment)} treatment rows.")
 
@@ -73,6 +76,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 3. Validate group representativeness
     # -----------------------------------------------------------------
+    logger.info("Evaluating representativeness of SRS samples...")
     repr = RepresentativenessCalculator.evaluate_sample_representativeness(
         processed_df = processed_df.df,
         data =(srs_c, srs_t),
@@ -107,7 +111,7 @@ def main() -> dict:
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
-        random_state=RANDOM_STATE,
+        random_state= int | np.random.Generator | None = RANDOM_STATE
     )
 
     logger.info("Bootstrapping completed")
@@ -120,12 +124,18 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 5. Validate group representativeness using bootstrap samples 
     # -----------------------------------------------------------------
+    logger.info("Evaluating representativeness of bootstrap samples...")
+
     repr_bootstrap = RepresentativenessCalculator.evaluate_sample_representativeness( 
         processed_df = processed_df.df,
         data =(bootstrap_c, bootstrap_t),
     )
 
-    
+    repr_bootstrap_c = repr_bootstrap.bootstrap_c
+    repr_bootstrap_t = repr_bootstrap.bootstrap_t  
+    smd_summary_bootstrap = repr_bootstrap.smd_summary  # Control vs. Treatment Comparison
+
+
 
     # -----------------------------------------------------------------
     # 6. Standardised mean difference (smd.py)
