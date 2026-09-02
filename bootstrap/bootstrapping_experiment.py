@@ -56,12 +56,16 @@ class BootstrapExperiment:
         bootstrap_c = self._df_control[columns].sample(
             n = len(self._df_control),
             replace = True,
-            random_state = self._random_state,
+            #random_state = self._random_state,
+            random_state = self._rng,
+
         )
         bootstrap_t = self._df_treatment[columns].sample(
             n = len(self._df_treatment),
             replace = True,
-            random_state = self._random_state,
+            #random_state = self._random_state,
+            random_state = self._rng,
+
         )
         return bootstrap_c, bootstrap_t
 
