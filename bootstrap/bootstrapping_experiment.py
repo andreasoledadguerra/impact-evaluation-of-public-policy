@@ -172,6 +172,11 @@ class BootstrapExperiment:
     # debo implementarlo dos veces: uno para que haga cálculos sobre 
     # el grupo control y otro sobre el grupo tratamiento
 
+
+    # ------------------------------------------------------------------
+    # Private helper methods
+    # ------------------------------------------------------------------
+
     def _calculate_stats(
             self,  
             bootstrap_samples: pd.DataFrame
@@ -200,9 +205,7 @@ class BootstrapExperiment:
 
         return stats
 
-    # ----------------------------- Private helper methods -----------------------------
-
-
+  
     @staticmethod
     def _stats_for_continuous(serie: pd.Series, n:int) -> BootstrapStatsContinuous:
         """ 
@@ -269,59 +272,59 @@ class BootstrapExperiment:
         )
 
 
- 
-    def _calculate_smd(self) -> pd.DataFrame:
-        """
-        Calculate the (SMD) balance between the control and treatment groups,
-        using self.stats_c / self.stats_t.
-        """
-        results = []
- 
-        for col in self._registry.continuous_columns:
-            smd = SMDCalculator.smd_continuous(self.stats_c[col], self.stats_t[col])
-            results.append(self._smd_row(col, "continua", smd))
- 
-        for col in self._registry.binary_columns:
-            smd = SMDCalculator.smd_binary(self.stats_c[col], self.stats_t[col])
-            results.append(self._smd_row(col, "binaria", smd))
- 
-        for col in self._registry.categorical_columns:
-            smd = SMDCalculator.smd_categorical(
-                self.stats_c[col], self.stats_t[col], resumen="max"
-            )
-            results.append(
-                self._smd_row(col, "categórica (max |SMD| entre dummies)", smd)
-            )
- 
-        return (
-            pd.DataFrame(results)
-            .sort_values("abs_SMD", ascending=False, na_position="last")
-            .reset_index(drop=True)
-        )
+ #
+    #def _calculate_smd(self) -> pd.DataFrame:
+    #    """
+    #    Calculate the (SMD) balance between the control and treatment groups,
+    #    using self.stats_c / self.stats_t.
+    #    """
+    #    results = []
+ #
+    #    for col in self._registry.continuous_columns:
+    #        smd = SMDCalculator.smd_continuous(self.stats_c[col], self.stats_t[col])
+    #        results.append(self._smd_row(col, "continua", smd))
+ #
+    #    for col in self._registry.binary_columns:
+    #        smd = SMDCalculator.smd_binary(self.stats_c[col], self.stats_t[col])
+    #        results.append(self._smd_row(col, "binaria", smd))
+ #
+    #    for col in self._registry.categorical_columns:
+    #        smd = SMDCalculator.smd_categorical(
+    #            self.stats_c[col], self.stats_t[col], resumen="max"
+    #        )
+    #        results.append(
+    #            self._smd_row(col, "categórica (max |SMD| entre dummies)", smd)
+    #        )
+ #
+    #    return (
+    #        pd.DataFrame(results)
+    #        .sort_values("abs_SMD", ascending=False, na_position="last")
+    #        .reset_index(drop=True)
+    #    )
 
 
-    @staticmethod
-    def _smd_row(variable: str, tipo: str, smd: float) -> dict:
-        """
-        Generate a row in the SMD summary with balance interpretation
-        """
-        is_valid = smd is not None and not np.isnan(smd)
-        abs_smd = abs(smd) if is_valid else np.nan
- 
-        if not is_valid:
-            balance = "N/A"
-        elif abs_smd < 0.10:
-            balance = "excelente"
-        elif abs_smd < 0.25:
-            balance = "aceptable"
-        else:
-            balance = "desequilibrado"
- 
-        return {
-            "variable": variable,
-            "tipo": tipo,
-            "SMD": round(smd, 4) if is_valid else np.nan,
-            "abs_SMD": round(abs_smd, 4) if is_valid else np.nan,
-            "balance": balance,
-        }
- 
+    #@staticmethod
+    #def _smd_row(variable: str, tipo: str, smd: float) -> dict:
+    #    """
+    #    Generate a row in the SMD summary with balance interpretation
+    #    """
+    #    is_valid = smd is not None and not np.isnan(smd)
+    #    abs_smd = abs(smd) if is_valid else np.nan
+ #
+    #    if not is_valid:
+    #        balance = "N/A"
+    #    elif abs_smd < 0.10:
+    #        balance = "excelente"
+    #    elif abs_smd < 0.25:
+    #        balance = "aceptable"
+    #    else:
+    #        balance = "desequilibrado"
+ #
+    #    return {
+    #        "variable": variable,
+    #        "tipo": tipo,
+    #        "SMD": round(smd, 4) if is_valid else np.nan,
+    #        "abs_SMD": round(abs_smd, 4) if is_valid else np.nan,
+    #        "balance": balance,
+    #    }
+ #
