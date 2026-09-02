@@ -14,7 +14,7 @@ class BootstrapResults:
         }
 
     #  helper method to add stats for a specific group and column
-    def __add(self, group:str, column: str, stats: StatsType) -> None:
+    def _add(self, group:str, column: str, stats: StatsType) -> None:
         if group not in self._data:
             raise ValueError(f"Group '{group}' not found.")
         if column not in self._data[group]:
@@ -28,7 +28,7 @@ class BootstrapResults:
             column: str,
             field: str,
             category: str | None = None,
-    ) -> np.array:
+    ) -> np.ndarray:
         if group not in self._data:
             raise ValueError(f"Group '{group}' not found.")
         if column not in self._data[group]:
@@ -51,7 +51,7 @@ class BootstrapResults:
 
     # Method to calculate percentiles and confidence intervales for a given field and column
     def summarize(self, ci: float = 0.95) -> dict[str, pd.DataFrame]:
-        alpha = (1 - ci)/ 2
+        alpha = (1 - ci) / 2
         percentiles = [100 * alpha, 50.0, 100 * (1 - alpha)]
 
         summary: dict[str, list[dict[str, Any]]] = {"control": [], "treatment": []}
