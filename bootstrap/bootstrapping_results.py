@@ -51,7 +51,7 @@ class BootstrapResults:
 
     # Method to calculate percentiles and confidence intervales for a given field and column
     def summarize(self, ci: float = 0.95) -> dict[str, pd.DataFrame]:
-        alpha = 1 - ci/ 2
+        alpha = (1 - ci)/ 2
         percentiles = [100 * alpha, 50.0, 100 * (1 - alpha)]
 
         summary: dict[str, list[dict[str, Any]]] = {"control": [], "treatment": []}
@@ -66,13 +66,13 @@ class BootstrapResults:
                 # ------- Continuous and Binary Variables -------
                 if isinstance(first, (BootstrapStatsContinuous, BootstrapStatsBinary)):
                     for field in ("mean", "std", "var"):
-                       dist =self.get_distribution(group, col, field)
+                       dist = self.get_distribution(group, col, field)
                        if len(dist) == 0 or np.all(np.isnan(dist)):
                             continue
                        q_low, q_med, q_high = np.nanpercentile(dist, percentiles)
                        summary[group].append({
                            "column": col,
-                           "variable_type": first._class__.__name__,
+                           "variable_type": first.__class__.__name__,
                            "statistic": field,
                            "mean_bootstrap": float(np.nanmean(dist)),
                            "median_bootstrap": float(q_med),
