@@ -32,11 +32,8 @@ class BootstrapExperiment:
         
         self._df_control, self._df_treatment = data
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
-        self._random_state = random_state
         self._n_bootstrap = n_bootstrap
         self._rng = np.random.default_rng(random_state)
-
-    # Automatization
 
         #self.bootstrap_c, self.bootstrap_t = self._generate_samples()
         #self.stats_c = self._calculate_stats(self.bootstrap_c)
