@@ -128,20 +128,27 @@ class BootstrapExperiment:
         num_columns: list[str],
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
-        random_state: int = 42
+        n_bootstrap: int = 10000, # 1000
+        # random_state: int | np.random.Generator | None = 42
     ) -> None:
         
         self._df_control, self._df_treatment = data
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._random_state = random_state
+        self._n_bootstrap = n_bootstrap
 
     # Automatization
 
-        self.bootstrap_c, self.bootstrap_t = self._generate_samples()
-        self.stats_c = self._calculate_stats(self.bootstrap_c)
-        self.stats_t = self._calculate_stats(self.bootstrap_t)
-        self.smd_summary = self._calculate_smd()
+        #self.bootstrap_c, self.bootstrap_t = self._generate_samples()
+        #self.stats_c = self._calculate_stats(self.bootstrap_c)
+        #self.stats_t = self._calculate_stats(self.bootstrap_t)
+        #self.smd_summary = self._calculate_smd()
 
+        if self._n_bootstrap < 1000:
+            logger.warning(
+                f"Bootstrapping with {self._n_bootstrap} replicas. "
+                f"Consider increasing to 10000 or more for more stable estimates."
+            )
 
     #----------------------------------Private methods-----------------------------------
 
