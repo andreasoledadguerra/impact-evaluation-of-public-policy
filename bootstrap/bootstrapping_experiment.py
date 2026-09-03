@@ -7,6 +7,7 @@ import numpy as np
 from constants import RANDOM_STATE
 
 from bootstrap.column_registry import ColumnRegistry
+from bootstrapping_results import BootstrapResults
 from bootstrap.models import (    
     BootstrapStatsBinary, 
     BootstrapStatsCategorical, 
@@ -14,7 +15,7 @@ from bootstrap.models import (
     StatsType,
 )
 
-from representativity.smd import SMDCalculator
+from representativity.representativeness import RepresentativenessCalculator
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +48,30 @@ class BootstrapExperiment:
                 f"Consider increasing to 10000 or more for more stable estimates."
             )
 
+    #----------------------------------Public methods-----------------------------------
+    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame]]:
+
+        results = BootstrapResults()
+        representatividad_replicas: list[pd.DataFrame] = []
+
+        baseline = RepresentativenessCalculator.compute_population_baseline( self._processed_df)
+
+        for _ in range(self._n_bootstrap):
+            bootstrap_c, bootstrap_t = self._generate_samples()
+
+            for col, stats in self._calculate_stats(bootstrap_c).items():
+                results.add("control", col, stats)
+            for col, stats in self._calculate_stats(bootstrap_t).items():
+                results.add("treatment", col, stats)
+
+            representatividad_replicas.append(
+                RepresentativenessCalculator.evaluate_replica((bootstrap_c, bootstrap_t, baseline))
+            
+            )
+            
+        return results, representatividad_replicas
+
+    
     #----------------------------------Private methods-----------------------------------
 
     def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
