@@ -1,4 +1,7 @@
+RANDOM_STATE = 42
+
 SAMPLE_SIZE = 1000 
+
 
 NUM_COLUMNS = ['ingreso_anual_hogar', # FORMULARIOS_PATH
                 'edad', # FORMULARIOS_PATH, calculated in preprocessing.py using fecha_de_nacimiento and fecha_carga

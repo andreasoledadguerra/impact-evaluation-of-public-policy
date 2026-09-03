@@ -132,8 +132,10 @@ def main() -> dict:
 
     repr_bootstrap = RepresentativenessCalculator.evaluate_sample_representativeness( 
         processed_df = processed_df.df,
-        data =(bootstrap_c, bootstrap_t),
+        data =(bootstrap_summary["control"], bootstrap_summary["treatment"]),
     )
+
+
 
     repr_bootstrap_c = repr_bootstrap.bootstrap_c
     repr_bootstrap_t = repr_bootstrap.bootstrap_t  
