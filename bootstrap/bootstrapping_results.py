@@ -13,8 +13,8 @@ class BootstrapResults:
             "treatment": {},
         }
 
-    #  helper method to add stats for a specific group and column
-    def _add(self, group:str, column: str, stats: StatsType) -> None:
+    #  method to add stats for a specific group and column
+    def add(self, group:str, column: str, stats: StatsType) -> None:
         if group not in self._data:
             raise ValueError(f"Group '{group}' not found.")
         if column not in self._data[group]:
