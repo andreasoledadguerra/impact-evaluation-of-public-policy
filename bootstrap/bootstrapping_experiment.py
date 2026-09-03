@@ -7,7 +7,7 @@ import numpy as np
 from constants import RANDOM_STATE
 
 from bootstrap.column_registry import ColumnRegistry
-from bootstrapping_results import BootstrapResults
+from bootstrap.bootstrapping_results import BootstrapResults
 from bootstrap.models import (    
     BootstrapStatsBinary, 
     BootstrapStatsCategorical, 
