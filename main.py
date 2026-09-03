@@ -88,7 +88,7 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 4. Bootstrapping on SRS Samples
+    # 4. Bootstrapping on SRS Samples (n replicas)
     # -----------------------------------------------------------------
     # Each column type requires a different calculation path:
     #   - NUM_COLUMNS    -> continuous: mean + std + var + cv
@@ -105,20 +105,23 @@ def main() -> dict:
     #                       no var/std 
 
     logger.info("Starting bootstrapping on SRS samples...")
-
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
         n_bootstrap=10000,  # 1000
-        random_state= int | np.random.Generator | None = RANDOM_STATE,
+        random_state= RANDOM_STATE,
     )
 
+    bootstrap_results = experiment.run_bootstrap()
     logger.info("Bootstrapping completed")
 
-    bootstrap_c = experiment.bootstrap_c
-    bootstrap_t = experiment.bootstrap_t
+    bootstrap_summary = bootstrap_results.summarize(ci=0.95)
+    summary_control = bootstrap_summary["control"]
+    summary_treatment = bootstrap_summary["treatment"]
+
+    
     # smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
 
