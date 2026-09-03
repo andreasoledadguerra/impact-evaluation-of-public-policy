@@ -20,11 +20,13 @@ from representativity.representativeness import RepresentativenessCalculator
 logger = logging.getLogger(__name__)
 
 
+
 class BootstrapExperiment:
 
     def __init__(
         self,
         data: tuple[pd.DataFrame, pd.DataFrame],
+        processed_df: pd.DataFrame,
         num_columns: list[str],
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
@@ -33,6 +35,7 @@ class BootstrapExperiment:
     ) -> None:
         
         self._df_control, self._df_treatment = data
+        self._processed_df = processed_df
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._n_bootstrap = n_bootstrap
         self._rng = np.random.default_rng(random_state)
@@ -54,7 +57,7 @@ class BootstrapExperiment:
         results = BootstrapResults()
         representatividad_replicas: list[pd.DataFrame] = []
 
-        baseline = RepresentativenessCalculator.compute_population_baseline( self._processed_df)
+        baseline = RepresentativenessCalculator.compute_population_baseline(self._processed_df)
 
         for _ in range(self._n_bootstrap):
             bootstrap_c, bootstrap_t = self._generate_samples()
@@ -65,9 +68,9 @@ class BootstrapExperiment:
                 results.add("treatment", col, stats)
 
             representatividad_replicas.append(
-                RepresentativenessCalculator.evaluate_replica((bootstrap_c, bootstrap_t, baseline))
+                RepresentativenessCalculator.evaluate_replica((bootstrap_c, bootstrap_t), baseline))
             
-            )
+
             
         return results, representatividad_replicas
 
