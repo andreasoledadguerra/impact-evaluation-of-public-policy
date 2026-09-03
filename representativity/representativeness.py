@@ -75,6 +75,13 @@ class RepresentativenessCalculator:
     relative_error = cls.rel_error_vs_population(sample_mean, population_mean)
     return np.nan if np.isnan(relative_error) else float(1 - relative_error)
 
+  @classmethod
+  def compute_population_baseline(cls,processed_df: pd.DataFrame) -> dict[str, float]:
+
+    return {
+        label: cls._get_mean(processed_df, column, var_config)
+        for label, column, var_config in cls._column_configs()
+    }
 
   @classmethod
   def _mean_in_columns(cls,
