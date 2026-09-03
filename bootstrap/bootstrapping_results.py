@@ -90,7 +90,7 @@ class BootstrapResults:
 
                     for cat in sorted(all_cats):
                         dist = self.get_distribution(group, col, "proportions", category=cat)
-                        if len(dist) == 0:
+                        if len(dist) == 0 or np.all(np.isnan(dist)):
                             continue
                         q_low, q_med, q_high = np.nanpercentile(dist, percentiles)
                         summary[group].append({
