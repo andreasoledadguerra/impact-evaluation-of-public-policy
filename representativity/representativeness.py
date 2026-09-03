@@ -84,6 +84,40 @@ class RepresentativenessCalculator:
     }
 
   @classmethod
+  def evaluate_replica(
+      cls, 
+      sample: tuple[pd.DataFrame, pd.DataFrame],
+      baseline: dict[str, float],
+    ) -> pd.DataFrame:
+
+      df_control, df_treatment = sample
+      rows = []
+
+      for label, column, var_config in cls._column_configs():
+          mean_population = baseline[label]
+          mean_c = cls._get_mean(df_control, column, var_config)
+          mean_t = cls._get_mean(df_treatment, column, var_config)
+
+          rows.append({
+              "column": label,
+              "mean_population": mean_population,
+              "mean_control": mean_c,
+              "mean_treatment": mean_t,
+              "absolute_error_control": cls.abs_error_vs_population(mean_c, mean_population),
+              "absolute_error_treatment": cls.abs_error_vs_population(mean_t, mean_population),
+              "relative_error_control": cls.rel_error_vs_population(mean_c, mean_population),
+              "relative_error_treatment": cls.rel_error_vs_population(mean_t, mean_population),
+              "percentage_error_control": cls.perc_error_vs_population(mean_c, mean_population),
+              "percentage_error_treatment": cls.perc_error_vs_population(mean_t, mean_population),
+              "coef_representatividad_control": cls.representativeness_coefficient(mean_c, mean_population),
+              "coef_representatividad_treatment": cls.representativeness_coefficient(mean_t, mean_population),
+          })
+
+      return pd.DataFrame(rows)
+
+    
+      
+  @classmethod
   def _mean_in_columns(cls,
       processed_df: pd.DataFrame,
       data: tuple[pd.DataFrame, pd.DataFrame],
