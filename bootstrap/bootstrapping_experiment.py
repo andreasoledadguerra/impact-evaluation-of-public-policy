@@ -29,7 +29,7 @@ class BootstrapExperiment:
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
         n_bootstrap: int = 10000, # 1000
-        random_state: int | np.random.Generator | None = RANDOM_STATE
+        random_state: int | np.random.Generator | None = None
     ) -> None:
         
         self._df_control, self._df_treatment = data
