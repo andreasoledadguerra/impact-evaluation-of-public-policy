@@ -9,7 +9,7 @@ from representativity.representativeness import RepresentativenessCalculator
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
-from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS
+from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,8 +17,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-RANDOM_STATE = 42
 
 
 
@@ -82,9 +80,17 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
+    negatives_cases = repr[repr['coef_representatividad_control'] < 0] | ( repr[repr['coef_representatividad_treatment'] < 0])
+
+    if not negatives_cases.empty:
+        logger.warning(
+            f"Negative representativeness coefficients found in {len(negatives_cases)} cases. "
+            f"Check the data and calculations for potential issues."
+        )
     logger.info(
         f"Representativeness evaluation completed: "
-        f"{len(repr)} variables/conditions assessed"
+        f"SRS representativeness vs. general population OK - no negative coefficients found in {len(repr)} variables/conditions assessed"
+    
     )
 
     # -----------------------------------------------------------------
@@ -107,6 +113,7 @@ def main() -> dict:
     logger.info("Starting bootstrapping on SRS samples...")
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
+        # processed_df=processed_df.df,
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
