@@ -175,30 +175,34 @@ def main() -> dict:
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
     
-    smd_summary.to_excel(FINAL_DATA_PATH / "smd_summary.xlsx", index=False)
+    summary_control.to_excel(FINAL_DATA_PATH / "bootstrap_summary_control.xlsx", index=False)
+    summary_treatment.to_excel(FINAL_DATA_PATH / "bootstrap_summary_treatment.xlsx", index=False)
+    media_std.to_excel(FINAL_DATA_PATH / "media_std.xlsx", index=False)
+    media_condition.to_excel(FINAL_DATA_PATH / "media_condition.xlsx", index=False)
+    media_round.to_excel(FINAL_DATA_PATH / "media_round.xlsx", index=False)
+    repr_bootstrap.to_excel(FINAL_DATA_PATH / "repr_bootstrap.xlsx", index=False) 
 
-    bootstrap_c.to_parquet(FINAL_DATA_PATH / "bootstrap_control.parquet", index=False)
-    bootstrap_c.to_excel(FINAL_DATA_PATH / "bootstrap_control.xlsx", index=False)
-
-    bootstrap_t.to_parquet(FINAL_DATA_PATH / "bootstrap_treatment.parquet", index=False)
-    bootstrap_t.to_excel(FINAL_DATA_PATH / "bootstrap_treatment.xlsx", index=False)
-
+    logger.info("Results exported successfully.")
 
     results = {
-        "bootstrap_c": bootstrap_c,
-        "bootstrap_t": bootstrap_t,
-        "smd_summary": smd_summary,
-        #"rep_coef_iah": rep_coef_iah,
+        "bootstrap_summary_control": summary_control,
+        "bootstrap_summary_treatment": summary_treatment,
+        "repr_bootstrap": repr_bootstrap,
+        "srs_representativeness": repr,
         "sample_analysis": sample_analysis,
         "media_std": media_std,
         "media_condition": media_condition,
         "media_round": media_round,
     }
 
-    logger.info("All results exported successfully.")
-    
     return results
-    
+
+    #bootstrap_c.to_parquet(FINAL_DATA_PATH / "bootstrap_control.parquet", index=False)
+    #bootstrap_c.to_excel(FINAL_DATA_PATH / "bootstrap_control.xlsx", index=False)
+#
+    #bootstrap_t.to_parquet(FINAL_DATA_PATH / "bootstrap_treatment.parquet", index=False)
+    #bootstrap_t.to_excel(FINAL_DATA_PATH / "bootstrap_treatment.xlsx", index=False)
+
 
 
 if __name__ == "__main__": main()
