@@ -41,6 +41,24 @@ class RepresentativenessCalculator:
 
       raise ValueError(f"Unknown variable type: {vtype}") 
 
+  @classmethod
+  def _column_configs(cls) -> list[tuple[str, str, dict]]:
+      configs: list[tuple[str, str, dict]] = []
+
+      for col in NUM_COLUMNS:
+          configs.append((col, col, {"type": "numeric"}))
+
+      for col in SPC_COLUMNS:
+            configs.append((col, col, {"type": "special"})) 
+
+      for col, conditions in CAT_CONDITIONS.items():
+          for condition in conditions:
+              label = f"{col} = {condition}"
+              configs.append((label, col, {"type": "categorical", "condition": condition}))
+
+      return configs
+
+
   @staticmethod
   def abs_error_vs_population(sample_mean:float, population_mean: float) -> float:
       if np.isnan(sample_mean) or np.isnan(population_mean):
