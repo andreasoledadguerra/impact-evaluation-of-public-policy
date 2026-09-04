@@ -192,3 +192,30 @@ class RepresentativenessCalculator:
               rows.append(row)
 
       return pd.DataFrame(rows)
+
+
+  @classmethod
+  def summarize_bootstrap_replicas(
+        cls, replicas: list[pd.DataFrame], ci: float = 0.95) -> pd.DataFrame:
+    all_replicas = pd.concat(replicas, ignore_index=True)
+    alpha = (1 - ci) / 2
+    lower_q, upper_q = alpha, 1 - alpha
+    metric_cols = [c for c in all_replicas.columns if c not in "column"]
+    rows = []
+    for col_name, group in all_replicas.groupby("column"):
+        for metric in metric_cols:
+          values = group[metric].dropna()
+          if values.empty:
+              continue
+          rows.append({
+              "column": col_name,
+              "metric": metric,
+              "mean_bootstrap": float(values.mean()),
+              "median_bootstrap": float(values.median()),
+              f"ci_lower_{int(ci*100)}": float(values.quantile(lower_q)),
+              f"ci_upper_{int(ci*100)}": float(values.quantile(upper_q)),
+              "std_bootstrap": float(values.std(ddof=1)) if len(values) > 1 else np.nan,
+              "n_replicas": len(values),
+  
+          })
+    return pd.DataFrame(rows)
