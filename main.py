@@ -113,7 +113,7 @@ def main() -> dict:
     logger.info("Starting bootstrapping on SRS samples...")
     experiment = BootstrapExperiment(
         data=(srs_c, srs_t),
-        # processed_df=processed_df.df,
+        processed_df=processed_df.df,
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
@@ -121,7 +121,7 @@ def main() -> dict:
         random_state= RANDOM_STATE,
     )
 
-    bootstrap_results = experiment.run_bootstrap()
+    bootstrap_results, repr_bootstrap_replicas = experiment.run_bootstrap()
     logger.info("Bootstrapping completed")
 
     bootstrap_summary = bootstrap_results.summarize(ci=0.95)
@@ -137,17 +137,21 @@ def main() -> dict:
     # -----------------------------------------------------------------
     logger.info("Evaluating representativeness of bootstrap samples...")
 
-    repr_bootstrap = RepresentativenessCalculator.evaluate_sample_representativeness( 
-        processed_df = processed_df.df,
-        data =(bootstrap_summary["control"], bootstrap_summary["treatment"]),
-    )
+    repr_bootstrap = RepresentativenessCalculator.summarize_bootstrap_replicas(repr_bootstrap_replicas, ci=0.95)
 
 
+    es_coef_representativeness = repr_bootstrap["metric"].isin(["coef_representatividad_control", "coef_representatividad_treatment"])
+    negative_cases_bootstrap = repr_bootstrap[es_coef_representativeness & (repr_bootstrap["mean_bootstrap"] < 0)]
 
-    repr_bootstrap_c = repr_bootstrap.bootstrap_c
-    repr_bootstrap_t = repr_bootstrap.bootstrap_t  
-    smd_summary_bootstrap = repr_bootstrap.smd_summary  # Control vs. Treatment Comparison
+    if not negative_cases_bootstrap.empty:
+        logger.warning(
+            f"{len(negative_cases_bootstrap)} case(s) with an "
+            f"average negative boostrap representativeness coefficient."
+        )
 
+    else: 
+        logger.info(f"Bootstrap representativeness OK --- no negative coefficients on average."
+        )
 
 
     # -----------------------------------------------------------------
