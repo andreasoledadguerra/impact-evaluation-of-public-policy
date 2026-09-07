@@ -177,6 +177,7 @@ def main() -> dict:
     # 7. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
+    _clear_output_dir(FINAL_DATA_PATH)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
     
     summary_control.to_excel(FINAL_DATA_PATH / "bootstrap_summary_control.xlsx", index=False)
@@ -186,7 +187,10 @@ def main() -> dict:
     media_round.to_excel(FINAL_DATA_PATH / "media_round.xlsx", index=False)
     repr_bootstrap.to_excel(FINAL_DATA_PATH / "repr_bootstrap.xlsx", index=False) 
 
-    logger.info("Results exported successfully.")
+    best_control_sample.to_excel(FINAL_DATA_PATH / "best_control_sample.parquet", index=False)
+    best_treatment_sample.to_excel(FINAL_DATA_PATH / "best_treatment_sample.parquet", index=False)
+
+    logger.info("Complete results exported successfully.")
 
     results = {
         "bootstrap_summary_control": summary_control,
@@ -197,6 +201,8 @@ def main() -> dict:
         "media_std": media_std,
         "media_condition": media_condition,
         "media_round": media_round,
+        "best_control_sample": best_control_sample,
+        "best_treatment_sample": best_treatment_sample,
     }
 
     return results
