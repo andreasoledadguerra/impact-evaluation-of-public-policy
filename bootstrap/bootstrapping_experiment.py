@@ -53,27 +53,49 @@ class BootstrapExperiment:
             )
 
     #----------------------------------Public methods-----------------------------------
-    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame]]:
+    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame], pd.DataFrame, pd.DataFrame]:
 
         results = BootstrapResults()
-        representatividad_replicas: list[pd.DataFrame] = []
+        representativness_replicas: list[pd.DataFrame] = []
+        control_errors: dict[str, list[float]] = {}
+        treatment_errors: dict[str, list[float]] = {}
 
         baseline = RepresentativenessCalculator.compute_population_baseline(self._processed_df)
 
-        for _ in range(self._n_bootstrap):
-            bootstrap_c, bootstrap_t = self._generate_samples()
+        seed_sequence = np.random.SeedSequence(self._random_state)
+        child_seeds = seed_sequence.spawn(self._n_bootstrap)
+
+        # ----- Phase 1: Generate, calculate, and filter the raw data --------
+        for seed in child_seeds:
+            rng = np.random.default_rng(seed)
+            bootstrap_c, bootstrap_t = self._generate_samples_with_rng(rng)
+
 
             for col, stats in self._calculate_stats(bootstrap_c).items():
                 results.add("control", col, stats)
             for col, stats in self._calculate_stats(bootstrap_t).items():
                 results.add("treatment", col, stats)
 
-            representatividad_replicas.append(
-                RepresentativenessCalculator.evaluate_replica((bootstrap_c, bootstrap_t), baseline))
+            replica_repr = RepresentativenessCalculator.evaluate_replica(
+            (bootstrap_c, bootstrap_t), baseline
+            )
             
+            representativness_replicas.append(replica_repr)
 
-            
-        return results, representatividad_replicas
+            for _, row in replica_repr.iterrows():
+                label = row["column"]
+                control_errors.setdefault(label, []).append(
+                    abs(row["coef_representativeness_control"] - 1)
+
+                )
+                treatment_errors.setdefault(label, []).append(
+                    abs(row["coef_representativeness_treatment"] - 1)
+                )
+
+        # ---- Ranking: average percentiles by variable, broken down 
+
+
+        return results, representativness_replicas
 
     
     #----------------------------------Private methods-----------------------------------
