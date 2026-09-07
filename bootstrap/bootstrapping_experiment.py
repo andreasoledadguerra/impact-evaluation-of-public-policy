@@ -92,7 +92,32 @@ class BootstrapExperiment:
                     abs(row["coef_representativeness_treatment"] - 1)
                 )
 
-        # ---- Ranking: average percentiles by variable, broken down 
+        # ---- Classification: average percentiles by variable, broken down 
+        for seed in child_seeds:
+            rng = np.random.default_rng(seed)
+            bootstrap_c, bootstrap_t = self._generate_samples(rng)
+
+            for col, stats in self._calculate_stats(bootstrap_c).items():
+                results.add("control", col, stats)
+            for col, stats in self._calculate_stats(bootstrap_t).items():
+                results.add("treatment", col, stats)
+
+            replica_repr = RepresentativenessCalculator.evaluate_replica(
+                (bootstrap_c, bootstrap_t), baseline
+            )
+            representativness_replicas.append(replica_repr)
+
+            for _, row in replica_repr.iterrows():
+                label = row["column"]
+                control_errors.setdefault(label, []).append(
+                    abs(row["coef_representativeness_control"] - 1)
+                )
+                treatment_errors.setdefault(label, []).append(
+                    abs(row["coef_representativeness_treatment"] - 1)
+                )
+
+
+           
 
 
         return results, representativness_replicas
