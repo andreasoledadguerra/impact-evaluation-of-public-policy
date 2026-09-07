@@ -1,5 +1,7 @@
 
 import logging
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 
@@ -17,6 +19,14 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+
+def _clear_output_dir(path: Path, patterns: tuple[str, ...] = ("*.xlsx", "*.parquet")) -> None :
+    if not path.exists():
+        return
+    for pattern in patterns:
+        for f in path.glob(pattern):
+            f.unlink()
 
 
 

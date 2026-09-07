@@ -68,7 +68,7 @@ class BootstrapExperiment:
         # ----- Phase 1: Generate, calculate, and filter the raw data --------
         for seed in child_seeds:
             rng = np.random.default_rng(seed)
-            bootstrap_c, bootstrap_t = self._generate_samples_with_rng(rng)
+            bootstrap_c, bootstrap_t = self._generate_samples(rng)
 
 
             for col, stats in self._calculate_stats(bootstrap_c).items():
