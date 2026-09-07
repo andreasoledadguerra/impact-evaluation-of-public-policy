@@ -63,16 +63,30 @@ def main() -> dict:
     srs_c, srs_t = generate_samples_first(df_control, df_treatment, random_state=RANDOM_STATE)
     logger.info(f"SRS sampling completed: {len(srs_c)} control rows, {len(srs_t)} treatment rows.")
 
-    control_treatment_stats = SubGroupSummary((srs_c, srs_t))
-    # este debe aparecer como argumento en BootstrapExperiment or so
-    logger.info(
-        f"Control ({len(control_treatment_stats.summary_control)} vars)"
-        f"Treatment ({len(control_treatment_stats.summary_treatment)} vars)"
+
+    # -----------------------------------------------------------------
+    # 3. Summary Descriptive Statistics from  control and treatment groups (SRS)
+    # -----------------------------------------------------------------
+    sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
+    media_std = sample_analysis.sample_media_std()
+    media_condition = sample_analysis.sample_media_condition()
+    media_round = sample_analysis.calculate_media_round()
+
+    logger.info("Final descriptive statistics calculated(media_std, media_condition, media_round)."
     )
+      
+
+
+    #control_treatment_stats = SubGroupSummary((srs_c, srs_t))
+    ## este debe aparecer como argumento en BootstrapExperiment or so
+    #logger.info(
+    #    f"Control ({len(control_treatment_stats.summary_control)} vars)"
+    #    f"Treatment ({len(control_treatment_stats.summary_treatment)} vars)"
+    #)
 
 
     # -----------------------------------------------------------------
-    # 3. Validate group representativeness
+    # 4. Validate group representativeness
     # -----------------------------------------------------------------
     logger.info("Evaluating representativeness of SRS samples...")
     repr = RepresentativenessCalculator.evaluate_sample_representativeness(
@@ -94,7 +108,7 @@ def main() -> dict:
     )
 
     # -----------------------------------------------------------------
-    # 4. Bootstrapping on SRS Samples (n replicas)
+    # 5. Bootstrapping on SRS Samples (n replicas)
     # -----------------------------------------------------------------
     # Each column type requires a different calculation path:
     #   - NUM_COLUMNS    -> continuous: mean + std + var + cv
@@ -117,11 +131,11 @@ def main() -> dict:
         num_columns=NUM_COLUMNS,
         cat_conditions=CAT_CONDITIONS,
         spc_columns=SPC_COLUMNS,
-        n_bootstrap=10000,  # 1000
+        #n_bootstrap=10000,  # 1000
         random_state= RANDOM_STATE,
     )
 
-    bootstrap_results, repr_bootstrap_replicas = experiment.run_bootstrap()
+    bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample = (experiment.run_bootstrap())
     logger.info("Bootstrapping completed")
 
     bootstrap_summary = bootstrap_results.summarize(ci=0.95)
@@ -133,7 +147,7 @@ def main() -> dict:
 
 
     # -----------------------------------------------------------------
-    # 5. Validate group representativeness using bootstrap samples 
+    # 6. Validate group representativeness using bootstrap samples 
     # -----------------------------------------------------------------
     logger.info("Evaluating representativeness of bootstrap samples...")
 
@@ -155,22 +169,12 @@ def main() -> dict:
 
 
     # -----------------------------------------------------------------
-    # 6. Standardised mean difference (smd.py)
+    # . Standardised mean difference (smd.py)
     # -----------------------------------------------------------------
 
+   
     # -----------------------------------------------------------------
-    # 7. Final Descriptive Statistics
-    # -----------------------------------------------------------------
-    sample_analysis = compute_sample_statistics_first((srs_c, srs_t))
-    media_std = sample_analysis.sample_media_std()
-    media_condition = sample_analysis.sample_media_condition()
-    media_round = sample_analysis.calculate_media_round()
-
-    logger.info("Final descriptive statistics calculated(media_std, media_condition, media_round)."
-    )
-
-    # -----------------------------------------------------------------
-    # 8. Exporting Results
+    # 7. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
