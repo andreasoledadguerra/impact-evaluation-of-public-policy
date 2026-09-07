@@ -31,14 +31,15 @@ class BootstrapExperiment:
         cat_conditions: dict[str, list[str]],
         spc_columns: list[str],
         n_bootstrap: int = 10000, # 1000
-        random_state: int | np.random.Generator | None = None
+        random_state: int | None = None
     ) -> None:
         
         self._df_control, self._df_treatment = data
         self._processed_df = processed_df
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._n_bootstrap = n_bootstrap
-        self._rng = np.random.default_rng(random_state)
+        self._random_state = random_state 
+        #self._rng = np.random.default_rng(random_state)
 
         #self.bootstrap_c, self.bootstrap_t = self._generate_samples()
         #self.stats_c = self._calculate_stats(self.bootstrap_c)
