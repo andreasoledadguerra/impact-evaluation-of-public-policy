@@ -137,6 +137,24 @@ class BootstrapExperiment:
     # debo implementarlo dos veces: uno para que haga cálculos sobre 
     # el grupo control y otro sobre el grupo tratamiento
 
+    @staticmethod
+
+    # method to determine the best replica index based on average percentiles of errors across variables
+    def _best_replica_index(errors_by_variable: dict[str, list[float]]) -> int:
+
+
+        n=len(next(iter(errors_by_variable.values())))
+        percentile_sum = np.zeros(n)
+
+        for errors in errors_by_variable.values():
+            ranks_pct = pd.Series(errors).rank(method="average",pct=True) * 10
+
+            percentile_sum += ranks_pct.to_numpy()
+
+        avg_percentile = percentile_sum / len(errors_by_variable)
+        return int(np.argmin(avg_percentile))  # index of the best replica
+
+
 
     # ------------------------------------------------------------------
     # Private helper methods
