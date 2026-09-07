@@ -114,20 +114,20 @@ class BootstrapExperiment:
     
     #----------------------------------Private methods-----------------------------------
 
-    def _generate_samples(self) -> tuple[pd.DataFrame, pd.DataFrame]:
+    def _generate_samples(self, rng: np.random.Generator) -> tuple[pd.DataFrame, pd.DataFrame]:
         columns = self._registry.columns
         bootstrap_c = self._df_control[columns].sample(
             n = len(self._df_control),
-            replace = True,
+            replace=True,
             #random_state = self._random_state,
-            random_state = self._rng,
+            random_state=rng,
 
         )
         bootstrap_t = self._df_treatment[columns].sample(
             n = len(self._df_treatment),
             replace = True,
             #random_state = self._random_state,
-            random_state = self._rng,
+            random_state = rng,
 
         )
         return bootstrap_c, bootstrap_t
