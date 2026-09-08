@@ -104,7 +104,7 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
-    negatives_cases = repr[repr['coef_representativness_control'] < 0] | ( repr[repr['coef_representativness_treatment'] < 0])
+    negatives_cases = repr[repr['coef_representativeness_control'] < 0] | ( repr[repr['coef_representativeness_treatment'] < 0])
 
     if not negatives_cases.empty:
         logger.warning(
