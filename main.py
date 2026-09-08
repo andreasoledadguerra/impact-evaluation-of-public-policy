@@ -99,13 +99,13 @@ def main() -> dict:
     # 4. Validate group representativeness
     # -----------------------------------------------------------------
     logger.info("Evaluating representativeness of SRS samples...")
-    repr = RepresentativenessCalculator.evaluate_sample_representativeness(
+    repr_srs = RepresentativenessCalculator.evaluate_sample_representativeness(
         processed_df = processed_df.df,
         data =(srs_c, srs_t),
     )
 
-    negatives_mask = ([repr['coef_representativeness_control'] < 0] | [repr['coef_representativeness_treatment'] < 0])
-    negative_cases = repr[negatives_mask]
+    negatives_mask = ([repr_srs['coef_representativeness_control'] < 0] | [repr_srs['coef_representativeness_treatment'] < 0])
+    negative_cases = repr_srs[negatives_mask]
 
     if not negative_cases.empty:
         logger.warning(
