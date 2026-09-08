@@ -104,7 +104,7 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
-    negatives_cases = repr[repr['coef_representatividad_control'] < 0] | ( repr[repr['coef_representatividad_treatment'] < 0])
+    negatives_cases = repr[repr['coef_representativness_control'] < 0] | ( repr[repr['coef_representativness_treatment'] < 0])
 
     if not negatives_cases.empty:
         logger.warning(
@@ -164,7 +164,7 @@ def main() -> dict:
     repr_bootstrap = RepresentativenessCalculator.summarize_bootstrap_replicas(repr_bootstrap_replicas, ci=0.95)
 
 
-    es_coef_representativeness = repr_bootstrap["metric"].isin(["coef_representatividad_control", "coef_representatividad_treatment"])
+    es_coef_representativeness = repr_bootstrap["metric"].isin(["coef_representativeness_control", "coef_representativness_treatment"])
     negative_cases_bootstrap = repr_bootstrap[es_coef_representativeness & (repr_bootstrap["mean_bootstrap"] < 0)]
 
     if not negative_cases_bootstrap.empty:

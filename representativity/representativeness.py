@@ -159,8 +159,8 @@ class RepresentativenessCalculator:
         "relative_error_treatment": cls.rel_error_vs_population(mean_t, mean_population),
         "percentage_error_control": cls.perc_error_vs_population(mean_c, mean_population),
         "percentage_error_treatment": cls.perc_error_vs_population(mean_t, mean_population),
-        "coef_representatividad_control": cls.representativeness_coefficient(mean_c, mean_population),
-        "coef_representatividad_treatment": cls.representativeness_coefficient(mean_t, mean_population),
+        "coef_representativness_control": cls.representativeness_coefficient(mean_c, mean_population),
+        "coef_representativness_treatment": cls.representativeness_coefficient(mean_t, mean_population),
 
     }
 
