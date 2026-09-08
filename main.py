@@ -164,7 +164,7 @@ def main() -> dict:
     repr_bootstrap = RepresentativenessCalculator.summarize_bootstrap_replicas(repr_bootstrap_replicas, ci=0.95)
 
 
-    es_coef_representativeness = repr_bootstrap["metric"].isin(["coef_representativeness_control", "coef_representativness_treatment"])
+    es_coef_representativeness = repr_bootstrap["metric"].isin(["coef_representativeness_control", "coef_representativeness_treatment"])
     negative_cases_bootstrap = repr_bootstrap[es_coef_representativeness & (repr_bootstrap["mean_bootstrap"] < 0)]
 
     if not negative_cases_bootstrap.empty:
