@@ -135,34 +135,34 @@ class RepresentativenessCalculator:
 
     
       
-  @classmethod
-  def _mean_in_columns(cls,
-      processed_df: pd.DataFrame,
-      data: tuple[pd.DataFrame, pd.DataFrame],
-      column: str,
-      var_config: dict, 
-  ) -> dict:
-      df_control, df_treatment = data
-
-      mean_population= cls._get_mean(processed_df, column, var_config)
-      mean_c = cls._get_mean(df_control, column, var_config)
-      mean_t = cls._get_mean(df_treatment, column, var_config)
-
-      return {
-        "column": column,
-        "mean_population": mean_population,
-        "mean_control": mean_c,
-        "mean_treatment": mean_t,
-        "absolut_error_control": cls.abs_error_vs_population(mean_c, mean_population),
-        "absolut_error_treatment": cls.abs_error_vs_population(mean_t, mean_population),
-        "relative_error_control": cls.rel_error_vs_population(mean_c, mean_population),
-        "relative_error_treatment": cls.rel_error_vs_population(mean_t, mean_population),
-        "percentage_error_control": cls.perc_error_vs_population(mean_c, mean_population),
-        "percentage_error_treatment": cls.perc_error_vs_population(mean_t, mean_population),
-        "coef_representativeness_control": cls.representativeness_coefficient(mean_c, mean_population),
-        "coef_representativeness_treatment": cls.representativeness_coefficient(mean_t, mean_population),
-
-    }
+  #@classmethod
+  #def _mean_in_columns(cls,
+  #    processed_df: pd.DataFrame,
+  #    data: tuple[pd.DataFrame, pd.DataFrame],
+  #    column: str,
+  #    var_config: dict, 
+  #) -> dict:
+  #    df_control, df_treatment = data
+#
+  #    mean_population= cls._get_mean(processed_df, column, var_config)
+  #    mean_c = cls._get_mean(df_control, column, var_config)
+  #    mean_t = cls._get_mean(df_treatment, column, var_config)
+#
+  #    return {
+  #      "column": column,
+  #      "mean_population": mean_population,
+  #      "mean_control": mean_c,
+  #      "mean_treatment": mean_t,
+  #      "absolut_error_control": cls.abs_error_vs_population(mean_c, mean_population),
+  #      "absolut_error_treatment": cls.abs_error_vs_population(mean_t, mean_population),
+  #      "relative_error_control": cls.rel_error_vs_population(mean_c, mean_population),
+  #      "relative_error_treatment": cls.rel_error_vs_population(mean_t, mean_population),
+  #      "percentage_error_control": cls.perc_error_vs_population(mean_c, mean_population),
+  #      "percentage_error_treatment": cls.perc_error_vs_population(mean_t, mean_population),
+  #      "coef_representativeness_control": cls.representativeness_coefficient(mean_c, mean_population),
+  #      "coef_representativeness_treatment": cls.representativeness_coefficient(mean_t, mean_population),
+#
+  #  }
 
   @classmethod
   def evaluate_sample_representativeness(
@@ -170,28 +170,33 @@ class RepresentativenessCalculator:
           processed_df: pd.DataFrame,
           data: tuple[pd.DataFrame, pd.DataFrame],
     ) -> pd.DataFrame:
-      rows = []
 
-      for col in NUM_COLUMNS:
-          rows.append(
-              cls._mean_in_columns(processed_df,data, col, {"type":"numeric"})
-          )
-      for col in SPC_COLUMNS:
-          rows.append(
-              cls._mean_in_columns(processed_df, data, col, {"type":"special"})
-          )
-      for col, conditions in CAT_CONDITIONS.items():
-          for condition in conditions:
-              row = cls._mean_in_columns(
-                  processed_df,
-                  data,
-                  col,
-                  {"type":"categorical", "condition": condition},
-              )
-              row["column"] = f"{col} = {condition}"
-              rows.append(row)
+      baseline = cls.compute_population_baseline(processed_df)
+      return cls. evaluate_replica(data, baseline)
 
-      return pd.DataFrame(rows)
+      #rows = []
+      #
+#
+      #for col in NUM_COLUMNS:
+      #    rows.append(
+      #        cls._mean_in_columns(processed_df,data, col, {"type":"numeric"})
+      #    )
+      #for col in SPC_COLUMNS:
+      #    rows.append(
+      #        cls._mean_in_columns(processed_df, data, col, {"type":"special"})
+      #    )
+      #for col, conditions in CAT_CONDITIONS.items():
+      #    for condition in conditions:
+      #        row = cls._mean_in_columns(
+      #            processed_df,
+      #            data,
+      #            col,
+      #            {"type":"categorical", "condition": condition},
+      #        )
+      #        row["column"] = f"{col} = {condition}"
+      #        rows.append(row)
+#
+      #return pd.DataFrame(rows)
 
 
   @classmethod
@@ -200,7 +205,8 @@ class RepresentativenessCalculator:
     all_replicas = pd.concat(replicas, ignore_index=True)
     alpha = (1 - ci) / 2
     lower_q, upper_q = alpha, 1 - alpha
-    metric_cols = [c for c in all_replicas.columns if c not in "column"]
+    metric_cols = [c for c in all_replicas.columns if c != "column"]
+    
     rows = []
     for col_name, group in all_replicas.groupby("column"):
         for metric in metric_cols:
