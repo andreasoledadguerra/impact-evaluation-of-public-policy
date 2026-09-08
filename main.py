@@ -104,11 +104,12 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
-    negatives_cases = repr[repr['coef_representativeness_control'] < 0] | ( repr[repr['coef_representativeness_treatment'] < 0])
+    negatives_mask = ([repr['coef_representativeness_control'] < 0] | [repr['coef_representativeness_treatment'] < 0])
+    negative_cases = repr[negatives_mask]
 
-    if not negatives_cases.empty:
+    if not negative_cases.empty:
         logger.warning(
-            f"Negative representativeness coefficients found in {len(negatives_cases)} cases. "
+            f"Negative representativeness coefficients found in {len(negative_cases)} cases. "
             f"Check the data and calculations for potential issues."
         )
     logger.info(
