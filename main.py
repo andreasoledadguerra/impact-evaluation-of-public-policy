@@ -198,8 +198,8 @@ def main() -> dict:
     media_round.to_excel(FINAL_DATA_PATH / "media_round.xlsx", index=False)
     repr_bootstrap.to_excel(FINAL_DATA_PATH / "repr_bootstrap.xlsx", index=False) 
 
-    best_control_sample.to_excel(FINAL_DATA_PATH / "best_control_sample.parquet", index=False)
-    best_treatment_sample.to_excel(FINAL_DATA_PATH / "best_treatment_sample.parquet", index=False)
+    best_control_sample.to_excel(FINAL_DATA_PATH / "best_control_sample.to_parquet", index=False)
+    best_treatment_sample.to_excel(FINAL_DATA_PATH / "best_treatment_sample.to_parquet", index=False)
 
     logger.info("Complete results exported successfully.")
 
