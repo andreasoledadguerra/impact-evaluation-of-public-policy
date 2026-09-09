@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 
-def _clear_output_dir(path: Path, patterns: tuple[str, ...] = ("*.xlsx", "*.parquet")) -> None :
+def _clear_output_dir(path: Path, patterns: tuple[str, ...] = ("*.xlsx", "*.to_parquet")) -> None :
     if not path.exists():
         return
     for pattern in patterns:
@@ -104,7 +104,10 @@ def main() -> dict:
         data =(srs_c, srs_t),
     )
 
-    negatives_mask = ([repr_srs['coef_representativeness_control'] < 0] | [repr_srs['coef_representativeness_treatment'] < 0])
+    negatives_mask = ( (repr_srs['coef_representativeness_control'] < 0) | 
+                      (repr_srs['coef_representativeness_treatment'] < 0)
+    ) 
+
     negative_cases = repr_srs[negatives_mask]
 
     if not negative_cases.empty:
@@ -112,11 +115,12 @@ def main() -> dict:
             f"Negative representativeness coefficients found in {len(negative_cases)} cases. "
             f"Check the data and calculations for potential issues."
         )
-    logger.info(
-        f"Representativeness evaluation completed: "
-        f"SRS representativeness vs. general population OK - no negative coefficients found in {len(repr)} variables/conditions assessed"
-    
-    )
+    else:
+        logger.info(
+            f"Representativeness evaluation completed: "
+            f"SRS representativeness vs. general population OK - "
+            f"no negative coefficients found in {len(repr_srs)} variables/conditions assessed"
+        )
 
     # -----------------------------------------------------------------
     # 5. Bootstrapping on SRS Samples (n replicas)
