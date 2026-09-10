@@ -4,11 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-GROUP_COLORS = {
-    "Poblation": "#4C72B0",
-    "Control": "#55A868",
-    "Treatment": "#C44E52",
-}
+
 
 def plot_variable_distributions(
         processed_df: pd.DataFrame,
