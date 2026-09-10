@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-
+from constants import GROUP_COLORS
 
 def plot_variable_distributions(
         processed_df: pd.DataFrame,
