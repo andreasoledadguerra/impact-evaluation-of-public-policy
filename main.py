@@ -11,6 +11,7 @@ from representativity.representativeness import RepresentativenessCalculator
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
+from visualizations.distributions import plot_variable_distributions
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
 
 logging.basicConfig(
@@ -182,6 +183,22 @@ def main() -> dict:
         logger.info(f"Bootstrap representativeness OK --- no negative coefficients on average."
         )
 
+     # -----------------------------------------------------------------
+     # 7. Generating distribution visualizations 
+     # -----------------------------------------------------------------
+    logger.info("Generating distribution plots...")
+
+    plots_dir = FINAL_DATA_PATH / "distributions"
+    _clear_output_dir(plots_dir, patterns=("*.png"))
+
+    distribution_plots = plot_variable_distributions(
+        processed_df=processed_df,
+        best_control_sample=best_control_sample,
+        best_treatment_sample=best_treatment_sample,
+        columns=NUM_COLUMNS,
+        output_dir=plots_dir,
+    )
+    logger.info(f"{len(distribution_plots)} distribution plot(s) savedto {plots_dir}")
 
     # -----------------------------------------------------------------
     # . Standardised mean difference (smd.py)
@@ -189,7 +206,7 @@ def main() -> dict:
 
    
     # -----------------------------------------------------------------
-    # 7. Exporting Results
+    # . Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     _clear_output_dir(FINAL_DATA_PATH)
@@ -218,6 +235,7 @@ def main() -> dict:
         "media_round": media_round,
         "best_control_sample": best_control_sample,
         "best_treatment_sample": best_treatment_sample,
+        "distribution_plots": distribution_plots,
     }
 
     return results
