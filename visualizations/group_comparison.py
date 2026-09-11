@@ -100,6 +100,17 @@ def _categorical_proportion(col: str, cat: str) -> ProportionFn:
         return lambda df: float((df[col] == cat).mean())
 
 
+# ----------------------------- Utilities ----------------------------------------------------
+def _save(self, fig, stem: str) -> Path:
+    fig.tight_layout()
+    path = self._output_dir / f"{stem}.png"
+    fig.savefig(path, dpi=DPI)
+    plt.close(fig)
+    return path
+
+def _slug(text: str) -> str:
+        return re.sub(r"^a-zA-Z0-9_]+", "_", text).strip("_")
+
 
 
 
