@@ -1,10 +1,16 @@
+from __future__ import annotations
+
+import re
 from pathlib import Path
+from typing import Callable
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
 
-from constants import GROUP_COLORS
+from bootstrap.column_registry import ColumnRegistry
+from visualizations.config import BAR_FIGSIZE, DPI, GROUP_COLORS, KDE_FIGSIZE
+
 
 def plot_variable_distributions(
         processed_df: pd.DataFrame,
