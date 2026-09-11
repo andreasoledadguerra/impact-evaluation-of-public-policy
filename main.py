@@ -232,7 +232,6 @@ def main() -> dict:
         "media_round": media_round,
         "best_control_sample": best_control_sample,
         "best_treatment_sample": best_treatment_sample,
-        "all_plots": all_plots,
     }
 
     return results
