@@ -17,9 +17,3 @@ CAT_CONDITIONS = {
 SPC_COLUMNS = ['escenario_vulnerabilidad_social', # FORMULARIOS_PATH
                'paredes_ext_revocadas' # FORMULARIOS_PATH
 ]
-
-GROUP_COLORS = {
-    "Poblation": "#4C72B0",
-    "Control": "#55A868",
-    "Treatment": "#C44E52",
-}
