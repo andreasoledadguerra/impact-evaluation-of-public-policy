@@ -225,14 +225,14 @@ def main() -> dict:
         "bootstrap_summary_control": summary_control,
         "bootstrap_summary_treatment": summary_treatment,
         "repr_bootstrap": repr_bootstrap,
-        "srs_representativeness": repr,
+        "srs_representativeness": repr_srs,
         "sample_analysis": sample_analysis,
         "media_std": media_std,
         "media_condition": media_condition,
         "media_round": media_round,
         "best_control_sample": best_control_sample,
         "best_treatment_sample": best_treatment_sample,
-        "distribution_plots": distribution_plots,
+        "all_plots": all_plots,
     }
 
     return results
