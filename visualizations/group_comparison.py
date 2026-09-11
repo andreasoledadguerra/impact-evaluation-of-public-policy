@@ -11,7 +11,24 @@ import seaborn as sns
 from bootstrap.column_registry import ColumnRegistry
 from visualizations.config import BAR_FIGSIZE, DPI, GROUP_COLORS, KDE_FIGSIZE
 
+ProportionFn = Callable[[pd.DataFrame], float]
 
+
+def __init__(
+    self,
+    processed_df: pd.DataFrame,
+    best_control_sample: pd.DataFrame,
+    best_treatment_sample: pd.DataFrame,
+    output_dir:Path,
+) -> None:
+    self._groups: dict[str, pd.DataFrame] = {
+        "Poblation": processed_df,
+        "Control": best_control_sample,
+        "Tratamiento": best_treatment_sample,
+    }
+    self._output_dir = Path(output_dir)
+    self._output_dir.mkdir(parents=True, existe_ok=True)
+    
 def plot_variable_distributions(
         processed_df: pd.DataFrame,
         best_control_sample: pd.DataFrame,
