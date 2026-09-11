@@ -84,7 +84,7 @@ def _render_proportion(self, label: str, proportion_fn:ProportionFn) -> Path:
     ax.set_xlabel(label)
     ax.axhline(0, color="black", linewidth=0.8)
     for i, v in enumerate(values):
-        ax.text(i, v + 0.05, f"v: .3f}", ha="center", va="bottom", fontsize=9)
+        ax.text(i, v + 0.015, f"{v:.3f}", ha="center", va="bottom", fontsize=9)
     
 
     return self._save(fig, f"prop_{_slug(label)}")
@@ -108,6 +108,7 @@ def _save(self, fig, stem: str) -> Path:
     plt.close(fig)
     return path
 
+# 
 def _slug(text: str) -> str:
         return re.sub(r"^a-zA-Z0-9_]+", "_", text).strip("_")
 
