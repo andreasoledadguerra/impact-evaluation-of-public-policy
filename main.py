@@ -5,14 +5,15 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from bootstrap.bootstrapping_experiment import BootstrapExperiment
+from bootstrap.column_registry import ColumnRegistry
 from config import FINAL_DATA_PATH
-from schema import GroupSummary, SubGroupSummary
+from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
 from representativity.representativeness import RepresentativenessCalculator
+from schema import GroupSummary, SubGroupSummary
 from src.preprocessing import ProcessedDataframe
 from src.randomization import randomization, generate_samples_first, compute_sample_statistics_first
-from bootstrap.bootstrapping_experiment import BootstrapExperiment
-from visualizations.distributions import plot_variable_distributions
-from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
+from visualizations.group_comparison import GroupComparisonPlotter
 
 logging.basicConfig(
     level=logging.INFO,
@@ -183,30 +184,26 @@ def main() -> dict:
         logger.info(f"Bootstrap representativeness OK --- no negative coefficients on average."
         )
 
-     # -----------------------------------------------------------------
-     # 7. Generating distribution visualizations 
-     # -----------------------------------------------------------------
-    logger.info("Generating distribution plots...")
-
-    plots_dir = FINAL_DATA_PATH / "distributions"
-    _clear_output_dir(plots_dir, patterns=("*.png"))
-
-    distribution_plots = plot_variable_distributions(
-        processed_df=processed_df,
-        best_control_sample=best_control_sample,
-        best_treatment_sample=best_treatment_sample,
-        columns=NUM_COLUMNS,
-        output_dir=plots_dir,
-    )
-    logger.info(f"{len(distribution_plots)} distribution plot(s) savedto {plots_dir}")
-
     # -----------------------------------------------------------------
     # . Standardised mean difference (smd.py)
     # -----------------------------------------------------------------
 
-   
     # -----------------------------------------------------------------
-    # . Exporting Results
+    # 8. Generating distribution visualizations 
+    # -----------------------------------------------------------------
+    logger.info("Generating distribution plots by type of variable and group...")
+
+    registry = ColumnRegistry(NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS)
+    plotter = GroupComparisonPlotter(processed_df.df, best_control_sample, best_treatment_sample)
+    all_plots = plotter.generate_all(registry)
+
+    plots_dir = FINAL_DATA_PATH / "distributions"
+    _clear_output_dir(plots_dir, patterns=("*.png"))
+
+    logger.info(f"{len(all_plots)} distribution plot(s) saved to {plots_dir}")
+
+    # -----------------------------------------------------------------
+    # 7. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     _clear_output_dir(FINAL_DATA_PATH)
@@ -239,12 +236,6 @@ def main() -> dict:
     }
 
     return results
-
-    #bootstrap_c.to_parquet(FINAL_DATA_PATH / "bootstrap_control.parquet", index=False)
-    #bootstrap_c.to_excel(FINAL_DATA_PATH / "bootstrap_control.xlsx", index=False)
-#
-    #bootstrap_t.to_parquet(FINAL_DATA_PATH / "bootstrap_treatment.parquet", index=False)
-    #bootstrap_t.to_excel(FINAL_DATA_PATH / "bootstrap_treatment.xlsx", index=False)
 
 
 
