@@ -30,7 +30,7 @@ def __init__(
     self._output_dir.mkdir(parents=True, existe_ok=True)
     
 
-# ------------------------Public Methods-----------------------------
+# -------------------------------------Public Methods-----------------------------------
 def generate_all(self, registry: ColumnRegistry) ->list[Path]:
 
     paths: list[Path] = []
@@ -48,22 +48,55 @@ def generate_all(self, registry: ColumnRegistry) ->list[Path]:
 
     return paths
 
-        fig, ax = plt.subplots(figsize=(8, 5))
+# ---------------------------------- Renders ------------------------------------------------
+def _render_continuos(self, col: str) -> Path:
+    fig, ax = plt.subplots(figsize=KDE_FIGSIZE)
 
-        for group_label, df in groups.items():
-            sns.kdplot(
-                df[col].dropna(),
-                ax=ax,
-                label=group_label,
-                color=GROUP_COLORS[group_label],
-                fill=True,
-                alpha=0.15,
-                linewidth=2,
-            )
-        ax.set_title(f"Sample distribution: {col}")
-        ax.set_xlabel(col)
-        ax.set_ylabel("Density")
-        ax.legend()
+    for group_label, df in self._groups.items():
+        sns.kdplot(
+            df[col].dropna(),
+            ax=ax,
+            label=group_label,
+            color=GROUP_COLORS[group_label],
+            fill=True,
+            alpha=0.15,
+            linewidth=2,
+        )
+    ax.set_title(f"Sample distribution: {col}")
+    ax.set_xlabel(col)
+    ax.set_ylabel("Density")
+    ax.legend()
+
+    return self._save(fig, f"kde_{_slug(col)}")
+
+def _render_proportion(self, label: str, proportion_fn:ProportionFn) -> Path:
+    heights = {g: proportion_fn(df) for g, df in self._group.items()
+               }
+    fig, ax = plt.subplots(figsize=BAR_FIGSIZE)
+    groups = list(heights.keys())
+    values = [heights[g] for g in groups]
+    colors = [GROUP_COLORS[g] for g in groups]
+
+    ax.bar(groups, values, color=colors, width=0.6, edgecolor="black", linewidth=0.5)
+    ax.set_ylim(0, 1.0)
+    ax.set_title(f"`Proportion per group: {label}")
+    ax.set_ylabel("Proportion")
+    ax.set_xlabel(label)
+    ax.axhline(0, color="black", linewidth=0.8)
+    for i, v in enumerate(values):
+        ax.text(i, v + 0.05, f"v: .3f}", ha="center", va="bottom", fontsize=9)
+    
+
+    return self._save(fig, f"prop_{_slug(label)}")
+
+
+
+
+
+
+
+
+
 
         fig.tight_layout()
         path = output_dir / f"kde_{col}.png"
