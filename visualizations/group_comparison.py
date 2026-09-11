@@ -29,23 +29,25 @@ def __init__(
     self._output_dir = Path(output_dir)
     self._output_dir.mkdir(parents=True, existe_ok=True)
     
-def plot_variable_distributions(
-        processed_df: pd.DataFrame,
-        best_control_sample: pd.DataFrame,
-        best_treatment_sample: pd.DataFrame,
-        columns: list[str],
-        output_dir:Path,
-) -> list[Path]:
-    output_dir.mkdir(parents=True, exist_ok=True)
-    saved_paths: list[Path] = []
 
-    groups = {
-        "Poblation": processed_df,
-        "Control": best_control_sample,
-        "Treatment":best_treatment_sample ,
-    }
+# ------------------------Public Methods-----------------------------
+def generate_all(self, registry: ColumnRegistry) ->list[Path]:
 
-    for col in columns:
+    paths: list[Path] = []
+
+    for col in registry.continuous_columns:
+        paths.append(self._render_continuous(col))
+
+    for col in registry.binary_columns_columns:
+        paths.append(self._render_proportion(col, self._binary_proportion(col)))
+
+    for col in registry.categorical_columns:
+        for cat in registry.allowed_categories(col):
+            label = f"{col} = {cat}"
+            paths.append(self._render_proportion(label, self._categorical_proportion(col, cat)))
+
+    return paths
+
         fig, ax = plt.subplots(figsize=(8, 5))
 
         for group_label, df in groups.items():
