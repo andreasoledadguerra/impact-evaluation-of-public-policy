@@ -90,6 +90,14 @@ def _render_proportion(self, label: str, proportion_fn:ProportionFn) -> Path:
     return self._save(fig, f"prop_{_slug(label)}")
 
 
+# ----------------------------- Calculating Proportions ------------------------------------
+@staticmethod
+def _binary_proportion(col: str) -> ProportionFn:
+        return lambda df: float(df[col].mean())
+
+@staticmethod
+def _categorical_proportion(col: str, cat: str) -> ProportionFn:
+        return lambda df: float((df[col] == cat).mean())
 
 
 
