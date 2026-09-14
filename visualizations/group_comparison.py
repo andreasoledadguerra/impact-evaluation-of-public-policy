@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import unicodedata
 from pathlib import Path
 from typing import Callable
 
@@ -106,4 +107,5 @@ def _save(self, fig, stem: str) -> Path:
     return path
 # 
 def _slug(text: str) -> str:
+        normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
         return re.sub(r"^a-zA-Z0-9_]+", "_", text).strip("_")

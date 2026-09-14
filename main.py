@@ -194,11 +194,12 @@ def main() -> dict:
     logger.info("Generating distribution plots by type of variable and group...")
 
     registry = ColumnRegistry(NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS)
-    plotter = GroupComparisonPlotter(processed_df.df, best_control_sample, best_treatment_sample)
-    all_plots = plotter.generate_all(registry)
 
+    plotter = GroupComparisonPlotter(processed_df.df, best_control_sample, best_treatment_sample, plots_dir)
     plots_dir = FINAL_DATA_PATH / "distributions"
     _clear_output_dir(plots_dir, patterns=("*.png"))
+
+    all_plots = plotter.generate_all(registry)
 
     logger.info(f"{len(all_plots)} distribution plot(s) saved to {plots_dir}")
 
