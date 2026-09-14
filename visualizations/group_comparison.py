@@ -50,7 +50,7 @@ class GroupComparisonPlotter:
         return paths
 
     # ---------------------------------- Renders ------------------------------------------------
-    def _render_continuos(self, col: str) -> Path:
+    def _render_continuous(self, col: str) -> Path:
         fig, ax = plt.subplots(figsize=KDE_FIGSIZE)
 
         for group_label, df in self._groups.items():
