@@ -200,31 +200,36 @@ def main() -> dict:
 
     registry = ColumnRegistry(NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS)
 
-    plotter = GroupComparisonPlotter(processed_df.df, best_control_sample, best_treatment_sample, plots_dir)
+    plotter = GroupComparisonPlotter(
+        processed_df.df, best_control_sample, best_treatment_sample, plots_dir
+    )
 
     all_plots = plotter.generate_all(registry)
-
     logger.info(f"{len(all_plots)} distribution plot(s) saved to {plots_dir}")
 
     # -----------------------------------------------------------------
     # 8. Exporting Results
     # -----------------------------------------------------------------
-    FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
-    _clear_output_dir(FINAL_DATA_PATH)
-    
-    logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
-    
-    summary_control.to_excel(FINAL_DATA_PATH / "bootstrap_summary_control.xlsx", index=False)
-    summary_treatment.to_excel(FINAL_DATA_PATH / "bootstrap_summary_treatment.xlsx", index=False)
-    media_std.to_excel(FINAL_DATA_PATH / "media_std.xlsx", index=False)
-    media_condition.to_excel(FINAL_DATA_PATH / "media_condition.xlsx", index=False)
-    media_round.to_excel(FINAL_DATA_PATH / "media_round.xlsx", index=False)
-    repr_bootstrap.to_excel(FINAL_DATA_PATH / "repr_bootstrap.xlsx", index=False) 
+    #FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
+    tables_dir = _prepare_output_dir(
+        FINAL_DATA_PATH / "tables",
+        patterns=("*.xlsx", "*.parquet"),
+    )
 
-    best_control_sample.to_excel(FINAL_DATA_PATH / "best_control_sample.to_parquet", index=False)
-    best_treatment_sample.to_excel(FINAL_DATA_PATH / "best_treatment_sample.to_parquet", index=False)
 
-    logger.info("Complete results exported successfully.")
+    logger.info(f"Exporting results to {tables_dir}...")
+    
+    summary_control.to_excel(tables_dir/ "bootstrap_summary_control.xlsx", index=False)
+    summary_treatment.to_excel(tables_dir / "bootstrap_summary_treatment.xlsx", index=False)
+    media_std.to_excel(tables_dir / "media_std.xlsx", index=False)
+    media_condition.to_excel(tables_dir / "media_condition.xlsx", index=False)
+    media_round.to_excel(tables_dir / "media_round.xlsx", index=False)
+    repr_bootstrap.to_excel(tables_dir / "repr_bootstrap.xlsx", index=False) 
+
+    best_control_sample.to_excel(tables_dir / "best_control_sample.to_parquet", index=False)
+    best_treatment_sample.to_excel(tables_dir / "best_treatment_sample.to_parquet", index=False)
+
+    logger.info(f"Complete results exported successfully to {tables_dir}")
 
     results = {
         "bootstrap_summary_control": summary_control,
