@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 
 
 
-def _clear_output_dir(path: Path, patterns: tuple[str, ...] = ("*.xlsx", "*.to_parquet")) -> None :
-    if not path.exists():
-        return
+def _prepare_output_dir(path: Path, patterns: tuple[str, ...] = ("*.xlsx", "*.to_parquet")) -> Path :
+    path.mkdir(parents=True, exist_ok=True)
     for pattern in patterns:
         for f in path.glob(pattern):
             f.unlink()
+    return path
 
 
 
@@ -189,25 +189,29 @@ def main() -> dict:
     # -----------------------------------------------------------------
 
     # -----------------------------------------------------------------
-    # 8. Generating distribution visualizations 
+    # 7. Generating distribution visualizations 
     # -----------------------------------------------------------------
     logger.info("Generating distribution plots by type of variable and group...")
+
+    plots_dir = _prepare_output_dir(
+        FINAL_DATA_PATH / "distributions",
+        patterns=("*.png",),
+    )
 
     registry = ColumnRegistry(NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS)
 
     plotter = GroupComparisonPlotter(processed_df.df, best_control_sample, best_treatment_sample, plots_dir)
-    plots_dir = FINAL_DATA_PATH / "distributions"
-    _clear_output_dir(plots_dir, patterns=("*.png"))
 
     all_plots = plotter.generate_all(registry)
 
     logger.info(f"{len(all_plots)} distribution plot(s) saved to {plots_dir}")
 
     # -----------------------------------------------------------------
-    # 7. Exporting Results
+    # 8. Exporting Results
     # -----------------------------------------------------------------
     FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     _clear_output_dir(FINAL_DATA_PATH)
+    
     logger.info(f"Exporting results to {FINAL_DATA_PATH}...")
     
     summary_control.to_excel(FINAL_DATA_PATH / "bootstrap_summary_control.xlsx", index=False)
