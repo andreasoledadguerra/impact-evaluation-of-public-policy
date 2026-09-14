@@ -108,4 +108,4 @@ def _save(self, fig, stem: str) -> Path:
 # 
 def _slug(text: str) -> str:
         normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
-        return re.sub(r"^a-zA-Z0-9_]+", "_", text).strip("_")
+        return re.sub(r"^a-zA-Z0-9_]+", "_", normalized).strip("_")
