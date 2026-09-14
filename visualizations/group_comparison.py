@@ -28,7 +28,7 @@ class GroupComparisonPlotter:
             "Tratamiento": best_treatment_sample,
         }
         self._output_dir = Path(output_dir)
-        self._output_dir.mkdir(parents=True, existe_ok=True)
+        self._output_dir.mkdir(parents=True, exist_ok=True)
 
 
     # -------------------------------------Public Methods-----------------------------------
