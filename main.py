@@ -226,8 +226,8 @@ def main() -> dict:
     media_round.to_excel(tables_dir / "media_round.xlsx", index=False)
     repr_bootstrap.to_excel(tables_dir / "repr_bootstrap.xlsx", index=False) 
 
-    best_control_sample.to_excel(tables_dir / "best_control_sample.to_parquet", index=False)
-    best_treatment_sample.to_excel(tables_dir / "best_treatment_sample.to_parquet", index=False)
+    best_control_sample.to_parquet(tables_dir / "best_control_sample.to_parquet", index=False)
+    best_treatment_sample.to_parquet(tables_dir / "best_treatment_sample.to_parquet", index=False)
 
     logger.info(f"Complete results exported successfully to {tables_dir}")
 
