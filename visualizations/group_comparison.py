@@ -25,7 +25,7 @@ class GroupComparisonPlotter:
         self._groups: dict[str, pd.DataFrame] = {
             "Poblation": processed_df,
             "Control": best_control_sample,
-            "Tratamiento": best_treatment_sample,
+            "Treatment": best_treatment_sample,
         }
         self._output_dir = Path(output_dir)
         self._output_dir.mkdir(parents=True, exist_ok=True)
@@ -54,7 +54,7 @@ class GroupComparisonPlotter:
         fig, ax = plt.subplots(figsize=KDE_FIGSIZE)
 
         for group_label, df in self._groups.items():
-            sns.kdplot(
+            sns.kdeplot(
                 df[col].dropna(),
                 ax=ax,
                 label=group_label,
