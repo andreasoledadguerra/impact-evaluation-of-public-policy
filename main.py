@@ -86,7 +86,11 @@ def main() -> dict:
 
     logger.info("Final descriptive statistics calculated(media_std, media_condition, media_round)."
     )
-      
+
+    # DEBUGGIN: Verificación rápida
+    logger.info("¿srs_c tiene índice único?", srs_c.index.is_unique)
+    logger.info("¿srs_t tiene índice único?", srs_t.index.is_unique)
+    logger.info("Primeros índices srs_c:", srs_c.index[:5].tolist())
 
 
     #control_treatment_stats = SubGroupSummary((srs_c, srs_t))
@@ -151,6 +155,7 @@ def main() -> dict:
         #n_bootstrap=10000,  # 1000
         random_state= RANDOM_STATE,
     )
+
 
     bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample = (experiment.run_bootstrap())
     logger.info("Bootstrapping completed")
