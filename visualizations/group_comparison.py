@@ -23,7 +23,7 @@ class GroupComparisonPlotter:
         output_dir:Path,
     ) -> None:
         self._groups: dict[str, pd.DataFrame] = {
-            "Poblation": processed_df,
+            "Population": processed_df,
             "Control": best_control_sample,
             "Treatment": best_treatment_sample,
         }
@@ -39,7 +39,7 @@ class GroupComparisonPlotter:
         for col in registry.continuous_columns:
             paths.append(self._render_continuous(col))
 
-        for col in registry.binary_columns_columns:
+        for col in registry.binary_columns:
             paths.append(self._render_proportion(col, self._binary_proportion(col)))
 
         for col in registry.categorical_columns:
@@ -71,7 +71,7 @@ class GroupComparisonPlotter:
         return self._save(fig, f"kde_{_slug(col)}")
 
     def _render_proportion(self, label: str, proportion_fn:ProportionFn) -> Path:
-        heights = {g: proportion_fn(df) for g, df in self._group.items()
+        heights = {g: proportion_fn(df) for g, df in self._groups.items()
                    }
         fig, ax = plt.subplots(figsize=BAR_FIGSIZE)
         groups = list(heights.keys())
@@ -99,7 +99,6 @@ class GroupComparisonPlotter:
     def _categorical_proportion(col: str, cat: str) -> ProportionFn:
             return lambda df: float((df[col] == cat).mean())
     # ----------------------------- Utilities ----------------------------------------------------
-    @staticmethod
     def _save(self, fig, stem: str) -> Path:
         fig.tight_layout()
         path = self._output_dir / f"{stem}.png"
@@ -109,4 +108,4 @@ class GroupComparisonPlotter:
      
 def _slug(text: str) -> str:
         normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
-        return re.sub(r"^a-zA-Z0-9_]+", "_", normalized).strip("_")
+        return re.sub(r"[^a-zA-Z0-9_]+", "_", normalized).strip("_")
