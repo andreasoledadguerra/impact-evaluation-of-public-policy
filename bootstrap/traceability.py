@@ -25,3 +25,6 @@ def get_seed_pair(
           replica_id:int) -> tuple[int, int]:
     rec = records[replica_id]
     return rec.seed_control, rec.seed_treatment
+
+def get_scores(replica_id: int) -> dict[str, float]:
+     return records[replica_id].scores
