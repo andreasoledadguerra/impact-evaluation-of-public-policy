@@ -20,3 +20,8 @@ import pandas as pd
 def get_best_replica_id(
           variable: str, group: str) -> int:
      return dict[variable][group]
+
+def get_seed_pair(
+          replica_id:int) -> tuple[int, int]:
+    rec = records[replica_id]
+    return rec.seed_control, rec.seed_treatment
