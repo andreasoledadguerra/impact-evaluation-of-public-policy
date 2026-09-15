@@ -92,20 +92,21 @@ class GroupComparisonPlotter:
 
 
 # ----------------------------- Calculating Proportions ------------------------------------
-@staticmethod
-def _binary_proportion(col: str) -> ProportionFn:
-        return lambda df: float(df[col].mean())
-@staticmethod
-def _categorical_proportion(col: str, cat: str) -> ProportionFn:
-        return lambda df: float((df[col] == cat).mean())
-# ----------------------------- Utilities ----------------------------------------------------
-def _save(self, fig, stem: str) -> Path:
-    fig.tight_layout()
-    path = self._output_dir / f"{stem}.png"
-    fig.savefig(path, dpi=DPI)
-    plt.close(fig)
-    return path
-# 
+    @staticmethod
+    def _binary_proportion(col: str) -> ProportionFn:
+            return lambda df: float(df[col].mean())
+    @staticmethod
+    def _categorical_proportion(col: str, cat: str) -> ProportionFn:
+            return lambda df: float((df[col] == cat).mean())
+    # ----------------------------- Utilities ----------------------------------------------------
+    @staticmethod
+    def _save(self, fig, stem: str) -> Path:
+        fig.tight_layout()
+        path = self._output_dir / f"{stem}.png"
+        fig.savefig(path, dpi=DPI)
+        plt.close(fig)
+        return path
+     
 def _slug(text: str) -> str:
         normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("ascii")
         return re.sub(r"^a-zA-Z0-9_]+", "_", normalized).strip("_")
