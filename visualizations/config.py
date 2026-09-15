@@ -1,5 +1,5 @@
 GROUP_COLORS = {
-    "Poblation": "#4C72B0",
+    "Population": "#4C72B0",
     "Control": "#55A868",
     "Treatment": "#C44E52",
 }
