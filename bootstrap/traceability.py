@@ -6,15 +6,27 @@ import numpy as np
 import pandas as pd
 
 
+class ReplicaRecord:
 
+     __slots__ = ("replica_id", "seed", "scores")
+
+     def __init__(
+         self,
+         replica_id: int,
+         seed: int,
+         scores: dict[str, float],
+     ):
+          self.replica_id = replica_id 
+          self.seed = seed 
+          self.scores = scores
 
 #def register(
 #        #self,
 #        replica_id: int,
-#        seed_control: int,
-#        seed_treatment: int,
+#        seed: int,
 #        scores: dict[str, float],
 #) -> None:
+#     records.append(ReplicaRecord(replica_id, seed, scores))
 
 
 def get_best_replica_id(
