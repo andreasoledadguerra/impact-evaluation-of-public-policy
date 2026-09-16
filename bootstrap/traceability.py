@@ -46,14 +46,12 @@ def set_best(self, key: str, group: str, replica_id: int) -> None:
 
 
 
-def get_best_replica_id(
-          key : str, group: str) -> int:
-     return dict[key][group]
+def get_best_replica_id(self, key : str, group: str) -> int:
+     return self._best_by_key[key][group]
 
-def get_seed(
-          replica_id:int) -> tuple[int, int]:
-    rec = records[replica_id]
-    return rec.seed_control, rec.seed_treatment
+def get_seed(self, replica_id:int) -> int:
+    return self._records[replica_id].seed
+    
 
 def get_scores(replica_id: int) -> dict[str, float]:
      return records[replica_id].scores
