@@ -28,13 +28,13 @@ class BootstrapTraceability:
           self._best_by_key: dict[str, dict[str, int]] = {}
 
      
-#def register(
-#        #self,
-#        replica_id: int,
-#        seed: int,
-#        scores: dict[str, float],
-#) -> None:
-#     records.append(ReplicaRecord(replica_id, seed, scores))
+def register(
+        self,
+        replica_id: int,
+        seed: int,
+        scores: dict[str, float],
+) -> None:
+     self._records.append(ReplicaRecord(replica_id, seed, scores))
 
 
 def get_best_replica_id(
