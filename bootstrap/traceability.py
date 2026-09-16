@@ -41,6 +41,10 @@ def regenerate_indexes(replica_id:int, n_control:int, n_treatment: int,) -> tupl
      )
      return bootstrap_c.index.to_numpy(), bootstrap_t.index.to_numpy()
 
-def get_best_sample(variable:str, group:str, df_control:pd.DataFrame,
+def get_best_sample(key:str, group:str, df_control:pd.DataFrame,
                     df_treatment:pd.DataFrame,) -> pd.DataFrame:
-    replica_id
+    replica_id = get_best_replica_id(key, group)
+    n_c = len(df_control)
+    n_t = len(df_treatment)
+    idx_c, idx_t = regenerate_indexes(replica_id, n_c, n_t)
+    return df_control.iloc[idx_c] if group == "control" else df_treatment.iloc[idx_t]
