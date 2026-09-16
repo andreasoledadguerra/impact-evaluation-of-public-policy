@@ -27,7 +27,9 @@ class BootstrapTraceability:
           self._record: list[ReplicaRecord] = []
           self._best_by_key: dict[str, dict[str, int]] = {}
 
-     
+
+
+# File cabinet
 def register(
         self,
         replica_id: int,
@@ -35,6 +37,13 @@ def register(
         scores: dict[str, float],
 ) -> None:
      self._records.append(ReplicaRecord(replica_id, seed, scores))
+
+# Select the winning replica
+def set_best(self, key: str, group: str, replica_id: int) -> None:
+     if key not in self._best_by_key:
+          self._best_by_key[key] = {}
+     self._best_by_key[key][group] = replica_id
+
 
 
 def get_best_replica_id(
