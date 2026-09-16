@@ -95,3 +95,12 @@ def to_dict(self) -> dict[str, Any]:
          ],
          "best_by_key": self._best_by_key,
     }
+
+def save(self, path: Path) -> None:
+     path = Path(path)
+     path.parent.mkdir(parents=True, exist_ok=True)
+     with open(path, "w", encoding="utf-8") as f:
+          json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
+
+
+
