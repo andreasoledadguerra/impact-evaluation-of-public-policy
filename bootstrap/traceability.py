@@ -52,9 +52,8 @@ def get_best_replica_id(self, key : str, group: str) -> int:
 def get_seed(self, replica_id:int) -> int:
     return self._records[replica_id].seed
     
-
-def get_scores(replica_id: int) -> dict[str, float]:
-     return records[replica_id].scores
+def get_scores(self, replica_id: int) -> dict[str, float]:
+     return self._records[replica_id].scores
 
 def regenerate_indexes(replica_id:int, n_control:int, n_treatment: int,) -> tuple[np.ndarray, np.ndarray]:
      seed = get_seed(replica_id)
