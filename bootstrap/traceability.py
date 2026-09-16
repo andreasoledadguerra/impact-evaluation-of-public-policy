@@ -20,6 +20,14 @@ class ReplicaRecord:
           self.seed = seed 
           self.scores = scores
 
+class BootstrapTraceability:
+
+     def __init__(self, n_replicas: int) -> None:
+          self._n_replicas = n_replicas
+          self._record: list[ReplicaRecord] = []
+          self._best_by_key: dict[str, dict[str, int]] = {}
+
+     
 #def register(
 #        #self,
 #        replica_id: int,
