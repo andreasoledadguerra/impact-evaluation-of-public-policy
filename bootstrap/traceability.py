@@ -30,7 +30,16 @@ def get_scores(replica_id: int) -> dict[str, float]:
      return records[replica_id].scores
 
 def regenerate_indexes(replica_id:int, n_control:int, n_treatment: int,) -> tuple[np.ndarray, np.ndarray]:
-     seed = get_seed
+     seed = get_seed(replica_id)
+     rng = np.random.default_rng(seed)
+
+     bootstrap_c = pd.RangeIndex(n_control).to_series().sample(
+           n=n_control, replace=True, random_state=rng
+     )
+     bootstrap_t = pd.RangeIndex(n_treatment).to_series().sample(
+           n=n_treatment, replace=True, random_state=rng
+     )
+     return bootstrap_c.index.to_numpy(), bootstrap_t.index.to_numpy()
 
 def get_best_sample(variable:str, group:str, df_control:pd.DataFrame,
                     df_treatment:pd.DataFrame,) -> pd.DataFrame:
