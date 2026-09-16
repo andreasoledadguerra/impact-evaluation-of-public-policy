@@ -18,8 +18,8 @@ import pandas as pd
 
 
 def get_best_replica_id(
-          variable: str, group: str) -> int:
-     return dict[variable][group]
+          key : str, group: str) -> int:
+     return dict[key][group]
 
 def get_seed_pair(
           replica_id:int) -> tuple[int, int]:
@@ -36,3 +36,7 @@ def regenerate_indexes(replica_id:int, n_control:int, n_treatment: int,) -> tupl
     idx_c = rng_c.integers(0, n_control, size=n_control)
     idx_t = rng_t.integers(0, n_treatment, size=n_treatment)
     return idx_c, idx_t
+
+def get_best_sample(variable:str, group:str, df_control:pd.DataFrame,
+                    df_treatment:pd.DataFrame,) -> pd.DataFrame:
+    replica_id
