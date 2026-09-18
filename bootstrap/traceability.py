@@ -115,4 +115,21 @@ def load(cls, path: Path) -> "BootstrapTraceability":
      return inst
 
 
+# Summary for reporting
+def to_summary_df(self) -> pd.DataFrame:
+     """A readeable DatFrame showing the winners by variable and group."""
+     rows: list[dict[str, Any]] = []
+     for var, groups in self._best_by_variable.items():
+         for group, rep_id in groups.items():
+             seed_c, seed_t = self.get_seed_pair(rep_id)
+             score = self.get_scores(rep_id).get(var, np.nan)
+             rows.append({
+                 "variable": var,
+                 "group": group,
+                 "best_replica_id": rep_id,
+                 "seed_control": seed_c,
+                 "seed_treatment": seed_t,
+                 "coef_representatividad": score,
+             })
+     return pd.DataFrame(rows)
 
