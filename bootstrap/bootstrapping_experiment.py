@@ -118,14 +118,14 @@ class BootstrapExperiment:
         traceability.set_best("__aggregate__", "treatment", best_treatment_idx)
 
         # Phase 2: Calculate the final statistics for the best replicas
-        best_control_rng = np.random.default_rng(child_seeds[best_control_idx])
+        best_control_rng = np.random.default_rng(int(child_seeds[best_control_idx]))
         best_control_sample, _ = self._generate_samples(best_control_rng)
 
-        best_treatment_rng = np.random.default_rng(child_seeds[best_treatment_idx])
+        best_treatment_rng = np.random.default_rng(int(child_seeds[best_treatment_idx]))
         _, best_treatment_sample = self._generate_samples(best_treatment_rng)
 
 
-        return results, representativness_replicas, best_control_sample, best_treatment_sample  
+        return results, representativness_replicas, best_control_sample, best_treatment_sample, traceability  
 
     
     #----------------------------------Private methods-----------------------------------
