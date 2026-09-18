@@ -14,6 +14,7 @@ from bootstrap.models import (
     BootstrapStatsContinuous, 
     StatsType,
 )
+from bootstrap.traceability import BootstrapTraceability 
 
 from representativity.representativeness import RepresentativenessCalculator
 
@@ -53,7 +54,7 @@ class BootstrapExperiment:
             )
 
     #----------------------------------Public methods-----------------------------------
-    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame], pd.DataFrame, pd.DataFrame]:
+    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame], pd.DataFrame, BootstrapTraceability]:
 
         results = BootstrapResults()
         representativness_replicas: list[pd.DataFrame] = []
@@ -64,6 +65,8 @@ class BootstrapExperiment:
 
         seed_sequence = np.random.SeedSequence(self._random_state)
         child_seeds = seed_sequence.spawn(self._n_bootstrap)
+
+        traceability = BootstrapTraceability(n_replicas=self._n_bootstrap, dtype=np.uin32)
 
         # ----- Phase 1: Generate, calculate, and filter the raw data --------
         for seed in child_seeds:
