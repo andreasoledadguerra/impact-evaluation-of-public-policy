@@ -110,9 +110,12 @@ class BootstrapExperiment:
         best_treatment_idx = self._best_replica_index(treatment_errors)
 
         logger.info(
-            f"Best control replica index: {best_control_idx}, "
-            f"Best treatment replica index: {best_treatment_idx}"   
-        )
+            "Best control replica index: %d, Best treatment replica index: %d",
+            best_control_idx, best_treatment_idx)   
+
+        # Mark winners in traceability
+        traceability.set_best("__aggregate__", "control", best_control_idx)
+        traceability.set_best("__aggregate__", "treatment", best_treatment_idx)
 
         # Phase 2: Calculate the final statistics for the best replicas
         best_control_rng = np.random.default_rng(child_seeds[best_control_idx])
