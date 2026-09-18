@@ -85,6 +85,16 @@ class BootstrapExperiment:
             
             representativness_replicas.append(replica_repr)
 
+            # score log for this replica for traceability
+            scores: dict[str, float] = {}
+            for _, row in replica_repr.iterrows():
+                col = row["column"]
+                scores[col] = float(
+                    (row.get("coef_representativeness_control", 0.0) +
+                     row.get("coef_representativeness_treatment", 0.0)) / 2
+                )
+            traceability.register(replica_id=b, seed=int(seed), scores=scores)
+
             for _, row in replica_repr.iterrows():
                 label = row["column"]
                 control_errors.setdefault(label, []).append(
