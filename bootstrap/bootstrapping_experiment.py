@@ -64,13 +64,13 @@ class BootstrapExperiment:
         baseline = RepresentativenessCalculator.compute_population_baseline(self._processed_df)
 
         seed_sequence = np.random.SeedSequence(self._random_state)
-        child_seeds = seed_sequence.spawn(self._n_bootstrap)
+        child_seeds = seed_sequence.generate_state(self._n_bootstrap)
 
         traceability = BootstrapTraceability(n_replicas=self._n_bootstrap, dtype=np.uin32)
 
         # ----- Phase 1: Generate, calculate, and filter the raw data --------
-        for seed in child_seeds:
-            rng = np.random.default_rng(seed)
+        for b, seed in enumerate(child_seeds):
+            rng = np.random.default_rng(int(seed))
             bootstrap_c, bootstrap_t = self._generate_samples(rng)
 
 
