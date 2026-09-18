@@ -102,5 +102,17 @@ def save(self, path: Path) -> None:
      with open(path, "w", encoding="utf-8") as f:
           json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
 
+@classmethod
+def load(cls, path: Path) -> "BootstrapTraceability":
+     with open(path, encoding="utf-8") as f:
+         data = json.load(f)
+     inst = cls(n_replicas=data["n_replicas"])
+     inst._records = [
+         ReplicaRecord(r["replica_id"], r["seed_control"], r["seed_treatment"], r["scores"])
+         for r in data["records"]
+     ]
+     inst._best_by_variable = data["best_by_variable"]
+     return inst
+
 
 
