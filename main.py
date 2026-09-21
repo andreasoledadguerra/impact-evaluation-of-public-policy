@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 
 from bootstrap.bootstrapping_experiment import BootstrapExperiment
+from bootstrap.traceability import BootstrapTraceability
 from bootstrap.column_registry import ColumnRegistry
 from config import FINAL_DATA_PATH
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
@@ -157,7 +158,7 @@ def main() -> dict:
     )
 
 
-    bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample = (experiment.run_bootstrap())
+    bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample, traceability = (experiment.run_bootstrap())
     logger.info("Bootstrapping completed")
 
     bootstrap_summary = bootstrap_results.summarize(ci=0.95)
@@ -223,7 +224,8 @@ def main() -> dict:
 
 
     logger.info(f"Exporting results to {tables_dir}...")
-    
+
+    #statistics summary
     summary_control.to_excel(tables_dir/ "bootstrap_summary_control.xlsx", index=False)
     summary_treatment.to_excel(tables_dir / "bootstrap_summary_treatment.xlsx", index=False)
     media_std.to_excel(tables_dir / "media_std.xlsx", index=False)
@@ -231,8 +233,17 @@ def main() -> dict:
     media_round.to_excel(tables_dir / "media_round.xlsx", index=False)
     repr_bootstrap.to_excel(tables_dir / "repr_bootstrap.xlsx", index=False) 
 
-    best_control_sample.to_parquet(tables_dir / "best_control_sample.to_parquet", index=False)
-    best_treatment_sample.to_parquet(tables_dir / "best_treatment_sample.to_parquet", index=False)
+    #best samples
+    best_control_sample.to_parquet(tables_dir / "best_control_sample.parquet", index=False)
+    best_treatment_sample.to_parquet(tables_dir / "best_treatment_sample.parquet", index=False)
+
+    #traceability
+    trace_dir = _prepare_output_dir(FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"))
+    traceability.save(trace_dir / "bootstrap_traceability.json")
+    logger.info("Traceability saved to %s", trace_dir / "bootstrap_traceability.json")
+
+    trace_summary = traceability.to_summary_df()
+    trace_summary.to_excel(tables_dir / "traceability_summary.xlsx", index=False)
 
     logger.info(f"Complete results exported successfully to {tables_dir}")
 
@@ -247,6 +258,7 @@ def main() -> dict:
         "media_round": media_round,
         "best_control_sample": best_control_sample,
         "best_treatment_sample": best_treatment_sample,
+        "traceability": trace_summary,
     }
 
     return results
