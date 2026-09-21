@@ -111,7 +111,7 @@ def load(cls, path: Path) -> "BootstrapTraceability":
          ReplicaRecord(r["replica_id"], r["seed_control"], r["seed_treatment"], r["scores"])
          for r in data["records"]
      ]
-     inst._best_by_variable = data["best_by_variable"]
+     inst._best_by_key = data["best_by_key"]
      return inst
 
 
