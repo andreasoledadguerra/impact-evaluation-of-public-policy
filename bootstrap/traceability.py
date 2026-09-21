@@ -108,7 +108,7 @@ def load(cls, path: Path) -> "BootstrapTraceability":
          data = json.load(f)
      inst = cls(n_replicas=data["n_replicas"])
      inst._records = [
-         ReplicaRecord(r["replica_id"], r["seed_control"], r["seed_treatment"], r["scores"])
+         ReplicaRecord(r["replica_id"], r["seed"], r["scores"])
          for r in data["records"]
      ]
      inst._best_by_key = data["best_by_key"]
