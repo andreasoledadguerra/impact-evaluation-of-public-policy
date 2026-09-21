@@ -121,7 +121,7 @@ def to_summary_df(self) -> pd.DataFrame:
      rows: list[dict[str, Any]] = []
      for var, groups in self._best_by_key.items():
          for group, rep_id in groups.items():
-             seed_c, seed_t = self.get_seed_pair(rep_id)
+             seed_c, seed_t = self.get_seed(rep_id)
              score = self.get_scores(rep_id).get(var, np.nan)
              rows.append({
                  "variable": var,
