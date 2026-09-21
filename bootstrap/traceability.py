@@ -24,7 +24,7 @@ class BootstrapTraceability:
 
      def __init__(self, n_replicas: int) -> None:
           self._n_replicas = n_replicas
-          self._record: list[ReplicaRecord] = []
+          self._records: list[ReplicaRecord] = []
           self._best_by_key: dict[str, dict[str, int]] = {}
 
 
