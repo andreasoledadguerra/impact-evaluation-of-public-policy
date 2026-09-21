@@ -239,7 +239,7 @@ def main() -> dict:
 
     #traceability
     trace_dir = _prepare_output_dir(FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"))
-    traceability.save(trace_dir / "bootstrap_traceability.json")
+    traceability.save(tables_dir/ "bootstrap_traceability.json")
     logger.info("Traceability saved to %s", trace_dir / "bootstrap_traceability.json")
 
     trace_summary = traceability.to_summary_df()
