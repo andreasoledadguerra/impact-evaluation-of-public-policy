@@ -66,7 +66,7 @@ class BootstrapExperiment:
         seed_sequence = np.random.SeedSequence(self._random_state)
         child_seeds = seed_sequence.generate_state(self._n_bootstrap)
 
-        traceability = BootstrapTraceability(n_replicas=self._n_bootstrap, dtype=np.uint32)
+        traceability = BootstrapTraceability(n_replicas=self._n_bootstrap)
 
         # ----- Phase 1: Generate, calculate, and filter the raw data --------
         for b, seed in enumerate(child_seeds):
