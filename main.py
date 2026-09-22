@@ -10,6 +10,7 @@ from bootstrap.traceability import BootstrapTraceability
 from bootstrap.column_registry import ColumnRegistry
 from config import FINAL_DATA_PATH
 from constants import NUM_COLUMNS, CAT_CONDITIONS, SPC_COLUMNS, RANDOM_STATE
+from datetime import datetime
 from representativity.representativeness import RepresentativenessCalculator
 from schema import GroupSummary, SubGroupSummary
 from src.preprocessing import ProcessedDataframe
@@ -37,6 +38,7 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 0. Preprocessing
     # -----------------------------------------------------------------
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     logger.info("Starting preprocessing...")
 
     raw_df = ProcessedDataframe.concatenate_df()
@@ -222,8 +224,16 @@ def main() -> dict:
         patterns=("*.xlsx", "*.parquet"),
     )
 
+    #traceability
+    trace_dir = _prepare_output_dir(
+        FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"),
+
+    )
+
 
     logger.info(f"Exporting results to {tables_dir}...")
+    logger.info(f"Exporting traceability to {trace_dir}...")
+
 
     #statistics summary
     summary_control.to_excel(tables_dir/ "bootstrap_summary_control.xlsx", index=False)
@@ -237,15 +247,14 @@ def main() -> dict:
     best_control_sample.to_parquet(tables_dir / "best_control_sample.parquet", index=False)
     best_treatment_sample.to_parquet(tables_dir / "best_treatment_sample.parquet", index=False)
 
-    #traceability
-    trace_dir = _prepare_output_dir(FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"))
-    traceability.save(tables_dir/ "bootstrap_traceability.json")
-    logger.info("Traceability saved to %s", trace_dir / "bootstrap_traceability.json")
-
+    # Traceability
+    traceability.save(trace_dir/ f"bootstrap_traceability_{run_id}.json")
     trace_summary = traceability.to_summary_df()
-    trace_summary.to_excel(tables_dir / "traceability_summary.xlsx", index=False)
+    trace_summary.to_excel(tables_dir / f"traceability_summary_{run_id}.xlsx", index=False)
+
 
     logger.info(f"Complete results exported successfully to {tables_dir}")
+    logger.info(f"Traceability saved to {trace_dir}")
 
     results = {
         "bootstrap_summary_control": summary_control,
@@ -261,6 +270,7 @@ def main() -> dict:
         "traceability": trace_summary,
     }
 
+    logger.info(f"=== Run {run_id} finished ===")
     return results
 
 
