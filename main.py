@@ -89,9 +89,9 @@ def main() -> dict:
     )
 
     # DEBUGGIN: Verificación rápida
-    logger.info("¿srs_c tiene índice único?", srs_c.index.is_unique)
-    logger.info("¿srs_t tiene índice único?", srs_t.index.is_unique)
-    logger.info("Primeros índices srs_c:", srs_c.index[:5].tolist())
+    logger.debug("¿srs_c tiene índice único? %s", srs_c.index.is_unique)
+    logger.debug("¿srs_t tiene índice único? %s", srs_t.index.is_unique)
+    logger.debug("Primeros índices srs_c: %s", srs_c.index[:5].tolist())
 
 
     #control_treatment_stats = SubGroupSummary((srs_c, srs_t))
