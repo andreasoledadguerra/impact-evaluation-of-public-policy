@@ -85,54 +85,54 @@ class BootstrapTraceability:
          idx_c, idx_t = self.regenerate_indexes(replica_id, n_c, n_t)
          return df_control.iloc[idx_c] if group == "control" else df_treatment.iloc[idx_t]
 
-# Serialization
-def to_dict(self) -> dict[str, Any]:
-    return {
-         "n_replicas": self._n_replicas,
-         "records": [
-              {
-                   "replica_id": r.replica_id,
-                   "seed": r.seed,
-                   "scores": r.scores,
-              }
-              for r in self._records
-         ],
-         "best_by_key": self._best_by_key,
-    }
-
-def save(self, path: Path) -> None:
-     path = Path(path)
-     path.parent.mkdir(parents=True, exist_ok=True)
-     with open(path, "w", encoding="utf-8") as f:
-          json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
-
-@classmethod
-def load(cls, path: Path) -> "BootstrapTraceability":
-     with open(path, encoding="utf-8") as f:
-         data = json.load(f)
-     inst = cls(n_replicas=data["n_replicas"])
-     inst._records = [
-         ReplicaRecord(r["replica_id"], r["seed"], r["scores"])
-         for r in data["records"]
-     ]
-     inst._best_by_key = data["best_by_key"]
-     return inst
-
-
-# Summary for reporting
-def to_summary_df(self) -> pd.DataFrame:
-     """A readable DataFrame showing the winners by variable and group."""
-     rows: list[dict[str, Any]] = []
-     for var, groups in self._best_by_key.items():
-         for group, rep_id in groups.items():
-             seed = self.get_seed(rep_id)
-             score = self.get_scores(rep_id).get(var, np.nan)
-             rows.append({
-                 "variable": var,
-                 "group": group,
-                 "best_replica_id": rep_id,
-                 "seed": seed,
-                 "coef_representatividad": score,
-             })
-     return pd.DataFrame(rows)
+     # Serialization
+     def to_dict(self) -> dict[str, Any]:
+         return {
+              "n_replicas": self._n_replicas,
+              "records": [
+                   {
+                        "replica_id": r.replica_id,
+                        "seed": r.seed,
+                        "scores": r.scores,
+                   }
+                   for r in self._records
+              ],
+              "best_by_key": self._best_by_key,
+         }
+     
+     def save(self, path: Path) -> None:
+          path = Path(path)
+          path.parent.mkdir(parents=True, exist_ok=True)
+          with open(path, "w", encoding="utf-8") as f:
+               json.dump(self.to_dict(), f, indent=2, ensure_ascii=False)
+     
+     @classmethod
+     def load(cls, path: Path) -> "BootstrapTraceability":
+          with open(path, encoding="utf-8") as f:
+              data = json.load(f)
+          inst = cls(n_replicas=data["n_replicas"])
+          inst._records = [
+              ReplicaRecord(r["replica_id"], r["seed"], r["scores"])
+              for r in data["records"]
+          ]
+          inst._best_by_key = data["best_by_key"]
+          return inst
+     
+     
+     # Summary for reporting
+     def to_summary_df(self) -> pd.DataFrame:
+          """A readable DataFrame showing the winners by variable and group."""
+          rows: list[dict[str, Any]] = []
+          for var, groups in self._best_by_key.items():
+              for group, rep_id in groups.items():
+                  seed = self.get_seed(rep_id)
+                  score = self.get_scores(rep_id).get(var, np.nan)
+                  rows.append({
+                      "variable": var,
+                      "group": group,
+                      "best_replica_id": rep_id,
+                      "seed": seed,
+                      "coef_representatividad": score,
+                  })
+          return pd.DataFrame(rows)
 
