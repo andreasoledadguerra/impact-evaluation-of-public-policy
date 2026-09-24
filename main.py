@@ -225,10 +225,13 @@ def main() -> dict:
     )
 
     #traceability
-    trace_dir = _prepare_output_dir(
-        FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"),
-
-    )
+    trace_dir = FINAL_DATA_PATH / "traceability"
+    trace_dir.mkdir(parents=True, exist_ok=True)
+    
+    #trace_dir = _prepare_output_dir(
+    #    FINAL_DATA_PATH / "traceability", patterns=("*.json", "*.xlsx"),
+    #
+    #)
 
 
     logger.info(f"Exporting results to {tables_dir}...")
