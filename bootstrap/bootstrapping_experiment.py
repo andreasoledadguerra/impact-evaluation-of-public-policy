@@ -244,14 +244,14 @@ class BootstrapExperiment:
 
         if sum(proportions.values()) == 0:
             logger.warning(
-                f"Ninguna observación pertenece a las categorías"
-                f"{allowed_categories}; revisar si están definidas correctamente."
+                f"None or the observations fall into any of the categories"
+                f"{allowed_categories}; Check to see if they are defined correctly."
             )
         
         # Calculate normalized ratios (that sum to 1)
         residual = 1.0 - sum(proportions.values())
         if residual > 1e-9:
-            proportions["otros"] = residual
+            proportions["others"] = residual
 
         return BootstrapStatsCategorical(
             n = n,
