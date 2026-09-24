@@ -120,11 +120,11 @@ class BootstrapExperiment:
         traceability.set_best("__aggregate__", "control", best_control_idx)
         traceability.set_best("__aggregate__", "treatment", best_treatment_idx)
 
-        #for var, errors in control_errors.items():
-        #    traceability.set_best(var, "control", self._best_replica_index({var: errors}))
-#
-        #for var, errors in control_errors.items():
-        #         traceability.set_best(var, "treatment", self._best_replica_index({var: errors}))
+        for var, errors in control_errors.items():
+            traceability.set_best(var, "control", self._best_replica_index({var: errors}))
+
+        for var, errors in control_errors.items():
+                 traceability.set_best(var, "treatment", self._best_replica_index({var: errors}))
         
 
         # Phase 2: Calculate the final statistics for the best replicas
