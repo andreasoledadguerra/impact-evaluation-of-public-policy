@@ -132,7 +132,7 @@ class BootstrapTraceability:
                       "group": group,
                       "best_replica_id": rep_id,
                       "seed": seed,
-                      "coef_representatividad": score,
+                      "coef_representativeness": score,
                   })
           return pd.DataFrame(rows)
 
