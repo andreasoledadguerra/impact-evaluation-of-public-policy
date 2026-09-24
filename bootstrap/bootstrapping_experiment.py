@@ -159,9 +159,9 @@ class BootstrapExperiment:
         return bootstrap_c, bootstrap_t
 
 
-    # se usa para iterar por grupo, es decir que al invocar
-    # debo implementarlo dos veces: uno para que haga cálculos sobre 
-    # el grupo control y otro sobre el grupo tratamiento
+    # Used to iterate through the group; that  is, when I call it, 
+    # must implement it twice: once to perform calculations on
+    # the control broup and once on the treatment group
 
     @staticmethod
 
