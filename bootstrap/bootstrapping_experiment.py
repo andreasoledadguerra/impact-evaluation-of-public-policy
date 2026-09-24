@@ -93,6 +93,9 @@ class BootstrapExperiment:
                     (row.get("coef_representativeness_control", 0.0) +
                      row.get("coef_representativeness_treatment", 0.0)) / 2
                 )
+
+            scores["__aggregate__"] = float(np.mean(list(scores.values()))) if scores else np.nan
+
             traceability.register(replica_id=b, seed=int(seed), scores=scores)
 
             for _, row in replica_repr.iterrows():
@@ -116,6 +119,13 @@ class BootstrapExperiment:
         # Mark winners in traceability
         traceability.set_best("__aggregate__", "control", best_control_idx)
         traceability.set_best("__aggregate__", "treatment", best_treatment_idx)
+
+        #for var, errors in control_errors.items():
+        #    traceability.set_best(var, "control", self._best_replica_index({var: errors}))
+#
+        #for var, errors in control_errors.items():
+        #         traceability.set_best(var, "treatment", self._best_replica_index({var: errors}))
+        
 
         # Phase 2: Calculate the final statistics for the best replicas
         best_control_rng = np.random.default_rng(int(child_seeds[best_control_idx]))
