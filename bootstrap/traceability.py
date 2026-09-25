@@ -125,14 +125,20 @@ class BootstrapTraceability:
           rows: list[dict[str, Any]] = []
           for var, groups in self._best_by_key.items():
               for group, rep_id in groups.items():
-                  seed = self.get_seed(rep_id)
-                  score = self.get_scores(rep_id).get(var, np.nan)
+                  scores = self.get_scores(rep_id)
+                  if var == "__aggregate__":
+                    coef = np.nan
+                    selection_score = scores.get(f"selection_score_{group}", np.nan)
+                  else:
+                       coef = scores.get(var, np.nan)
+                       selection_score = np.nan
                   rows.append({
                       "variable": var,
                       "group": group,
                       "best_replica_id": rep_id,
-                      "seed": seed,
-                      "coef_representativeness": score,
+                      "seed": self.get_seed(rep_id),
+                      "coef_representativeness": coef,
+                      "selection_score": selection_score,
                   })
           return pd.DataFrame(rows)
 
