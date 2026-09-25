@@ -109,25 +109,37 @@ class BootstrapExperiment:
                 )
 
         # ---- Classification: average percentiles by variable, broken down 
-        best_control_idx = self._best_replica_index(control_errors)
-        best_treatment_idx = self._best_replica_index(treatment_errors)
+        best_control_idx, avg_percentile_control = self._best_replica_index(control_errors)
+        best_treatment_idx, avg_percentile_treatment = self._best_replica_index(treatment_errors)
 
         logger.info(
             "Best control replica index: %d, Best treatment replica index: %d",
             best_control_idx, best_treatment_idx)   
+
+        for b in range(self._n_bootstrap):
+            replica_scores = traceability.get_scores(b)
+            replica_scores["selection_score_control"] = float(1 - avg_percentile_control[b])
+            replica_scores["selection_score_treatment"] = float(1 - avg_percentile_treatment[b])
 
         # Mark winners in traceability
         traceability.set_best("__aggregate__", "control", best_control_idx)
         traceability.set_best("__aggregate__", "treatment", best_treatment_idx)
 
         for var, errors in control_errors.items():
-            traceability.set_best(var, "control", self._best_replica_index({var: errors}))
+            idx, _ = self._best_replica_index({var: errors})
+            traceability.set_best(var, "control", idx)
 
         for var, errors in control_errors.items():
-                 traceability.set_best(var, "treatment", self._best_replica_index({var: errors}))
+            idx, _ = self._best_replica_index({var: errors})
+            traceability.set_best(var, "treatment", idx)
         
-
         # Phase 2: Calculate the final statistics for the best replicas
+        logger.info(
+            "best_control_sample / best_treatment_sample: replica with lower error" 
+            "in terms of representativeness of the population (better than %d) -- used" 
+            "for descriptive/illustrative purposes; does not represent actual sample variability.",
+            self._n_bootstrap,
+        )
         best_control_rng = np.random.default_rng(int(child_seeds[best_control_idx]))
         best_control_sample, _ = self._generate_samples(best_control_rng)
 
