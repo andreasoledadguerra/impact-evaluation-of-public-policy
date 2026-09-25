@@ -91,6 +91,7 @@ class GroupComparisonPlotter:
         return self._save(fig, f"prop_{_slug(label)}")
 
 
+
 # ----------------------------- Calculating Proportions ------------------------------------
     @staticmethod
     def _binary_proportion(col: str) -> ProportionFn:
@@ -98,9 +99,21 @@ class GroupComparisonPlotter:
     @staticmethod
     def _categorical_proportion(col: str, cat: str) -> ProportionFn:
             return lambda df: float((df[col] == cat).mean())
+
+
+    
     # ----------------------------- Utilities ----------------------------------------------------
+    __SAMPLE_CAVEAT = (
+        "Control/Treatment: best-ofN bootstrap replica vs. Population,"
+        "not a typical sample."
+    )
     def _save(self, fig, stem: str) -> Path:
-        fig.tight_layout()
+        fig.text(
+            0.5, 0.01, self.__SAMPLE_CAVEAT,
+            ha="center", va="bottom", fontsize=7, style="italic", color="dimgray",
+            wrap=True,
+        )
+        fig.tight_layout(rect=(0, 0.05, 1, 1))
         path = self._output_dir / f"{stem}.png"
         fig.savefig(path, dpi=DPI)
         plt.close(fig)
