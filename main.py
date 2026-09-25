@@ -199,7 +199,10 @@ def main() -> dict:
     # -----------------------------------------------------------------
     # 7. Generating distribution visualizations 
     # -----------------------------------------------------------------
-    logger.info("Generating distribution plots by type of variable and group...")
+    logger.info(
+        "Generating distribution plots by type of variable and group"
+        "(best_control_sample / best_treatment_sample = best bootstrap replica, not a typical sample) ..."
+        )
 
     plots_dir = _prepare_output_dir(
         FINAL_DATA_PATH / "distributions",
