@@ -17,6 +17,12 @@ class ProcessedDataframe():
         df_2 = pd.read_excel(INSCRIPTOS_PATH)
         df_3 = pd.read_excel(FORMULARIOS_PATH)
 
+
+        if len(df_2) != len(df_3):
+            raise ValueError(
+                f"ficha_inscriptos ({len(df_2)}) and formularios_curso({len(df_3)}))"
+                f"have different amount of rows."
+            )
         # Concatenating dataframes by column
         df = pd.concat([df_2, df_3], axis=1)
 

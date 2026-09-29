@@ -10,7 +10,7 @@ import pandas as pd
 import seaborn as sns
 
 from bootstrap.column_registry import ColumnRegistry
-from visualizations.config import BAR_FIGSIZE, DPI, GROUP_COLORS, KDE_FIGSIZE
+from visualizations.config_plot import BAR_FIGSIZE, DPI, GROUP_COLORS, KDE_FIGSIZE
 
 ProportionFn = Callable[[pd.DataFrame], float]
 
