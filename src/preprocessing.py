@@ -21,15 +21,27 @@ class ProcessedDataframe():
         if len(df_2) != len(df_3):
             raise ValueError(
                 f"ficha_inscriptos ({len(df_2)}) and formularios_curso({len(df_3)}))"
-                f"have different amount of rows."
+                f"have different numbers of rows."
             )
         # Concatenating dataframes by column
         df = pd.concat([df_2, df_3], axis=1)
 
         if 'municipio' not in df.columns or 'municipio' not in df_1.columns:
-            raise ValueError("Falta columna 'municipio' para el merge con municipios")
+            raise ValueError("The 'municipio' column is missing for the merge with municipios")
 
-        df = df.merge(df_1, on='municipio', how='left')
+        df['_municipio_key'] = df['municipio'].astype(str).str.strip().str.casefold()
+        municipios = df_1.copy()
+        municipios['municipios_key'] = municipios['municipio'].astype(str).strip().str.casefold()
+
+        #df = df.merge(df_1, on='municipio', how='left')
+        if not municipios['_municipio_key'].is_unique:
+            dup  = municipios.loc[
+                municipios['_municipio_key'].duplicate(keep=False), 'municipio'
+            ].unique().tolist()
+            raise ValueError(
+                f"'municipio' in base_municipios is not unique after normalizing"
+                f"spaces/capitalization:{dup}."
+            )
 
         return df
 
