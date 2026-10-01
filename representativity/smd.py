@@ -127,7 +127,39 @@ class SMDCalculator:
             "balance": balance,
         }
     
+    @classmethod
+    def replica_smd(
+        cls,
+        stats_c: dict[str, StatsType],
+        stats_t: dict[str, StatsType],
+        registry: "ColumnRegistry",
+    ) -> pd.DataFrame:
+        """
+        SMD for a bootstrap replica, one per column for accumulate a list and summarize them.
+        """
+        rows = []
 
+        for col in registry.continuous_columns:
+            smd = cls.smd_continuous(stats_c[col], stats_t[col])
+            rows.append(cls.smd_row(col, "continuous", smd))
+
+        for col in registry.binary_columns:
+            smd = cls.smd_binary(stats_c[col], stats_t[col])
+            rows.append(cls.smd_row(col, "binary", smd))
+
+        for col in registry.categorical_columns:
+            smd = cls.smd_categorical(stats_c[col], stats_t[col], resumen="max")
+            rows.append(cls.smd_row(col, "categorical(max |SMD| between dummies)", smd))
+
+        return pd.DataFrame(rows)
+
+
+
+
+
+
+
+        
 def calculate_rep_coef_smd(
     processed_df: pd.DataFrame,
     sample: tuple[pd.DataFrame, pd.DataFrame],
