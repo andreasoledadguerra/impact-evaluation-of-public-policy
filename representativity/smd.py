@@ -16,12 +16,17 @@
 import numpy as np
 import pandas as pd
 
-from typing import Literal
+from typing import Literal, TYPE_CHECKING
 from bootstrap.models import (
     BootstrapStatsContinuous,
     BootstrapStatsBinary,
-    BootstrapStatsCategorical
+    BootstrapStatsCategorical,
+    StatsType,
 )
+
+if TYPE_CHECKING:
+    from bootstrap.column_registry import ColumnRegistry
+
 
 class SMDCalculator:
     
@@ -93,9 +98,34 @@ class SMDCalculator:
             return smds
         else:
             raise ValueError(
-                f"resumen debe ser 'max', 'mean' o 'detail', recibido: {resumen!r}"
+                f"Summary must be 'max', 'mean' o 'detail', received: {resumen!r}"
             )
- 
+
+    @staticmethod
+    def smd_row(column: str, variable_type: str, smd: float) -> dict:
+        """
+        An SMD summary row with balance interpretation, according to the standard convention (Austin, 2009): 
+        |SMD| < 0-10 excellent, < 0.25 acceptable, otherwise unbalanced.
+        """
+        is_valid = smd is not None and not np.isnan(smd)
+        abs_smd = abs(smd) if is_valid else np.nan
+
+        if not is_valid:
+            balance = "N/A"
+        elif abs_smd < 0.10:
+            balance = "Excellent"
+        elif abs_smd < 0.25:
+            balance = "Acceptable"
+        else:
+            balance = "Unbalanced"
+
+        return {
+            "column": column,
+            "variable_type": variable_type,
+            "SMD": float(smd) if is_valid else np.nan,
+            "abs_SMD": float(abs_smd) if is_valid else np.nan,
+            "balance": balance,
+        }
     
 
 def calculate_rep_coef_smd(
