@@ -82,9 +82,9 @@ class BootstrapExperiment:
             stats_t = self._calculate_stats(bootstrap_t)
 
 
-            for col, stats in self._calculate_stats(bootstrap_c).items():
+            for col, stats in stats_c.items():
                 results.add("control", col, stats)
-            for col, stats in self._calculate_stats(bootstrap_t).items():
+            for col, stats in stats_t.items():
                 results.add("treatment", col, stats)
 
             replica_repr = RepresentativenessCalculator.evaluate_replica(
