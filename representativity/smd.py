@@ -153,11 +153,63 @@ class SMDCalculator:
 
         return pd.DataFrame(rows)
 
+    @staticmethod
+    def summarize_bootstrap_replicas(
+        replicas: list[pd.DataFrame], ci: float = 0.95
+    ) -> pd.DataFrame:
+        """
+        Summarizes the SMD results from multiple bootstrap replicas, calculating the mean and confidence intervals.
+        """
+        all_replicas = pd.concat(replicas, ignore_index=True)
+        alpha = (1 - ci) / 2
+        lower_q, upper_q = alpha, 1 - alpha
+
+        rows = []
+        for col_name, group in all_replicas.groupby("column"):
+            values = group["SMD"].dropna()
+            variable_type = group["variable_type"].iloc[0]
+
+            if values.empty:
+                rows.append({
+                    "column": col_name,
+                    "variable_type": variable_type,
+                    "mean_SMD": np.nan,
+                    "median_SMD": np.nan,
+                    f"ci_lower_{int(ci*100)}": np.nan,
+                    f"ci_upper_{int(ci*100)}": np.nan,
+                    "std_SMD": np.nan,
+                    "n_replicas": 0,
+                    "balance": "N/A",
+                })
+
+                continue
+
+            mean_smd = float(values.mean())
+            abs_mean_smd = abs(mean_smd)
+            balance = (
+                "Excellent" if abs_mean_smd < 0.10 else
+                "Acceptable" if abs_mean_smd < 0.25 else
+                "Unbalanced"
+            )
 
 
+            rows.append({
+                "column": col_name, 
+                "variable_type": variable_type,
+                "mean_SMD": mean_smd,
+                "median_SMD": float(values.median()),
+                f"ci_lower_{int(ci*100)}": float(values.quantile(lower_q)),
+                f"ci_upper_{int(ci*100)}": float(values.quantile(upper_q)),
+                "std_SMD": float(values.std()),
+                "n_replicas": len(values),
+                "balance": balance,
+            })
 
-
-
+        return (
+            pd.DataFrame(rows)
+            .sort_values("mean_SMD", key=lambda s: s.abs(), ascending=False, na_position="last")
+            .reset_index(drop=True)
+        )
 
         
 def calculate_rep_coef_smd(
