@@ -54,7 +54,12 @@ class BootstrapExperiment:
             )
 
     #----------------------------------Public methods-----------------------------------
-    def run_bootstrap(self) -> tuple[BootstrapResults, list[pd.DataFrame], pd.DataFrame, BootstrapTraceability]:
+    def run_bootstrap(
+            self,
+    ) -> tuple[
+        BootstrapResults, list[pd.DataFrame], pd.DataFrame, 
+        BootstrapTraceability, pd.DataFrame,
+    ]:
 
         results = BootstrapResults()
         representativness_replicas: list[pd.DataFrame] = []
@@ -72,6 +77,9 @@ class BootstrapExperiment:
         for b, seed in enumerate(child_seeds):
             rng = np.random.default_rng(int(seed))
             bootstrap_c, bootstrap_t = self._generate_samples(rng)
+
+            stats_c = self._calculate_stats(bootstrap_c)
+            stats_t = self._calculate_stats(bootstrap_t)
 
 
             for col, stats in self._calculate_stats(bootstrap_c).items():
