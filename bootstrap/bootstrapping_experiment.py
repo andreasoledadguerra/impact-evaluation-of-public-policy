@@ -64,6 +64,7 @@ class BootstrapExperiment:
 
         results = BootstrapResults()
         representativness_replicas: list[pd.DataFrame] = []
+        smd_replicas: list[pd.DataFrame] = []
         control_errors: dict[str, list[float]] = {}
         treatment_errors: dict[str, list[float]] = {}
 
