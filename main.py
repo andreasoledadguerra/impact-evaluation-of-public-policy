@@ -160,15 +160,12 @@ def main() -> dict:
     )
 
 
-    bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample, traceability = (experiment.run_bootstrap())
+    bootstrap_results, repr_bootstrap_replicas, best_control_sample, best_treatment_sample, traceability, smd_summary = (experiment.run_bootstrap())
     logger.info("Bootstrapping completed")
 
     bootstrap_summary = bootstrap_results.summarize(ci=0.95)
     summary_control = bootstrap_summary["control"]
     summary_treatment = bootstrap_summary["treatment"]
-
-    
-    # smd_summary = experiment.smd_summary  # Control vs. Treatment Comparison
 
 
     # -----------------------------------------------------------------
@@ -193,11 +190,21 @@ def main() -> dict:
         )
 
     # -----------------------------------------------------------------
-    # . Standardised mean difference (smd.py)
+    # 7. Standardised mean difference (smd.py)
     # -----------------------------------------------------------------
+    logger.info("Evaluating standardized mean difference (SMD) between control and treatment groups...")
+
+    imbalanced_smd = smd_summary[smd_summary["balance"] == "imbalanced"]
+    if not imbalanced_smd.empty:
+        logger.warning(
+            f"{len(imbalanced_smd)} variable(s) with imbalanced SMD between "
+            f"(|mean_SMD| > 0.25):{imbalanced_smd['column'].tolist()}"
+        )
+    else:
+        logger.info("SMD balance OK --no unbalanced variables on average.")
 
     # -----------------------------------------------------------------
-    # 7. Generating distribution visualizations 
+    # 8. Generating distribution visualizations 
     # -----------------------------------------------------------------
     logger.info(
         "Generating distribution plots by type of variable and group"
@@ -219,7 +226,7 @@ def main() -> dict:
     logger.info(f"{len(all_plots)} distribution plot(s) saved to {plots_dir}")
 
     # -----------------------------------------------------------------
-    # 8. Exporting Results
+    # 9. Exporting Results
     # -----------------------------------------------------------------
     #FINAL_DATA_PATH.mkdir(parents=True, exist_ok=True)
     tables_dir = _prepare_output_dir(
