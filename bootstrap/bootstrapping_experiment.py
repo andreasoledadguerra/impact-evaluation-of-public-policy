@@ -157,8 +157,22 @@ class BootstrapExperiment:
         best_treatment_rng = np.random.default_rng(int(child_seeds[best_treatment_idx]))
         _, best_treatment_sample = self._generate_samples(best_treatment_rng)
 
+        smd_summary = SMDCalculator.summarize_bootstrap_replicas(smd_replicas, ci=0.95)
+        imbalanced = smd_summary[smd_summary["balance"] == "unbalanced"]
 
-        return results, representativness_replicas, best_control_sample, best_treatment_sample, traceability  
+        if not imbalanced.empty:
+            logger.warning(
+                "%d variable(s) are unbalanced in the best replicas(|mean_SMD| >= 0.25) %s. ",
+                len(imbalanced),imbalanced["column"].tolist(),
+            )
+        else:
+            logger.info(
+                "SMD: balance OK, no unbalanced variables on average. "
+            )
+        return (
+            results, representativness_replicas, best_control_sample, 
+            best_treatment_sample, traceability, smd_summary,
+        )
 
     
     #----------------------------------Private methods-----------------------------------
