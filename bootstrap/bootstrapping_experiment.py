@@ -17,6 +17,7 @@ from bootstrap.models import (
 from bootstrap.traceability import BootstrapTraceability 
 
 from representativity.representativeness import RepresentativenessCalculator
+from representativity.smd import SMDCalculator
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +93,8 @@ class BootstrapExperiment:
             )
             
             representativness_replicas.append(replica_repr)
+
+            smd_replicas.append(SMDCalculator.replica_smd(stats_c, stats_t, self._registry))
 
             # score log for this replica for traceability
             scores: dict[str, float] = {}
