@@ -43,6 +43,12 @@ class ProcessedDataframe():
                 f"spaces/capitalization:{dup}."
             )
 
+        n_before = len(df)
+        df = df.merge(
+            municipios.drop(columns=['municipio']), on='_municipio_key', how='left'
+        ).drop(columns=['_municipio_key'])
+        assert len(df) == n_before, "The merge with municipios changed the number of rows."
+        
         return df
 
 
