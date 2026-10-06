@@ -23,6 +23,7 @@ class ProcessedDataframe():
                 f"ficha_inscriptos ({len(df_2)}) and formularios_curso({len(df_3)}))"
                 f"have different numbers of rows."
             )
+        
         # Concatenating dataframes by column
         df = pd.concat([df_2, df_3], axis=1)
 
@@ -31,7 +32,7 @@ class ProcessedDataframe():
 
         df['_municipio_key'] = df['municipio'].astype(str).str.strip().str.casefold()
         municipios = df_1.copy()
-        municipios['municipios_key'] = municipios['municipio'].astype(str).str.strip().str.casefold()
+        municipios['_municipios_key'] = municipios['municipio'].astype(str).str.strip().str.casefold()
 
         #df = df.merge(df_1, on='municipio', how='left')
         if not municipios['_municipio_key'].is_unique:
