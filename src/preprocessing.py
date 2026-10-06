@@ -36,7 +36,7 @@ class ProcessedDataframe():
         #df = df.merge(df_1, on='municipio', how='left')
         if not municipios['_municipio_key'].is_unique:
             dup  = municipios.loc[
-                municipios['_municipio_key'].duplicate(keep=False), 'municipio'
+                municipios['_municipio_key'].duplicated(keep=False), 'municipio'
             ].unique().tolist()
             raise ValueError(
                 f"'municipio' in base_municipios is not unique after normalizing"
@@ -48,7 +48,7 @@ class ProcessedDataframe():
             municipios.drop(columns=['municipio']), on='_municipio_key', how='left'
         ).drop(columns=['_municipio_key'])
         assert len(df) == n_before, "The merge with municipios changed the number of rows."
-        
+
         return df
 
 
