@@ -104,6 +104,8 @@ class BootstrapExperiment:
                      row.get("coef_representativeness_treatment", 0.0)) / 2
                 )
 
+
+            ##################################
             scores["__aggregate__"] = float(np.mean(list(scores.values()))) if scores else np.nan
 
             traceability.register(replica_id=b, seed=int(seed), scores=scores)
@@ -139,7 +141,7 @@ class BootstrapExperiment:
             idx, _ = self._best_replica_index({var: errors})
             traceability.set_best(var, "control", idx)
 
-        for var, errors in control_errors.items():
+        for var, errors in treatment_errors.items():
             idx, _ = self._best_replica_index({var: errors})
             traceability.set_best(var, "treatment", idx)
         
