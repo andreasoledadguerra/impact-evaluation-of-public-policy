@@ -19,11 +19,14 @@ from bootstrap.traceability import BootstrapTraceability
 from representativity.representativeness import RepresentativenessCalculator
 from representativity.smd import SMDCalculator
 
+
 logger = logging.getLogger(__name__)
 
 
 
+
 class BootstrapExperiment:
+
 
     def __init__(
         self,
@@ -41,12 +44,7 @@ class BootstrapExperiment:
         self._registry = ColumnRegistry(num_columns, cat_conditions, spc_columns)
         self._n_bootstrap = n_bootstrap
         self._random_state = random_state 
-        #self._rng = np.random.default_rng(random_state)
-
-        #self.bootstrap_c, self.bootstrap_t = self._generate_samples()
-        #self.stats_c = self._calculate_stats(self.bootstrap_c)
-        #self.stats_t = self._calculate_stats(self.bootstrap_t)
-        #self.smd_summary = self._calculate_smd()
+ 
 
         if self._n_bootstrap < 1000:
             logger.warning(
@@ -56,9 +54,9 @@ class BootstrapExperiment:
 
     #----------------------------------Public methods-----------------------------------
     def run_bootstrap(
-            self,
+        self,
     ) -> tuple[
-        BootstrapResults, list[pd.DataFrame], pd.DataFrame, 
+        BootstrapResults, list[pd.DataFrame], pd.DataFrame, pd.DataFrame,
         BootstrapTraceability, pd.DataFrame,
     ]:
 
