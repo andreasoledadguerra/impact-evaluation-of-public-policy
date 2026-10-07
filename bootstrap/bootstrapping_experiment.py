@@ -204,7 +204,9 @@ class BootstrapExperiment:
     @staticmethod
 
     # method to determine the best replica index based on average percentiles of errors across variables
-    def _best_replica_index(errors_by_variable: dict[str, list[float]]) -> int:
+    def _best_replica_index(
+        errors_by_variable: dict[str, list[float]]
+    ) -> tuple[int, np.ndarray]:
 
 
         n=len(next(iter(errors_by_variable.values())))
@@ -216,7 +218,7 @@ class BootstrapExperiment:
             percentile_sum += ranks_pct.to_numpy()
 
         avg_percentile = percentile_sum / len(errors_by_variable)
-        return int(np.argmin(avg_percentile))  # index of the best replica
+        return int(np.argmin(avg_percentile)), avg_percentile  # index of the best replica and all average percentiles
 
 
 
