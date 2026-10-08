@@ -11,7 +11,8 @@ A modular Python pipeline for evaluating the causal impact of public policy inte
 ```
 IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │
-├── config.py                  # Centralized paths and parameters
+├──main.py                     # Pipelin entry point (stages 1-9)
+├── config.py                  # Centralized paths (raw sources, final outputs)
 ├── constants.py               # Domain contants (column names, thresholds, sample size)
 ├── experiment.py              # Experiment orchestration ------------x
 ├── models.py                  # Statistical models ------------------x
@@ -21,10 +22,14 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │   ├── __init__.py
 │   └── bootstrapping_application.py # Low-level bootstrap sampling (numpy)
 │   └── bootstrapping_experiment.py  # BootstrapExperiment - orchestrates sampling + stats + SMD
-│   └── models.py # Pydantic models for bootstrap statistics
-│
+│   ├── bootrstrapping_results.py    # BootstrapResults - accumulates stats across replicas, percentiles CIs
+│   ├── column_registry.py           # ColumnRegistry - column -> variable type (continuos / binary / categorical)
+│   └── models.py                    # Pydantic models for bootstrap statistics
+│   └── traceability.py              # BootstrapTraceability - per-replica seeds/scores and winner tracking
+
 ├── representativity/         
 │   └── __init__.py
+│   └── representativeness.py        # RepresentativenessCalculator -  sample vs. population coefficient        
 │   └── smd.py                 # SMDCalculator - Standardized Mean Diffference by variable type
 |
 ├── src/
@@ -37,11 +42,17 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 │   └── reporting.py           # Report and export generation-----X
 │   └── utils.py               # Pure utility functions (mean, std, proportions)
 |
+├── visualizations/
+│   ├── group_comparison.py    # GroupComparisonPlotter - population  vs. control vs. treatment plots
+│   ├── config_plot.py         # PLotconstants (colors, figure sizes, DPI)
+
 ├── data/
 │   ├── raw/                   # Original source files — never modified
 │   ├── processed/             # Output of preprocessing (Parquet)
 │   └── final/                 # Group-split data ready for analysis
-│
+│         ├── tables/          # Summary tables (.xlsx) and best-replica samples (.parquet)
+│         ├── distributions/   # Distribution plots (.png)
+│         └── traceability/    # Per-run traceability files (kept across runs)
 ├── notebooks/
 │   └── impact_evaluation_policy.ipynb   # EDA and exploratory analysis
 │
