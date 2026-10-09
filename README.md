@@ -110,6 +110,21 @@ SMD = (mean_treatment - mean_control) / pooled SD, with the pooled SD defines as
   | 0.1 – 0.25 | ⚠️ Acceptable — moderate difference |
   | > 0.25 | ❌ Imbalanced — groups differ significantly |
 
+**Methodological notes**
+- **Best replica ≠ typical sample**, best_control_sample / best_treatment_sample are, out of all bootstrap replicas, the ones with thelowest representativeness error against the population. THey will look more representative than any real sampple by construction. Use them for **descriptive illustration only**, never as input for treatment-effect estimation (use the full bootstrap distribution or the originak SRS). Every exported plot carries this warning.
+
+- **No effect estimation.** The pipeline prepares and diagnoses samples, estimating the tratment effect is a separate, downstreram analysis.
+
+- **Assignment mechanism.** The code defines groups from the application stae; how applications were adjudicatedis not encoded in it and determines which identification assumption applies. Documentit alongside any result.
+
+- **Representativeness coefficient** can be unstable when the population mean is close to 0 (typicalfor low-prevalence binary/categorical variables).
+
+- **Variable typing.** relacion_de_parentezco_con_jefe_del_hogar and conurbano_interior declare a single category in CAT_CONDITIONS, so they behave like binary indicators but are processed as categorical.
+
+- **Skewed variables.** Continuous variables such as ingreso_anual_hogar are summarized with mean/SD, which is sensitive to heavy tails.
+
+Details and the full list of limitations: docs/methodological_report_pipeline.md
+
 
 ## Setup
 
