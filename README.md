@@ -91,13 +91,20 @@ Workflow:
 | Replica traceability | Seed and scores per replica, so anyreplica (including the selected one) can be regenerated |
 
 
-**SMD interpretation:**
+**SMD**
+SMD = (mean_treatment - mean_control) / pooled SD, with the pooled SD defines as sqrt((var_1 + var_2) / 2).
 
-| abs(SMD) | Balance |
-|---|---|
-| < 0.1 | ✅ Excellent — groups are comparable |
-| 0.1 – 0.25 | ⚠️ Acceptable — moderate difference |
-| > 0.25 | ❌ Imbalanced — groups differ significantly |
+- Continuous / binary variables: Coen's d with the pooled SD above.
+- Categorical variables: one SMD per category (dummy coding, last category as reference), summarized as the largest |SMD|. The sign of that value refers to the ingle category that produced it, so judge balance by magnitud.
+- Per replica: the SMD is computed on every bootstrap replica and summarized across replicas (mean, median, 95% percentile interval). The balance label is ased on the meand SMD.
+
+  **SMD interpretation:**
+
+  | abs(SMD) | Balance |
+  |---|---|
+  | < 0.1 | ✅ Excellent — groups are comparable |
+  | 0.1 – 0.25 | ⚠️ Acceptable — moderate difference |
+  | > 0.25 | ❌ Imbalanced — groups differ significantly |
 
 
 ## Setup
