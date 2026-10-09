@@ -79,6 +79,7 @@ Workflow:
 
 ---
 
+Group assignment: treatment = state == "solicitud_adjudicada"; control = the remaining applications that passed the filter.
 
 ## Statistical Methods
 
