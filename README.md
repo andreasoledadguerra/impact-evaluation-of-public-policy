@@ -85,7 +85,11 @@ Workflow:
 | Mean & Standard Deviation | Descriptive statistics per variable |
 | Standardized Mean Difference (SMD) | Balance check between control and treatment |
 | Proportions by category | Distribution of categorical variables per group |
-| Bootstrap resampling | Confidence interval estimation |
+| Representativeness coefficient| 1 - relative error of the samplemean/proportin vs. the population |
+| Bootstrap resampling | Variability of every statistic across n_bootstrap replicas (default 10000); percentile confidence intervals |
+| Standardized Mean Difference (SMD) | Balancecheck between control and treatment |
+| Replica traceability | Seed and scores per replica, so anyreplica (including the selected one) can be regenerated |
+
 
 **SMD interpretation:**
 
