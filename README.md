@@ -65,13 +65,16 @@ IMPACT-EVALUATION-OF-PUBLIC-POLICY/
 ## Pipeline orchestration entry point - main.py
 
 Workflow:
-    1. Loading processed data
-    2. Initial sample extraction (SRS) by group + descriptive statistics
-    3. Bootstrapping by group (control / treatment)
-    4. Calculation of SMD to assess balance between groups
-    5. Sample representativeness coefficient vs. population
-    6. Final descriptive analysis of the samples
-    7. Export of results
+    0. Preprocessing: oad the thre sources, merge, filter (registration stage 1, adjudicated or elegible-but-rejected-for-surplus application),compute age
+    1. Statistical summary of the population
+    2. Group assignment (control / treatment) + simple random sampling (SRS) of SAMPLE_SIZE per group
+    3. Descriptive statistics of the SRS samples
+    4. Representativeness of the SRS samples vs. the population 
+    5. Bootstrapping on the SRS samples (n_replicas); per-replica statistics, representativeness, SMD and traceability; selection of the best replica per group
+    6. Representativeness of the bootstrap replicas (percentile intervals)
+    7. SMD balance between control and treatment (summarize across replicas)
+    8. Distribution plots (population vs. control vs. treatment)
+    9. Export of results
 
 
 ---
